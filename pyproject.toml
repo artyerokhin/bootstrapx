@@ -3,7 +3,7 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bootstrapx"
+name = "bootstrapx-lib"
 version = "0.1.1"
 description = "Production-grade uncertainty estimation for Python."
 readme = "README.md"
