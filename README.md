@@ -5,7 +5,7 @@
 **Production-grade uncertainty estimation for Python.**
 
 [![CI](https://github.com/artyerokhin/bootstrapx/actions/workflows/ci.yml/badge.svg)](https://github.com/artyerokhin/bootstrapx/actions)
-[![PyPI](https://img.shields.io/pypi/v/bootstrap-lib)](https://pypi.org/project/bootstrapx-lib/)
+[![PyPI](https://img.shields.io/pypi/v/bootstrapx-lib)](https://pypi.org/project/bootstrapx-lib/)
 [![Python](https://img.shields.io/pypi/pyversions/bootstrapx)](https://pypi.org/project/bootstrapx/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-mkdocs-blue)](https://artyerokhin.github.io/bootstrapx)
