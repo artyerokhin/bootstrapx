@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bootstrapx"
-version = "0.1.0"
+version = "0.1.1"
 description = "Production-grade uncertainty estimation for Python."
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
-authors = [{name = "Artyom Yerokhin", email = "artyerokhin@users.noreply.github.com"}]
+authors = [{name = "Artem Erokhin", email = "artyerokhin@gmail.com"}]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
@@ -37,7 +37,7 @@ Repository = "https://github.com/artyerokhin/bootstrapx"
 Issues = "https://github.com/artyerokhin/bootstrapx/issues"
 
 [project.optional-dependencies]
-cuda = ["numba[cuda]"]
+cuda = ["numba>=0.57"]
 dev  = ["pytest>=7", "hypothesis", "coverage", "mypy", "ruff"]
 docs = ["mkdocs-material", "mkdocstrings[python]"]
 bench = ["asv", "virtualenv"]
