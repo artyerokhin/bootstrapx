@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bootstrapx"
+version = "0.1.0"
+description = "Production-grade uncertainty estimation for Python."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Artyom Yerokhin", email = "artyerokhin@users.noreply.github.com"}]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+keywords = ["bootstrap", "statistics", "confidence-interval", "resampling", "numba"]
+
+dependencies = [
+    "numpy>=1.23",
+    "scipy>=1.10",
+    "numba>=0.57",
+    "joblib>=1.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/artyerokhin/bootstrapx"
+Documentation = "https://artyerokhin.github.io/bootstrapx"
+Repository = "https://github.com/artyerokhin/bootstrapx"
+Issues = "https://github.com/artyerokhin/bootstrapx/issues"
+
+[project.optional-dependencies]
+cuda = ["numba[cuda]"]
+dev  = ["pytest>=7", "hypothesis", "coverage", "mypy", "ruff"]
+docs = ["mkdocs-material", "mkdocstrings[python]"]
+bench = ["asv", "virtualenv"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
