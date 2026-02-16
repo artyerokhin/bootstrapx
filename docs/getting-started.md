@@ -3,10 +3,10 @@
 ## Installation
 
 ```bash
-pip install bootstrapx
+pip install bootstrapx-lib
 
 # With GPU support
-pip install "bootstrapx[cuda]"
+pip install "bootstrapx-lib[cuda]"
 
 # For development
 pip install -e ".[dev,docs]"
