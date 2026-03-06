@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Permutation-based confidence intervals
 - Registry-based method dispatch
 
-## [0.2.0] — 2026-03-XX
+## [0.2.0] — 2026-03-06
 
 ### Added
 - **Bayesian bootstrap** method via Dirichlet(1,...,1) weights (Rubin, 1981).
