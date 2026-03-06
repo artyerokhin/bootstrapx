@@ -1,4 +1,4 @@
-"""Backend dispatcher with Numba acceleration."""
+"""Backend dispatcher with Numba acceleration and vectorized statistic support."""
 from __future__ import annotations
 
 import enum
@@ -19,7 +19,6 @@ class BackendKind(enum.Enum):
 def _cuda_available() -> bool:
     try:
         from numba import cuda
-
         return bool(cuda.is_available())
     except Exception:
         return False
@@ -28,7 +27,6 @@ def _cuda_available() -> bool:
 def _numba_available() -> bool:
     try:
         import numba  # noqa: F401
-
         return True
     except ImportError:
         return False
@@ -74,8 +72,7 @@ try:
 
     _HAS_NUMBA = True
 except ImportError:
-    # Dummy for type checking
-    def _batch_indices_numba(n: int, batch_size: int, seed_base: int) -> np.ndarray:  # type: ignore
+    def _batch_indices_numba(n: int, batch_size: int, seed_base: int) -> np.ndarray:  # type: ignore[misc]
         return np.empty(0)
 
     _HAS_NUMBA = False
@@ -90,25 +87,37 @@ def resample_batch_vanilla(
 
 def apply_statistic_batched(
     data: np.ndarray,
-    statistic: Callable[[np.ndarray], float],
+    statistic: Callable[..., float],
     batch_size: int,
     n_resamples: int,
     backend: BackendKind,
     rng: np.random.Generator,
+    *,
+    vectorized: bool = False,
 ) -> np.ndarray:
+    """Apply *statistic* to bootstrap resamples in batches.
+
+    Parameters
+    ----------
+    vectorized : bool
+        If True, call statistic(samples, axis=1) for the whole batch.
+    """
     n = data.shape[0]
-    results = []
+    results: list[float] = []
     done = 0
     while done < n_resamples:
         bs = min(batch_size, n_resamples - done)
         if backend is BackendKind.NUMBA_CPU and _HAS_NUMBA:
-            # Cast explicit types for Numba signature if needed, or just pass int
             idx = _batch_indices_numba(n, bs, int(rng.integers(0, 2**31)))
             samples = data[idx]
         else:
             samples = resample_batch_vanilla(data, bs, rng)
 
-        for i in range(bs):
-            results.append(float(statistic(samples[i])))
+        if vectorized:
+            batch_results = statistic(samples, axis=1)
+            results.extend(float(v) for v in np.asarray(batch_results).ravel())
+        else:
+            for i in range(bs):
+                results.append(float(statistic(samples[i])))
         done += bs
     return np.array(results, dtype=np.float64)

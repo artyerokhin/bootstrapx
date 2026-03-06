@@ -1,3 +1,4 @@
+"""IID bootstrap generators."""
 from __future__ import annotations
 
 from typing import Generator
@@ -60,4 +61,17 @@ def subsampling_resample(
         for i in range(bs):
             batch[i] = data[rng.choice(n, size=m, replace=False)]
         yield batch
+        done += bs
+
+
+def bayesian_resample(
+    data: np.ndarray, n_resamples: int, batch_size: int, rng: np.random.Generator
+) -> Generator[tuple[np.ndarray, np.ndarray], None, None]:
+    """Bayesian bootstrap: Dirichlet(1,...,1) weights (Rubin, 1981)."""
+    n = data.shape[0]
+    done = 0
+    while done < n_resamples:
+        bs = min(batch_size, n_resamples - done)
+        weights = rng.dirichlet(np.ones(n), size=bs)
+        yield data, weights
         done += bs

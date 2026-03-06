@@ -1,4 +1,7 @@
+"""Hierarchical (cluster & stratified) bootstrap generators."""
 from __future__ import annotations
+
+from typing import Generator
 
 import numpy as np
 

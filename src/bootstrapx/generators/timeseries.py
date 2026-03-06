@@ -1,13 +1,15 @@
 """Time-series bootstrap generators with optional Numba acceleration."""
 from __future__ import annotations
 
+from typing import Generator
+
 import numpy as np
 
 try:
     from numba import njit
 
     @njit(cache=True)
-    def _mbb_idx(n, bl, seed):
+    def _mbb_idx(n: int, bl: int, seed: int) -> np.ndarray:
         np.random.seed(seed)
         out = np.empty(n, dtype=np.int64)
         pos = 0
@@ -22,7 +24,7 @@ try:
         return out
 
     @njit(cache=True)
-    def _cbb_idx(n, bl, seed):
+    def _cbb_idx(n: int, bl: int, seed: int) -> np.ndarray:
         np.random.seed(seed)
         out = np.empty(n, dtype=np.int64)
         pos = 0
@@ -36,7 +38,7 @@ try:
         return out
 
     @njit(cache=True)
-    def _stat_idx(n, mb, seed):
+    def _stat_idx(n: int, mb: float, seed: int) -> np.ndarray:
         np.random.seed(seed)
         p = 1.0 - 1.0 / mb
         out = np.empty(n, dtype=np.int64)
@@ -110,46 +112,35 @@ def mbb_resample(data, n_resamples, batch_size, rng, block_length=10):
     if block_length >= n:
         raise ValueError("block_length must be < len(data).")
     return _batch_gen(
-        data,
-        n_resamples,
-        batch_size,
-        rng,
+        data, n_resamples, batch_size, rng,
         lambda n, seed, **k: _mbb_idx(n, block_length, seed),
     )
 
 
 def cbb_resample(data, n_resamples, batch_size, rng, block_length=10):
+    n = data.shape[0]
+    if block_length >= n:
+        raise ValueError("block_length must be < len(data).")
     return _batch_gen(
-        data,
-        n_resamples,
-        batch_size,
-        rng,
+        data, n_resamples, batch_size, rng,
         lambda n, seed, **k: _cbb_idx(n, block_length, seed),
     )
 
 
 def stationary_resample(data, n_resamples, batch_size, rng, mean_block=10.0):
     return _batch_gen(
-        data,
-        n_resamples,
-        batch_size,
-        rng,
+        data, n_resamples, batch_size, rng,
         lambda n, seed, **k: _stat_idx(n, mean_block, seed),
     )
 
 
-def tapered_block_resample(
-    data, n_resamples, batch_size, rng, block_length=10, taper="tukey"
-):
+def tapered_block_resample(data, n_resamples, batch_size, rng, block_length=10, taper="tukey"):
     from scipy.signal import windows as sw
-
     n = data.shape[0]
     if block_length >= n:
         raise ValueError("block_length must be < len(data).")
-
     win = sw.get_window(taper, block_length)
     win = win / win.sum() * block_length
-
     done = 0
     while done < n_resamples:
         bs = min(batch_size, n_resamples - done)
@@ -171,28 +162,20 @@ def sieve_resample(data, n_resamples, batch_size, rng, ar_order=None):
         ar_order = min(int(np.round(np.log(n))), n // 3)
     if ar_order < 1:
         ar_order = 1
-
     mu = data.mean()
     c = data - mu
-    ac = np.correlate(c, c, mode="full")[n - 1 :][: ar_order + 1]
-
-    # Construct Yule-Walker matrix R
+    ac = np.correlate(c, c, mode="full")[n - 1:][:ar_order + 1]
     R = np.empty((ar_order, ar_order), dtype=np.float64)
     for i in range(ar_order):
         for j in range(ar_order):
             R[i, j] = ac[abs(i - j)]
-
-    phi = np.linalg.solve(R, ac[1 : ar_order + 1])
-
-    # Compute fitted values
+    phi = np.linalg.solve(R, ac[1:ar_order + 1])
     ft = np.zeros(n, dtype=np.float64)
     for t in range(ar_order, n):
         for k in range(ar_order):
             ft[t] += phi[k] * c[t - k - 1]
-
     res = c.copy()
     res[ar_order:] -= ft[ar_order:]
-
     done = 0
     while done < n_resamples:
         bs = min(batch_size, n_resamples - done)
@@ -211,13 +194,10 @@ def sieve_resample(data, n_resamples, batch_size, rng, ar_order=None):
         done += bs
 
 
-def wild_resample(
-    data, n_resamples, batch_size, rng, fitted=None, distribution="rademacher"
-):
+def wild_resample(data, n_resamples, batch_size, rng, fitted=None, distribution="rademacher"):
     n = data.shape[0]
     if fitted is None:
         fitted = np.full(n, data.mean(), dtype=np.float64)
-
     resid = data - fitted
     done = 0
     while done < n_resamples:

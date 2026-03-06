@@ -15,8 +15,10 @@ def timeseries_data(rng):
 
 @pytest.fixture
 def ar1_data(rng):
-    y = np.zeros(200); y[0] = rng.standard_normal()
-    for t in range(1, 200): y[t] = 0.7 * y[t-1] + rng.standard_normal()
+    y = np.zeros(200)
+    y[0] = rng.standard_normal()
+    for t in range(1, 200):
+        y[t] = 0.7 * y[t - 1] + rng.standard_normal()
     return y
 
 @pytest.fixture
