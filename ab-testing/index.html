@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://artyerokhin.github.io/bootstrapx/getting-started/">
+        <link rel="canonical" href="https://artyerokhin.github.io/bootstrapx/ab-testing/">
       
       
       
@@ -23,7 +23,7 @@
     
     
       
-        <title>Getting Started - bootstrapx</title>
+        <title>A/B Testing - bootstrapx</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started" class="md-skip">
+        <a href="#ab-testing" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Getting Started
+              A/B Testing
             
           </span>
         </div>
@@ -487,10 +487,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#why-plain-iid-bootstrap-is-often-wrong" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        Why plain iid bootstrap is often wrong
       
     </span>
   </a>
@@ -498,10 +498,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#first-bootstrap-interval" class="md-nav__link">
+  <a href="#cluster-bootstrap-pattern" class="md-nav__link">
     <span class="md-ellipsis">
       
-        First bootstrap interval
+        Cluster bootstrap pattern
       
     </span>
   </a>
@@ -509,10 +509,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#choosing-a-method" class="md-nav__link">
+  <a href="#recommended-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Choosing a method
+        Recommended workflow
       
     </span>
   </a>
@@ -520,21 +520,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reproducibility" class="md-nav__link">
+  <a href="#future-extensions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reproducibility
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#local-development" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Local development
+        Future extensions
       
     </span>
   </a>
@@ -561,48 +550,50 @@
   
 
 
-<h1 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h1>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p>Choose the smallest install that fits your workflow.</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bootstrapx-lib
-</code></pre></div>
-<p>Optional extras:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;bootstrapx-lib[pandas]&quot;</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;bootstrapx-lib[sklearn]&quot;</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;bootstrapx-lib[numba]&quot;</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;bootstrapx-lib[pandas,sklearn,numba]&quot;</span>
-</code></pre></div>
-<h2 id="first-bootstrap-interval">First bootstrap interval<a class="headerlink" href="#first-bootstrap-interval" title="Permanent link">&para;</a></h2>
+<h1 id="ab-testing">A/B Testing<a class="headerlink" href="#ab-testing" title="Permanent link">&para;</a></h1>
+<h2 id="why-plain-iid-bootstrap-is-often-wrong">Why plain iid bootstrap is often wrong<a class="headerlink" href="#why-plain-iid-bootstrap-is-often-wrong" title="Permanent link">&para;</a></h2>
+<p>In product experiments, rows are often not independent.
+Common examples:</p>
+<ul>
+<li>multiple sessions per user</li>
+<li>multiple events per order</li>
+<li>repeated exposures per account</li>
+</ul>
+<p>If you resample rows independently, uncertainty is often underestimated.</p>
+<h2 id="cluster-bootstrap-pattern">Cluster bootstrap pattern<a class="headerlink" href="#cluster-bootstrap-pattern" title="Permanent link">&para;</a></h2>
+<p>Use <code>method="cluster"</code> and pass a cluster id per observation.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">bootstrapx</span><span class="w"> </span><span class="kn">import</span> <span class="n">bootstrap</span>
 
-<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;bca&quot;</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">4999</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">n_users</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">n_sessions</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">cluster_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_users</span><span class="p">),</span> <span class="n">n_sessions</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">theta_hat</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">standard_error</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">confidence_interval</span><span class="p">)</span>
+<span class="n">user_effects</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">n_users</span><span class="p">)</span>
+<span class="n">session_noise</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_users</span> <span class="o">*</span> <span class="n">n_sessions</span><span class="p">)</span>
+
+<span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">user_effects</span><span class="p">,</span> <span class="n">n_sessions</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">+</span> <span class="n">session_noise</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span>
+    <span class="n">diff</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;cluster&quot;</span><span class="p">,</span>
+    <span class="n">cluster_ids</span><span class="o">=</span><span class="n">cluster_ids</span><span class="p">,</span>
+    <span class="n">n_resamples</span><span class="o">=</span><span class="mi">4999</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="choosing-a-method">Choosing a method<a class="headerlink" href="#choosing-a-method" title="Permanent link">&para;</a></h2>
-<ul>
-<li><code>bca</code>: best default for general statistics.</li>
-<li><code>percentile</code>: simplest and fast.</li>
-<li><code>basic</code>: useful when symmetry assumptions are acceptable.</li>
-<li><code>studentized</code>: higher compute cost, useful when bootstrap-t is desired.</li>
-<li><code>mbb</code>, <code>stationary</code>, <code>sieve</code>: for dependent time series.</li>
-<li><code>cluster</code>, <code>strata</code>: for grouped or sampled data.</li>
-</ul>
-<h2 id="reproducibility">Reproducibility<a class="headerlink" href="#reproducibility" title="Permanent link">&para;</a></h2>
-<p>Always pass <code>random_state</code> in production code:</p>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
-</code></pre></div>
-<p>This is especially important for pipelines, tests, and repeated model evaluation.</p>
-<h2 id="local-development">Local development<a class="headerlink" href="#local-development" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/artyerokhin/bootstrapx.git
-<span class="nb">cd</span><span class="w"> </span>bootstrapx
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
-pytest<span class="w"> </span>tests/<span class="w"> </span>-v
-</code></pre></div>
+<h2 id="recommended-workflow">Recommended workflow<a class="headerlink" href="#recommended-workflow" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Define the unit of randomization.</li>
+<li>Bootstrap at that unit, not at the event row.</li>
+<li>Keep <code>random_state</code> fixed for repeatable analyses.</li>
+<li>Compare CI width between iid and cluster methods to sanity-check dependence.</li>
+</ol>
+<h2 id="future-extensions">Future extensions<a class="headerlink" href="#future-extensions" title="Permanent link">&para;</a></h2>
+<p>Natural next additions for <code>bootstrapx</code> are explicit two-sample APIs, lift estimation, and bootstrap-based p-values for experimentation workflows.</p>
 
 
 

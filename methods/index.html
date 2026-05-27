@@ -6,17 +6,13 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Production-grade uncertainty estimation for Python.">
+        <meta name="description" content="Production-grade bootstrap uncertainty estimation for Python">
       
       
       
         <link rel="canonical" href="https://artyerokhin.github.io/bootstrapx/methods/">
       
       
-        <link rel="prev" href="../reference/">
-      
-      
-        <link rel="next" href="../benchmarks/">
       
       
         
@@ -27,14 +23,11 @@
     
     
       
-        <title>Methods Guide - bootstrapx</title>
+        <title>Methods - bootstrapx</title>
       
     
     
       <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
-      
-        
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -64,14 +57,7 @@
   </head>
   
   
-    
-    
-      
-    
-    
-    
-    
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+    <body dir="ltr">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -80,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#methods-guide" class="md-skip">
+        <a href="#methods" class="md-skip">
           Skip to content
         </a>
       
@@ -92,7 +78,9 @@
     
       
 
-<header class="md-header" data-md-component="header">
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="bootstrapx" class="md-header__button md-logo" aria-label="bootstrapx" data-md-component="logo">
       
@@ -114,38 +102,12 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Methods Guide
+              Methods
             
           </span>
         </div>
       </div>
     </div>
-    
-      
-        <form class="md-header__option" data-md-component="palette">
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_0">
-    
-      <label class="md-header__button md-icon" title="Dark mode" for="__palette_1" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
-      </label>
-    
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_1">
-    
-      <label class="md-header__button md-icon" title="Light mode" for="__palette_0" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
-      </label>
-    
-  
-</form>
-      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -176,6 +138,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
       
     </form>
     <div class="md-search__output">
@@ -214,131 +178,6 @@
       
         
           
-            
-<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
-  <div class="md-grid">
-    <ul class="md-tabs__list">
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
-        
-  
-  
-    
-  
-  Home
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../getting-started/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Getting Started
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../reference/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  API Reference
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-    
-  
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Methods Guide
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../benchmarks/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Benchmarks
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../changelog/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Changelog
-
-      </a>
-    </li>
-  
-
-      
-    </ul>
-  </div>
-</nav>
-          
         
       
       <main class="md-main" data-md-component="main">
@@ -352,10 +191,8 @@
                     
 
 
-  
 
-
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="bootstrapx" class="md-nav__button md-logo" aria-label="bootstrapx" data-md-component="logo">
       
@@ -387,7 +224,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../docs/index.md" class="md-nav__link">
         
   
   
@@ -414,7 +251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
+      <a href="../docs/getting-started.md" class="md-nav__link">
         
   
   
@@ -441,7 +278,115 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/" class="md-nav__link">
+      <a href="../docs/methods.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs/integrations.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs/ab-testing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A/B Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs/time-series.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Time Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs/reference.md" class="md-nav__link">
         
   
   
@@ -465,300 +410,10 @@
       
   
   
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Methods Guide
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Methods Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#iid-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        IID Methods
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="IID Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#percentile" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Percentile
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#basic-reverse-percentile" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic (Reverse Percentile)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bca-bias-corrected-and-accelerated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BCa (Bias-Corrected and Accelerated)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#studentized-bootstrap-t" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Studentized (Bootstrap-t)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#poisson-bootstrap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Poisson Bootstrap
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bernoulli-bootstrap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bernoulli Bootstrap
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#subsampling-m-out-of-n" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Subsampling (m-out-of-n)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#time-series-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Time Series Methods
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Time Series Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#moving-block-bootstrap-mbb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Moving Block Bootstrap (MBB)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#circular-block-bootstrap-cbb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Circular Block Bootstrap (CBB)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stationary-bootstrap-politis-romano" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stationary Bootstrap (Politis &amp; Romano)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tapered-block-bootstrap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tapered Block Bootstrap
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ar-sieve-bootstrap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AR-Sieve Bootstrap
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#wild-bootstrap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Wild Bootstrap
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hierarchical-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hierarchical Methods
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Hierarchical Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cluster-bootstrap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cluster Bootstrap
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stratified-bootstrap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stratified Bootstrap
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
   
   
     <li class="md-nav__item">
-      <a href="../benchmarks/" class="md-nav__link">
+      <a href="../docs/benchmarks.md" class="md-nav__link">
         
   
   
@@ -785,7 +440,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+      <a href="../docs/changelog.md" class="md-nav__link">
         
   
   
@@ -835,19 +490,19 @@
   <a href="#iid-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        IID Methods
+        IID methods
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="IID Methods">
+    <nav class="md-nav" aria-label="IID methods">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#percentile" class="md-nav__link">
+  <a href="#bca-methodbca" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Percentile
+        BCa (method="bca")
       
     </span>
   </a>
@@ -855,10 +510,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#basic-reverse-percentile" class="md-nav__link">
+  <a href="#percentile-methodpercentile" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Basic (Reverse Percentile)
+        Percentile (method="percentile")
       
     </span>
   </a>
@@ -866,10 +521,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bca-bias-corrected-and-accelerated" class="md-nav__link">
+  <a href="#basic-methodbasic" class="md-nav__link">
     <span class="md-ellipsis">
       
-        BCa (Bias-Corrected and Accelerated)
+        Basic (method="basic")
       
     </span>
   </a>
@@ -877,10 +532,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#studentized-bootstrap-t" class="md-nav__link">
+  <a href="#studentized-methodstudentized" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Studentized (Bootstrap-t)
+        Studentized (method="studentized")
       
     </span>
   </a>
@@ -888,10 +543,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#poisson-bootstrap" class="md-nav__link">
+  <a href="#bayesian-methodbayesian" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Poisson Bootstrap
+        Bayesian (method="bayesian")
       
     </span>
   </a>
@@ -899,21 +554,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bernoulli-bootstrap" class="md-nav__link">
+  <a href="#poisson-bernoulli-subsampling" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bernoulli Bootstrap
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#subsampling-m-out-of-n" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Subsampling (m-out-of-n)
+        Poisson / Bernoulli / Subsampling
       
     </span>
   </a>
@@ -929,19 +573,19 @@
   <a href="#time-series-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Time Series Methods
+        Time-series methods
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Time Series Methods">
+    <nav class="md-nav" aria-label="Time-series methods">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#moving-block-bootstrap-mbb" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Moving Block Bootstrap (MBB)
+        Moving Block Bootstrap (mbb)
       
     </span>
   </a>
@@ -952,7 +596,7 @@
   <a href="#circular-block-bootstrap-cbb" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Circular Block Bootstrap (CBB)
+        Circular Block Bootstrap (cbb)
       
     </span>
   </a>
@@ -960,10 +604,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stationary-bootstrap-politis-romano" class="md-nav__link">
+  <a href="#stationary-bootstrap-stationary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stationary Bootstrap (Politis &amp; Romano)
+        Stationary Bootstrap (stationary)
       
     </span>
   </a>
@@ -971,10 +615,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#tapered-block-bootstrap" class="md-nav__link">
+  <a href="#tapered-block-bootstrap-tapered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tapered Block Bootstrap
+        Tapered Block Bootstrap (tapered)
       
     </span>
   </a>
@@ -982,10 +626,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ar-sieve-bootstrap" class="md-nav__link">
+  <a href="#sieve-bootstrap-sieve" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AR-Sieve Bootstrap
+        Sieve Bootstrap (sieve)
       
     </span>
   </a>
@@ -993,10 +637,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#wild-bootstrap" class="md-nav__link">
+  <a href="#wild-bootstrap-wild" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Wild Bootstrap
+        Wild Bootstrap (wild)
       
     </span>
   </a>
@@ -1012,19 +656,19 @@
   <a href="#hierarchical-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Hierarchical Methods
+        Hierarchical methods
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Hierarchical Methods">
+    <nav class="md-nav" aria-label="Hierarchical methods">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cluster-bootstrap" class="md-nav__link">
+  <a href="#cluster-bootstrap-cluster" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cluster Bootstrap
+        Cluster Bootstrap (cluster)
       
     </span>
   </a>
@@ -1032,10 +676,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stratified-bootstrap" class="md-nav__link">
+  <a href="#stratified-bootstrap-strata" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stratified Bootstrap
+        Stratified Bootstrap (strata)
       
     </span>
   </a>
@@ -1044,6 +688,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-defaults" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical defaults
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1067,44 +722,47 @@
   
 
 
-<h1 id="methods-guide">Methods Guide</h1>
-<h2 id="iid-methods">IID Methods</h2>
-<h3 id="percentile">Percentile</h3>
-<p>Standard quantile-based CI. Simple but can have poor coverage for skewed distributions.</p>
-<h3 id="basic-reverse-percentile">Basic (Reverse Percentile)</h3>
-<div class="arithmatex">\[CI = [2\hat{\theta} - q_{1-\alpha/2},\; 2\hat{\theta} - q_{\alpha/2}]\]</div>
-<h3 id="bca-bias-corrected-and-accelerated">BCa (Bias-Corrected and Accelerated)</h3>
-<p>The recommended default. Corrects for bias and skewness using jackknife acceleration:</p>
-<div class="arithmatex">\[\hat{a} = \frac{\sum_{i=1}^{n}(\hat{\theta}_{(\cdot)} - \hat{\theta}_{(i)})^3}{6\left[\sum_{i=1}^{n}(\hat{\theta}_{(\cdot)} - \hat{\theta}_{(i)})^2\right]^{3/2}}\]</div>
-<h3 id="studentized-bootstrap-t">Studentized (Bootstrap-t)</h3>
-<p>Uses pivotal quantity <span class="arithmatex">\(t^* = (\hat{\theta}^* - \hat{\theta}) / \hat{se}^*\)</span> with nested bootstrap for SE.</p>
-<h3 id="poisson-bootstrap">Poisson Bootstrap</h3>
-<p>Weighted resampling with <span class="arithmatex">\(W \sim \text{Poisson}(1)\)</span>. Ideal for streaming/online algorithms.</p>
-<h3 id="bernoulli-bootstrap">Bernoulli Bootstrap</h3>
-<p>Binary weights <span class="arithmatex">\(W \sim \text{Bernoulli}(p)\)</span>. Useful for specific ML applications.</p>
-<h3 id="subsampling-m-out-of-n">Subsampling (m-out-of-n)</h3>
-<p>Sampling without replacement, size <span class="arithmatex">\(m &lt; n\)</span>. Required for non-regular statistics (max, min).</p>
-<hr />
-<h2 id="time-series-methods">Time Series Methods</h2>
-<h3 id="moving-block-bootstrap-mbb">Moving Block Bootstrap (MBB)</h3>
-<p>Overlapping fixed-length blocks. Set <code>block_length</code> based on autocorrelation structure.</p>
-<h3 id="circular-block-bootstrap-cbb">Circular Block Bootstrap (CBB)</h3>
-<p>Wraps data circularly to eliminate edge effects. Same block logic as MBB.</p>
-<h3 id="stationary-bootstrap-politis-romano">Stationary Bootstrap (Politis &amp; Romano)</h3>
-<p>Random block lengths <span class="arithmatex">\(L \sim \text{Geometric}(1/\bar{L})\)</span> where <span class="arithmatex">\(\bar{L}\)</span> = <code>mean_block</code>.</p>
-<h3 id="tapered-block-bootstrap">Tapered Block Bootstrap</h3>
-<p>Applies a tapering window (Tukey, Hanning, etc.) to each block. For spectral density estimation.</p>
-<h3 id="ar-sieve-bootstrap">AR-Sieve Bootstrap</h3>
-<p>Fits AR(p) model → extracts residuals → resamples residuals → reconstructs series.</p>
-<h3 id="wild-bootstrap">Wild Bootstrap</h3>
-<p>$<span class="arithmatex">\(y_t^* = \hat{y}_t + \hat{\varepsilon}_t \cdot v_t\)</span>$
-where <span class="arithmatex">\(v_t\)</span> is Rademacher (±1) or Mammen two-point. Handles heteroskedasticity.</p>
-<hr />
-<h2 id="hierarchical-methods">Hierarchical Methods</h2>
-<h3 id="cluster-bootstrap">Cluster Bootstrap</h3>
-<p>Resamples entire clusters (groups), preserving within-group correlation structure.</p>
-<h3 id="stratified-bootstrap">Stratified Bootstrap</h3>
-<p>Resamples within each stratum independently, preserving class proportions.</p>
+<h1 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h1>
+<p>This page explains when to use each method.</p>
+<h2 id="iid-methods">IID methods<a class="headerlink" href="#iid-methods" title="Permanent link">&para;</a></h2>
+<h3 id="bca-methodbca">BCa (<code>method="bca"</code>)<a class="headerlink" href="#bca-methodbca" title="Permanent link">&para;</a></h3>
+<p>Best default when you want strong coverage properties for a scalar statistic.</p>
+<h3 id="percentile-methodpercentile">Percentile (<code>method="percentile"</code>)<a class="headerlink" href="#percentile-methodpercentile" title="Permanent link">&para;</a></h3>
+<p>Good when you want a simple interval and your bootstrap distribution is already informative.</p>
+<h3 id="basic-methodbasic">Basic (<code>method="basic"</code>)<a class="headerlink" href="#basic-methodbasic" title="Permanent link">&para;</a></h3>
+<p>Useful as a classic alternative to percentile intervals.</p>
+<h3 id="studentized-methodstudentized">Studentized (<code>method="studentized"</code>)<a class="headerlink" href="#studentized-methodstudentized" title="Permanent link">&para;</a></h3>
+<p>Useful when you need bootstrap-t intervals and can afford higher compute cost.</p>
+<h3 id="bayesian-methodbayesian">Bayesian (<code>method="bayesian"</code>)<a class="headerlink" href="#bayesian-methodbayesian" title="Permanent link">&para;</a></h3>
+<p>Useful for Bayesian bootstrap style uncertainty without assuming a parametric model.</p>
+<h3 id="poisson-bernoulli-subsampling">Poisson / Bernoulli / Subsampling<a class="headerlink" href="#poisson-bernoulli-subsampling" title="Permanent link">&para;</a></h3>
+<p>Useful for weighted or subsampling-based workflows, especially under heavy tails or sampling constraints.</p>
+<h2 id="time-series-methods">Time-series methods<a class="headerlink" href="#time-series-methods" title="Permanent link">&para;</a></h2>
+<h3 id="moving-block-bootstrap-mbb">Moving Block Bootstrap (<code>mbb</code>)<a class="headerlink" href="#moving-block-bootstrap-mbb" title="Permanent link">&para;</a></h3>
+<p>Preserves local autocorrelation by resampling contiguous blocks.</p>
+<h3 id="circular-block-bootstrap-cbb">Circular Block Bootstrap (<code>cbb</code>)<a class="headerlink" href="#circular-block-bootstrap-cbb" title="Permanent link">&para;</a></h3>
+<p>Like MBB, but wraps around the series to reduce edge effects.</p>
+<h3 id="stationary-bootstrap-stationary">Stationary Bootstrap (<code>stationary</code>)<a class="headerlink" href="#stationary-bootstrap-stationary" title="Permanent link">&para;</a></h3>
+<p>Uses random block lengths and is often a strong default for stationary dependent data.</p>
+<h3 id="tapered-block-bootstrap-tapered">Tapered Block Bootstrap (<code>tapered</code>)<a class="headerlink" href="#tapered-block-bootstrap-tapered" title="Permanent link">&para;</a></h3>
+<p>Reduces block-boundary artifacts with tapering windows.</p>
+<h3 id="sieve-bootstrap-sieve">Sieve Bootstrap (<code>sieve</code>)<a class="headerlink" href="#sieve-bootstrap-sieve" title="Permanent link">&para;</a></h3>
+<p>Fits an AR approximation and resamples residual-driven trajectories. Use it when an AR representation is reasonable.</p>
+<h3 id="wild-bootstrap-wild">Wild Bootstrap (<code>wild</code>)<a class="headerlink" href="#wild-bootstrap-wild" title="Permanent link">&para;</a></h3>
+<p>Useful for heteroscedastic residual structures.</p>
+<h2 id="hierarchical-methods">Hierarchical methods<a class="headerlink" href="#hierarchical-methods" title="Permanent link">&para;</a></h2>
+<h3 id="cluster-bootstrap-cluster">Cluster Bootstrap (<code>cluster</code>)<a class="headerlink" href="#cluster-bootstrap-cluster" title="Permanent link">&para;</a></h3>
+<p>Resample entire clusters, not rows, when observations within a cluster are dependent.</p>
+<h3 id="stratified-bootstrap-strata">Stratified Bootstrap (<code>strata</code>)<a class="headerlink" href="#stratified-bootstrap-strata" title="Permanent link">&para;</a></h3>
+<p>Use when the sampling design or inference target is stratified.</p>
+<h2 id="practical-defaults">Practical defaults<a class="headerlink" href="#practical-defaults" title="Permanent link">&para;</a></h2>
+<ul>
+<li>General-purpose scalar statistic: <code>bca</code></li>
+<li>Model metric on iid holdout set: <code>bca</code> or <code>percentile</code></li>
+<li>Financial / dependent series: <code>stationary</code> or <code>mbb</code></li>
+<li>Panel / user-session data: <code>cluster</code></li>
+<li>Survey-like grouped data: <code>strata</code></li>
+</ul>
 
 
 
@@ -1154,12 +812,10 @@ where <span class="arithmatex">\(v_t\)</span> is Rademacher (±1) or Mammen two-
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "content.code.copy", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
   </body>

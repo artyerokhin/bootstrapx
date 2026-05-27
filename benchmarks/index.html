@@ -6,17 +6,13 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Production-grade uncertainty estimation for Python.">
+        <meta name="description" content="Production-grade bootstrap uncertainty estimation for Python">
       
       
       
         <link rel="canonical" href="https://artyerokhin.github.io/bootstrapx/benchmarks/">
       
       
-        <link rel="prev" href="../methods/">
-      
-      
-        <link rel="next" href="../changelog/">
       
       
         
@@ -32,9 +28,6 @@
     
     
       <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
-      
-        
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -64,14 +57,7 @@
   </head>
   
   
-    
-    
-      
-    
-    
-    
-    
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+    <body dir="ltr">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -92,7 +78,9 @@
     
       
 
-<header class="md-header" data-md-component="header">
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="bootstrapx" class="md-header__button md-logo" aria-label="bootstrapx" data-md-component="logo">
       
@@ -120,32 +108,6 @@
         </div>
       </div>
     </div>
-    
-      
-        <form class="md-header__option" data-md-component="palette">
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_0">
-    
-      <label class="md-header__button md-icon" title="Dark mode" for="__palette_1" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
-      </label>
-    
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_1">
-    
-      <label class="md-header__button md-icon" title="Light mode" for="__palette_0" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
-      </label>
-    
-  
-</form>
-      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -176,6 +138,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
       
     </form>
     <div class="md-search__output">
@@ -214,131 +178,6 @@
       
         
           
-            
-<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
-  <div class="md-grid">
-    <ul class="md-tabs__list">
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
-        
-  
-  
-    
-  
-  Home
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../getting-started/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Getting Started
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../reference/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  API Reference
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../methods/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Methods Guide
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-    
-  
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Benchmarks
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../changelog/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Changelog
-
-      </a>
-    </li>
-  
-
-      
-    </ul>
-  </div>
-</nav>
-          
         
       
       <main class="md-main" data-md-component="main">
@@ -352,10 +191,8 @@
                     
 
 
-  
 
-
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="bootstrapx" class="md-nav__button md-logo" aria-label="bootstrapx" data-md-component="logo">
       
@@ -387,7 +224,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../docs/index.md" class="md-nav__link">
         
   
   
@@ -414,7 +251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
+      <a href="../docs/getting-started.md" class="md-nav__link">
         
   
   
@@ -441,7 +278,115 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/" class="md-nav__link">
+      <a href="../docs/methods.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs/integrations.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs/ab-testing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A/B Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs/time-series.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Time Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs/reference.md" class="md-nav__link">
         
   
   
@@ -468,61 +413,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../methods/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Methods Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+      <a href="../docs/benchmarks.md" class="md-nav__link">
         
   
   
@@ -538,48 +429,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#speed-bootstrapx-vs-scipystatsbootstrap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Speed: bootstrapx vs scipy.stats.bootstrap
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#coverage-accuracy-large-sample-n1000" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Coverage Accuracy (Large Sample, N=1000)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -591,7 +440,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+      <a href="../docs/changelog.md" class="md-nav__link">
         
   
   
@@ -638,10 +487,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#speed-bootstrapx-vs-scipystatsbootstrap" class="md-nav__link">
+  <a href="#what-is-fast" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Speed: bootstrapx vs scipy.stats.bootstrap
+        What is fast
       
     </span>
   </a>
@@ -649,10 +498,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#coverage-accuracy-large-sample-n1000" class="md-nav__link">
+  <a href="#benchmark-philosophy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Coverage Accuracy (Large Sample, N=1000)
+        Benchmark philosophy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reproducible-benchmark-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproducible benchmark command
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to report
       
     </span>
   </a>
@@ -679,113 +550,37 @@
   
 
 
-<h1 id="benchmarks">Benchmarks</h1>
-<p>See <code>benchmarks/</code> directory for reproducible benchmark scripts.</p>
-<p>Results on a typical development machine (Apple M1, Python 3.12):</p>
-<h2 id="speed-bootstrapx-vs-scipystatsbootstrap">Speed: bootstrapx vs scipy.stats.bootstrap</h2>
-<table>
-<thead>
-<tr>
-<th style="text-align: right;">N</th>
-<th style="text-align: center;">Method</th>
-<th style="text-align: right;">Scipy (s)</th>
-<th style="text-align: right;">Bx-Vanilla (s)</th>
-<th style="text-align: right;">Bx-Numba (s)</th>
-<th style="text-align: right;">Speedup</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: right;">500</td>
-<td style="text-align: center;">BCa</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">0.94</td>
-<td style="text-align: right;">0.0x</td>
-</tr>
-<tr>
-<td style="text-align: right;">1,000</td>
-<td style="text-align: center;">BCa</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.05</td>
-<td style="text-align: right;"><strong>1.3x</strong></td>
-</tr>
-<tr>
-<td style="text-align: right;">5,000</td>
-<td style="text-align: center;">BCa</td>
-<td style="text-align: right;">0.80</td>
-<td style="text-align: right;">0.26</td>
-<td style="text-align: right;">0.27</td>
-<td style="text-align: right;"><strong>3.0x</strong></td>
-</tr>
-<tr>
-<td style="text-align: right;">10,000</td>
-<td style="text-align: center;">Percentile</td>
-<td style="text-align: right;">1.43</td>
-<td style="text-align: right;">0.46</td>
-<td style="text-align: right;">0.49</td>
-<td style="text-align: right;"><strong>2.9x</strong></td>
-</tr>
-<tr>
-<td style="text-align: right;">50,000</td>
-<td style="text-align: center;">Percentile</td>
-<td style="text-align: right;">7.29</td>
-<td style="text-align: right;">2.19</td>
-<td style="text-align: right;">2.01</td>
-<td style="text-align: right;"><strong>3.6x</strong></td>
-</tr>
-<tr>
-<td style="text-align: right;">100,000</td>
-<td style="text-align: center;">Percentile</td>
-<td style="text-align: right;">54.34</td>
-<td style="text-align: right;">4.51</td>
-<td style="text-align: right;">3.99</td>
-<td style="text-align: right;"><strong>13.6x</strong></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Key takeaway:</strong>
-- For small datasets (<span class="arithmatex">\(N &lt; 1000\)</span>), overhead dominates, performance is comparable.
-- For medium datasets (<span class="arithmatex">\(N \approx 5000\)</span>), bootstrapx is <strong>3x faster</strong>.
-- For large datasets (<span class="arithmatex">\(N = 100k\)</span>), bootstrapx is <strong>13.6x faster</strong> due to efficient memory management and Numba compilation, while Scipy slows down significantly.</p>
-<h2 id="coverage-accuracy-large-sample-n1000">Coverage Accuracy (Large Sample, N=1000)</h2>
-<p>Monte Carlo simulation (500 runs, <span class="arithmatex">\(N=1000\)</span> observations per sample). Nominal confidence level: <strong>95%</strong>.</p>
-<table>
-<thead>
-<tr>
-<th>Data Distribution</th>
-<th style="text-align: center;">Percentile</th>
-<th style="text-align: center;">Basic</th>
-<th style="text-align: center;">BCa</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Normal</strong> <span class="arithmatex">\(N(5, 4)\)</span></td>
-<td style="text-align: center;">94.6%</td>
-<td style="text-align: center;">94.8%</td>
-<td style="text-align: center;"><strong>94.8%</strong></td>
-</tr>
-<tr>
-<td><strong>Skewed</strong> <span class="arithmatex">\(Exp(2)\)</span></td>
-<td style="text-align: center;">95.2%</td>
-<td style="text-align: center;">95.6%</td>
-<td style="text-align: center;"><strong>95.0%</strong></td>
-</tr>
-<tr>
-<td><strong>Heavy-Tailed</strong> <span class="arithmatex">\(t(3)\)</span></td>
-<td style="text-align: center;">94.0%</td>
-<td style="text-align: center;">94.6%</td>
-<td style="text-align: center;"><strong>94.0%</strong></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Analysis:</strong>
-- All methods converge to the nominal 95% level on large samples.
-- <strong>BCa</strong> achieves exactly <strong>95.0%</strong> on the skewed Exponential distribution, confirming its theoretical advantage in handling asymmetry.
-- The variations (e.g., 94.6% vs 95.0%) are within the expected Monte Carlo error margin (~1%).</p>
-<p>These results demonstrate that <strong>bootstrapx</strong> provides production-grade statistical correctness alongside significant performance improvements.</p>
+<h1 id="benchmarks">Benchmarks<a class="headerlink" href="#benchmarks" title="Permanent link">&para;</a></h1>
+<p><code>bootstrapx</code> focuses on CPU-portable performance that works on most machines.</p>
+<h2 id="what-is-fast">What is fast<a class="headerlink" href="#what-is-fast" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Batched iid resampling for scalar statistics.</li>
+<li>Vectorized statistics where the user provides a batch-aware callable.</li>
+<li>Time-series sieve implementation with efficient filtering-based generation.</li>
+</ul>
+<h2 id="benchmark-philosophy">Benchmark philosophy<a class="headerlink" href="#benchmark-philosophy" title="Permanent link">&para;</a></h2>
+<p>Compare methods under the same:</p>
+<ul>
+<li>sample size</li>
+<li>number of resamples</li>
+<li>statistic</li>
+<li>confidence method</li>
+<li>random seed when possible</li>
+</ul>
+<h2 id="reproducible-benchmark-command">Reproducible benchmark command<a class="headerlink" href="#reproducible-benchmark-command" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>benchmarks/bench_speed.py
+</code></pre></div>
+<h2 id="what-to-report">What to report<a class="headerlink" href="#what-to-report" title="Permanent link">&para;</a></h2>
+<p>When publishing benchmark numbers, include:</p>
+<ul>
+<li>CPU model</li>
+<li>Python version</li>
+<li>NumPy / SciPy version</li>
+<li>method name</li>
+<li><code>n_resamples</code></li>
+<li>sample size <code>n</code></li>
+</ul>
+<p>This keeps performance claims credible and repeatable.</p>
 
 
 
@@ -835,12 +630,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "content.code.copy", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
   </body>

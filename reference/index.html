@@ -6,17 +6,13 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Production-grade uncertainty estimation for Python.">
+        <meta name="description" content="Production-grade bootstrap uncertainty estimation for Python">
       
       
       
         <link rel="canonical" href="https://artyerokhin.github.io/bootstrapx/reference/">
       
       
-        <link rel="prev" href="../getting-started/">
-      
-      
-        <link rel="next" href="../methods/">
       
       
         
@@ -32,9 +28,6 @@
     
     
       <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
-      
-        
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -64,14 +57,7 @@
   </head>
   
   
-    
-    
-      
-    
-    
-    
-    
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+    <body dir="ltr">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -92,7 +78,9 @@
     
       
 
-<header class="md-header" data-md-component="header">
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="bootstrapx" class="md-header__button md-logo" aria-label="bootstrapx" data-md-component="logo">
       
@@ -120,32 +108,6 @@
         </div>
       </div>
     </div>
-    
-      
-        <form class="md-header__option" data-md-component="palette">
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_0">
-    
-      <label class="md-header__button md-icon" title="Dark mode" for="__palette_1" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
-      </label>
-    
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_1">
-    
-      <label class="md-header__button md-icon" title="Light mode" for="__palette_0" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
-      </label>
-    
-  
-</form>
-      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -176,6 +138,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
       
     </form>
     <div class="md-search__output">
@@ -214,131 +178,6 @@
       
         
           
-            
-<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
-  <div class="md-grid">
-    <ul class="md-tabs__list">
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
-        
-  
-  
-    
-  
-  Home
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../getting-started/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Getting Started
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-    
-  
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
-        
-  
-  
-    
-  
-  API Reference
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../methods/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Methods Guide
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../benchmarks/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Benchmarks
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../changelog/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Changelog
-
-      </a>
-    </li>
-  
-
-      
-    </ul>
-  </div>
-</nav>
-          
         
       
       <main class="md-main" data-md-component="main">
@@ -352,10 +191,8 @@
                     
 
 
-  
 
-
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="bootstrapx" class="md-nav__button md-logo" aria-label="bootstrapx" data-md-component="logo">
       
@@ -387,7 +224,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../docs/index.md" class="md-nav__link">
         
   
   
@@ -414,7 +251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
+      <a href="../docs/getting-started.md" class="md-nav__link">
         
   
   
@@ -438,245 +275,17 @@
       
   
   
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#main-entry-point" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Main Entry Point
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrapx.api.bootstrap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        bootstrap
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrapx.api.BootstrapResult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BootstrapResult
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#confidence-intervals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Confidence Intervals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrapx.stats.confidence.percentile_interval" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        percentile_interval
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrapx.stats.confidence.basic_interval" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        basic_interval
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrapx.stats.confidence.bca_interval" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        bca_interval
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrapx.stats.confidence.studentized_interval" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        studentized_interval
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#utilities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Utilities
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrapx.utils.validate_data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        validate_data
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrapx.utils.auto_batch_size" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        auto_batch_size
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#backend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backend
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrapx.engine.backend.resolve_backend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        resolve_backend
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrapx.engine.backend.BackendKind" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BackendKind
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
   
   
     <li class="md-nav__item">
-      <a href="../methods/" class="md-nav__link">
+      <a href="../docs/methods.md" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Methods Guide
+    Methods
   
 
     
@@ -696,7 +305,115 @@
   
   
     <li class="md-nav__item">
-      <a href="../benchmarks/" class="md-nav__link">
+      <a href="../docs/integrations.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs/ab-testing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A/B Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs/time-series.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Time Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs/reference.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs/benchmarks.md" class="md-nav__link">
         
   
   
@@ -723,7 +440,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+      <a href="../docs/changelog.md" class="md-nav__link">
         
   
   
@@ -770,10 +487,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#main-entry-point" class="md-nav__link">
+  <a href="#top-level-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Main Entry Point
+        Top-level API
       
     </span>
   </a>
@@ -781,7 +498,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bootstrapx.api.bootstrap" class="md-nav__link">
+  <a href="#bootstrapx.bootstrap" class="md-nav__link">
     <span class="md-ellipsis">
       
         bootstrap
@@ -789,10 +506,27 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="bootstrap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bootstrapx.bootstrap--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#bootstrapx.api.BootstrapResult" class="md-nav__link">
+  <a href="#bootstrapx.BootstrapResult" class="md-nav__link">
     <span class="md-ellipsis">
       
         BootstrapResult
@@ -803,10 +537,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confidence-intervals" class="md-nav__link">
+  <a href="#bootstrapx.ConfidenceInterval" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confidence Intervals
+        ConfidenceInterval
       
     </span>
   </a>
@@ -814,10 +548,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bootstrapx.stats.confidence.percentile_interval" class="md-nav__link">
+  <a href="#integrations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        percentile_interval
+        Integrations
       
     </span>
   </a>
@@ -825,10 +559,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bootstrapx.stats.confidence.basic_interval" class="md-nav__link">
+  <a href="#bootstrapx.compat.sklearn_cv.BootstrapCV" class="md-nav__link">
     <span class="md-ellipsis">
       
-        basic_interval
+        BootstrapCV
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BootstrapCV">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bootstrapx.compat.sklearn_cv.BootstrapCV--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bootstrapx.compat.sklearn_cv.BootstrapCV--notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bootstrapx.compat.pandas_accessor._BootstrapSeriesAccessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        _BootstrapSeriesAccessor
       
     </span>
   </a>
@@ -836,10 +609,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bootstrapx.stats.confidence.bca_interval" class="md-nav__link">
+  <a href="#bootstrapx.compat.pandas_accessor._BootstrapSeriesAccessor.bca" class="md-nav__link">
     <span class="md-ellipsis">
       
-        bca_interval
+        bca
       
     </span>
   </a>
@@ -847,10 +620,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bootstrapx.stats.confidence.studentized_interval" class="md-nav__link">
+  <a href="#bootstrapx.compat.pandas_accessor._BootstrapSeriesAccessor.ci" class="md-nav__link">
     <span class="md-ellipsis">
       
-        studentized_interval
+        ci
       
     </span>
   </a>
@@ -858,10 +631,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#utilities" class="md-nav__link">
+  <a href="#bootstrapx.compat.pandas_accessor._BootstrapSeriesAccessor.percentile" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Utilities
+        percentile
       
     </span>
   </a>
@@ -869,10 +642,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bootstrapx.utils.validate_data" class="md-nav__link">
+  <a href="#bootstrapx.compat.pandas_accessor._BootstrapDataFrameAccessor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        validate_data
+        _BootstrapDataFrameAccessor
       
     </span>
   </a>
@@ -880,10 +653,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bootstrapx.utils.auto_batch_size" class="md-nav__link">
+  <a href="#bootstrapx.compat.pandas_accessor._BootstrapDataFrameAccessor.ci" class="md-nav__link">
     <span class="md-ellipsis">
       
-        auto_batch_size
+        ci
       
     </span>
   </a>
@@ -891,35 +664,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backend" class="md-nav__link">
+  <a href="#bootstrapx.compat.pandas_accessor._BootstrapDataFrameAccessor.summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Backend
+        summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bootstrapx.compat.pandas_accessor._BootstrapDataFrameAccessor.summary--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrapx.engine.backend.resolve_backend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        resolve_backend
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrapx.engine.backend.BackendKind" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BackendKind
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -943,22 +711,402 @@
   
 
 
-<h1 id="api-reference">API Reference</h1>
-<h2 id="main-entry-point">Main Entry Point</h2>
+<h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
+<h2 id="top-level-api">Top-level API<a class="headerlink" href="#top-level-api" title="Permanent link">&para;</a></h2>
 
 
 <div class="doc doc-object doc-function">
 
 
-<h2 id="bootstrapx.api.bootstrap" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">bootstrapx</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">statistic</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bca&#39;</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">9999</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
-</h2>
-
-
+<a id="bootstrapx.bootstrap"></a>
     <div class="doc doc-contents first">
 
+        <p>Run bootstrap estimation.</p>
+<h3 id="bootstrapx.bootstrap--parameters">Parameters<a class="headerlink" href="#bootstrapx.bootstrap--parameters" title="Permanent link">&para;</a></h3>
+<p>data : array-like or pandas Series/DataFrame
+    Observed sample.
+statistic : callable
+    <code>(array) -&gt; float</code>.  If <code>vectorized=True</code>, must accept
+    <code>(array_2d, axis=1) -&gt; array_1d</code>.
+method : str
+    One of: bca, percentile, basic, studentized, poisson, bernoulli,
+    bayesian, subsampling, mbb, cbb, stationary, tapered, sieve,
+    wild, cluster, strata.
+ci_method : str or None
+    CI construction for generator-based methods: <code>"percentile"</code> or
+    <code>"basic"</code>.  Defaults to <code>"percentile"</code>.
+vectorized : bool
+    If <code>True</code>, <code>statistic</code> is called as <code>statistic(batch, axis=1)</code>.
+n_jobs : int
+    Parallelism for jackknife in BCa (effective only for n ≥ 2000).</p>
 
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/bootstrapx/api.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">bootstrap</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bca&quot;</span><span class="p">,</span>
+    <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9999</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">confidence_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="n">ci_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">vectorized</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BootstrapResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run bootstrap estimation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : array-like or pandas Series/DataFrame</span>
+<span class="sd">        Observed sample.</span>
+<span class="sd">    statistic : callable</span>
+<span class="sd">        ``(array) -&gt; float``.  If ``vectorized=True``, must accept</span>
+<span class="sd">        ``(array_2d, axis=1) -&gt; array_1d``.</span>
+<span class="sd">    method : str</span>
+<span class="sd">        One of: bca, percentile, basic, studentized, poisson, bernoulli,</span>
+<span class="sd">        bayesian, subsampling, mbb, cbb, stationary, tapered, sieve,</span>
+<span class="sd">        wild, cluster, strata.</span>
+<span class="sd">    ci_method : str or None</span>
+<span class="sd">        CI construction for generator-based methods: ``&quot;percentile&quot;`` or</span>
+<span class="sd">        ``&quot;basic&quot;``.  Defaults to ``&quot;percentile&quot;``.</span>
+<span class="sd">    vectorized : bool</span>
+<span class="sd">        If ``True``, ``statistic`` is called as ``statistic(batch, axis=1)``.</span>
+<span class="sd">    n_jobs : int</span>
+<span class="sd">        Parallelism for jackknife in BCa (effective only for n ≥ 2000).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_ALL_METHODS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Unknown method </span><span class="si">{</span><span class="n">method</span><span class="si">!r}</span><span class="s2">. Choose from </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_ALL_METHODS</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">validate_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">allow_2d</span><span class="o">=</span><span class="p">(</span><span class="n">method</span> <span class="ow">in</span> <span class="n">_HIER_METHODS</span><span class="p">))</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">random_state</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">random_state</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)</span>
+        <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">batch_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">auto_batch_size</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">)</span>
+
+    <span class="n">backend_kind</span> <span class="o">=</span> <span class="n">resolve_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+    <span class="n">theta_hat</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">statistic</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">_CI_CAPABLE</span><span class="p">:</span>
+        <span class="n">boot_stats</span> <span class="o">=</span> <span class="n">apply_statistic_batched</span><span class="p">(</span>
+            <span class="n">arr</span><span class="p">,</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">backend_kind</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span>
+            <span class="n">vectorized</span><span class="o">=</span><span class="n">vectorized</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;percentile&quot;</span><span class="p">:</span>
+            <span class="n">ci</span> <span class="o">=</span> <span class="n">percentile_interval</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="n">confidence_level</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;basic&quot;</span><span class="p">:</span>
+            <span class="n">ci</span> <span class="o">=</span> <span class="n">basic_interval</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="n">theta_hat</span><span class="p">,</span> <span class="n">confidence_level</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;bca&quot;</span><span class="p">:</span>
+            <span class="n">ci</span> <span class="o">=</span> <span class="n">bca_interval</span><span class="p">(</span>
+                <span class="n">boot_stats</span><span class="p">,</span> <span class="n">arr</span><span class="p">,</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">theta_hat</span><span class="p">,</span> <span class="n">confidence_level</span><span class="p">,</span>
+                <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;studentized&quot;</span><span class="p">:</span>
+            <span class="n">n_inner</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_inner&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+            <span class="n">boot_se</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_resamples</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">done</span> <span class="o">&lt;</span> <span class="n">n_resamples</span><span class="p">:</span>
+                <span class="n">bs</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">n_resamples</span> <span class="o">-</span> <span class="n">done</span><span class="p">)</span>
+                <span class="n">outer_idx</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+                <span class="c1"># Vectorise inner SE: draw (n_inner, n) indices once per outer sample</span>
+                <span class="n">inner_idx</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_inner</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bs</span><span class="p">):</span>
+                    <span class="n">sample</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">outer_idx</span><span class="p">[</span><span class="n">b</span><span class="p">]]</span>
+                    <span class="n">inner_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                        <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">statistic</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="n">inner_idx</span><span class="p">[</span><span class="n">k</span><span class="p">]]))</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_inner</span><span class="p">)]</span>
+                    <span class="p">)</span>
+                    <span class="n">boot_se</span><span class="p">[</span><span class="n">done</span> <span class="o">+</span> <span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">inner_vals</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">done</span> <span class="o">+=</span> <span class="n">bs</span>
+            <span class="n">ci</span> <span class="o">=</span> <span class="n">studentized_interval</span><span class="p">(</span>
+                <span class="n">arr</span><span class="p">,</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">theta_hat</span><span class="p">,</span> <span class="n">boot_stats</span><span class="p">,</span> <span class="n">boot_se</span><span class="p">,</span> <span class="n">confidence_level</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;bayesian&quot;</span><span class="p">:</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="n">bayesian_resample</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+            <span class="n">boot_stats_list</span> <span class="o">=</span> <span class="n">_collect_bayesian</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>  <span class="c1"># pass rng!</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;poisson&quot;</span><span class="p">:</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="n">poisson_resample</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+            <span class="n">boot_stats_list</span> <span class="o">=</span> <span class="n">_collect_weighted</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;bernoulli&quot;</span><span class="p">:</span>
+            <span class="n">prob</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prob&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="n">bernoulli_resample</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">prob</span><span class="o">=</span><span class="n">prob</span><span class="p">)</span>
+            <span class="n">boot_stats_list</span> <span class="o">=</span> <span class="n">_collect_weighted</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;cluster&quot;</span><span class="p">:</span>
+            <span class="n">cids</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cluster_ids&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;cluster method requires `cluster_ids` kwarg.&quot;</span><span class="p">)</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="n">cluster_resample</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cids</span><span class="p">),</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+            <span class="n">boot_stats_list</span> <span class="o">=</span> <span class="n">_collect_arrays</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">statistic</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;strata&quot;</span><span class="p">:</span>
+            <span class="n">sids</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;strata_ids&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;strata method requires `strata_ids` kwarg.&quot;</span><span class="p">)</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="n">strata_resample</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sids</span><span class="p">),</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+            <span class="n">boot_stats_list</span> <span class="o">=</span> <span class="n">_collect_arrays</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">statistic</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;subsampling&quot;</span><span class="p">:</span>
+            <span class="n">ss</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;subsample_size&quot;</span><span class="p">)</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="n">subsampling_resample</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">subsample_size</span><span class="o">=</span><span class="n">ss</span><span class="p">)</span>
+            <span class="n">boot_stats_list</span> <span class="o">=</span> <span class="n">_collect_arrays</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">statistic</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;mbb&quot;</span><span class="p">:</span>
+            <span class="n">bl</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block_length&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="n">mbb_resample</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">block_length</span><span class="o">=</span><span class="n">bl</span><span class="p">)</span>
+            <span class="n">boot_stats_list</span> <span class="o">=</span> <span class="n">_collect_arrays</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">statistic</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;cbb&quot;</span><span class="p">:</span>
+            <span class="n">bl</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block_length&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="n">cbb_resample</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">block_length</span><span class="o">=</span><span class="n">bl</span><span class="p">)</span>
+            <span class="n">boot_stats_list</span> <span class="o">=</span> <span class="n">_collect_arrays</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">statistic</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;stationary&quot;</span><span class="p">:</span>
+            <span class="n">mb</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mean_block&quot;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">))</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="n">stationary_resample</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">mean_block</span><span class="o">=</span><span class="n">mb</span><span class="p">)</span>
+            <span class="n">boot_stats_list</span> <span class="o">=</span> <span class="n">_collect_arrays</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">statistic</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;tapered&quot;</span><span class="p">:</span>
+            <span class="n">bl</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block_length&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+            <span class="n">tp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;taper&quot;</span><span class="p">,</span> <span class="s2">&quot;tukey&quot;</span><span class="p">))</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="n">tapered_block_resample</span><span class="p">(</span>
+                <span class="n">arr</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">block_length</span><span class="o">=</span><span class="n">bl</span><span class="p">,</span> <span class="n">taper</span><span class="o">=</span><span class="n">tp</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">boot_stats_list</span> <span class="o">=</span> <span class="n">_collect_arrays</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">statistic</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;sieve&quot;</span><span class="p">:</span>
+            <span class="n">ar</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ar_order&quot;</span><span class="p">)</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="n">sieve_resample</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">ar_order</span><span class="o">=</span><span class="n">ar</span><span class="p">)</span>
+            <span class="n">boot_stats_list</span> <span class="o">=</span> <span class="n">_collect_arrays</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">statistic</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;wild&quot;</span><span class="p">:</span>
+            <span class="n">fit</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fitted&quot;</span><span class="p">)</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;distribution&quot;</span><span class="p">,</span> <span class="s2">&quot;rademacher&quot;</span><span class="p">))</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="n">wild_resample</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">fitted</span><span class="o">=</span><span class="n">fit</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="n">dist</span><span class="p">)</span>
+            <span class="n">boot_stats_list</span> <span class="o">=</span> <span class="n">_collect_arrays</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">statistic</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Method </span><span class="si">{</span><span class="n">method</span><span class="si">!r}</span><span class="s2"> not implemented.&quot;</span><span class="p">)</span>
+
+        <span class="n">boot_stats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boot_stats_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="n">_ci_method</span> <span class="o">=</span> <span class="p">(</span><span class="n">ci_method</span> <span class="ow">or</span> <span class="s2">&quot;percentile&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">_ci_method</span> <span class="o">==</span> <span class="s2">&quot;basic&quot;</span><span class="p">:</span>
+            <span class="n">ci</span> <span class="o">=</span> <span class="n">basic_interval</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="n">theta_hat</span><span class="p">,</span> <span class="n">confidence_level</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ci</span> <span class="o">=</span> <span class="n">percentile_interval</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="n">confidence_level</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">BootstrapResult</span><span class="p">(</span>
+        <span class="n">confidence_interval</span><span class="o">=</span><span class="n">ci</span><span class="p">,</span>
+        <span class="n">bootstrap_distribution</span><span class="o">=</span><span class="n">boot_stats</span><span class="p">,</span>
+        <span class="n">theta_hat</span><span class="o">=</span><span class="n">theta_hat</span><span class="p">,</span>
+        <span class="n">standard_error</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+        <span class="n">n_resamples</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">),</span>
+        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
     </div>
 
 </div>
@@ -967,20 +1115,12 @@
 
 
 
-<h2 id="bootstrapx.api.BootstrapResult" class="doc doc-heading">
-            <code>bootstrapx.api.BootstrapResult</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h2>
-
-
+<a id="bootstrapx.BootstrapResult"></a>
     <div class="doc doc-contents first">
 
 
+
+        <p>Container for bootstrap estimation results.</p>
 
 
 
@@ -990,42 +1130,46 @@
 
 
               <details class="mkdocstrings-source">
-                <summary>Source code in <code>bootstrapx/api.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-34">34</a></span>
-<span class="normal"><a href="#__codelineno-0-35">35</a></span>
-<span class="normal"><a href="#__codelineno-0-36">36</a></span>
-<span class="normal"><a href="#__codelineno-0-37">37</a></span>
-<span class="normal"><a href="#__codelineno-0-38">38</a></span>
-<span class="normal"><a href="#__codelineno-0-39">39</a></span>
-<span class="normal"><a href="#__codelineno-0-40">40</a></span>
-<span class="normal"><a href="#__codelineno-0-41">41</a></span>
-<span class="normal"><a href="#__codelineno-0-42">42</a></span>
-<span class="normal"><a href="#__codelineno-0-43">43</a></span>
-<span class="normal"><a href="#__codelineno-0-44">44</a></span>
-<span class="normal"><a href="#__codelineno-0-45">45</a></span>
-<span class="normal"><a href="#__codelineno-0-46">46</a></span>
-<span class="normal"><a href="#__codelineno-0-47">47</a></span>
-<span class="normal"><a href="#__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="nd">@dataclass</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="k">class</span><span class="w"> </span><span class="nc">BootstrapResult</span><span class="p">:</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="n">confidence_interval</span><span class="p">:</span> <span class="n">ConfidenceInterval</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="n">bootstrap_distribution</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="n">theta_hat</span><span class="p">:</span> <span class="nb">float</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="n">standard_error</span><span class="p">:</span> <span class="nb">float</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a>        <span class="n">ci</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence_interval</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a>        <span class="k">return</span> <span class="p">(</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a>            <span class="sa">f</span><span class="s2">&quot;BootstrapResult(method=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="si">!r}</span><span class="s2">, &quot;</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a>            <span class="sa">f</span><span class="s2">&quot;theta_hat=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_hat</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">, &quot;</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>            <span class="sa">f</span><span class="s2">&quot;se=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">standard_error</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">, &quot;</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a>            <span class="sa">f</span><span class="s2">&quot;CI=[</span><span class="si">{</span><span class="n">ci</span><span class="o">.</span><span class="n">low</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ci</span><span class="o">.</span><span class="n">high</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">])&quot;</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="p">)</span>
+                <summary>Source code in <code>src/bootstrapx/api.py</code></summary>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BootstrapResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for bootstrap estimation results.&quot;&quot;&quot;</span>
+
+    <span class="n">confidence_interval</span><span class="p">:</span> <span class="n">ConfidenceInterval</span>
+    <span class="n">bootstrap_distribution</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">theta_hat</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">standard_error</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">ci</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence_interval</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;BootstrapResult(method=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="si">!r}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;theta_hat=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_hat</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;se=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">standard_error</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;CI=[</span><span class="si">{</span><span class="n">ci</span><span class="o">.</span><span class="n">low</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ci</span><span class="o">.</span><span class="n">high</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">])&quot;</span>
+        <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1048,378 +1192,14 @@
 
     </div>
 
-</div><h2 id="confidence-intervals">Confidence Intervals</h2>
-
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bootstrapx.stats.confidence.percentile_interval" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">bootstrapx</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">confidence</span><span class="o">.</span><span class="n">percentile_interval</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span></code>
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>bootstrapx/stats/confidence.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-16">16</a></span>
-<span class="normal"><a href="#__codelineno-0-17">17</a></span>
-<span class="normal"><a href="#__codelineno-0-18">18</a></span>
-<span class="normal"><a href="#__codelineno-0-19">19</a></span>
-<span class="normal"><a href="#__codelineno-0-20">20</a></span>
-<span class="normal"><a href="#__codelineno-0-21">21</a></span>
-<span class="normal"><a href="#__codelineno-0-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="k">def</span><span class="w"> </span><span class="nf">percentile_interval</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">confidence_level</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a>        <span class="n">low</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)),</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20"></a>        <span class="n">high</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))),</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a>        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;percentile&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bootstrapx.stats.confidence.basic_interval" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">bootstrapx</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">confidence</span><span class="o">.</span><span class="n">basic_interval</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="n">theta_hat</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span></code>
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>bootstrapx/stats/confidence.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-25">25</a></span>
-<span class="normal"><a href="#__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#__codelineno-0-27">27</a></span>
-<span class="normal"><a href="#__codelineno-0-28">28</a></span>
-<span class="normal"><a href="#__codelineno-0-29">29</a></span>
-<span class="normal"><a href="#__codelineno-0-30">30</a></span>
-<span class="normal"><a href="#__codelineno-0-31">31</a></span>
-<span class="normal"><a href="#__codelineno-0-32">32</a></span>
-<span class="normal"><a href="#__codelineno-0-33">33</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="k">def</span><span class="w"> </span><span class="nf">basic_interval</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="n">theta_hat</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a>    <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">confidence_level</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="n">q_low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="n">q_high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a>        <span class="n">low</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">theta_hat</span> <span class="o">-</span> <span class="n">q_high</span><span class="p">),</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a>        <span class="n">high</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">theta_hat</span> <span class="o">-</span> <span class="n">q_low</span><span class="p">),</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a>        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;basic&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bootstrapx.stats.confidence.bca_interval" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">bootstrapx</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">confidence</span><span class="o">.</span><span class="n">bca_interval</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">theta_hat</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span></code>
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>bootstrapx/stats/confidence.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-44">44</a></span>
-<span class="normal"><a href="#__codelineno-0-45">45</a></span>
-<span class="normal"><a href="#__codelineno-0-46">46</a></span>
-<span class="normal"><a href="#__codelineno-0-47">47</a></span>
-<span class="normal"><a href="#__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span>
-<span class="normal"><a href="#__codelineno-0-61">61</a></span>
-<span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span>
-<span class="normal"><a href="#__codelineno-0-64">64</a></span>
-<span class="normal"><a href="#__codelineno-0-65">65</a></span>
-<span class="normal"><a href="#__codelineno-0-66">66</a></span>
-<span class="normal"><a href="#__codelineno-0-67">67</a></span>
-<span class="normal"><a href="#__codelineno-0-68">68</a></span>
-<span class="normal"><a href="#__codelineno-0-69">69</a></span>
-<span class="normal"><a href="#__codelineno-0-70">70</a></span>
-<span class="normal"><a href="#__codelineno-0-71">71</a></span>
-<span class="normal"><a href="#__codelineno-0-72">72</a></span>
-<span class="normal"><a href="#__codelineno-0-73">73</a></span>
-<span class="normal"><a href="#__codelineno-0-74">74</a></span>
-<span class="normal"><a href="#__codelineno-0-75">75</a></span>
-<span class="normal"><a href="#__codelineno-0-76">76</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="k">def</span><span class="w"> </span><span class="nf">bca_interval</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">theta_hat</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">confidence_level</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="c1"># Bias correction z0</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="n">prop_less</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">boot_stats</span> <span class="o">&lt;</span> <span class="n">theta_hat</span><span class="p">)</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="c1"># Clip to avoid infinity</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="n">prop_less</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">prop_less</span><span class="p">,</span> <span class="mf">1e-10</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">1e-10</span><span class="p">)</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>    <span class="n">z0</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sp_stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">prop_less</span><span class="p">))</span>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="c1"># Acceleration a</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="n">jack_stats</span> <span class="o">=</span> <span class="n">_jackknife</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">statistic</span><span class="p">)</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="n">mean_jack</span> <span class="o">=</span> <span class="n">jack_stats</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="n">diffs</span> <span class="o">=</span> <span class="n">mean_jack</span> <span class="o">-</span> <span class="n">jack_stats</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="n">num</span> <span class="o">=</span> <span class="p">(</span><span class="n">diffs</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="n">den</span> <span class="o">=</span> <span class="p">((</span><span class="n">diffs</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">**</span> <span class="mf">1.5</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="n">a_hat</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">den</span><span class="p">)</span> <span class="k">if</span> <span class="n">den</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="c1"># Adjusted percentiles</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">adjust_percentile</span><span class="p">(</span><span class="n">z_alpha</span><span class="p">):</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="n">num_adj</span> <span class="o">=</span> <span class="n">z0</span> <span class="o">+</span> <span class="n">z_alpha</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="n">denom_adj</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">a_hat</span> <span class="o">*</span> <span class="n">num_adj</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">sp_stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z0</span> <span class="o">+</span> <span class="n">num_adj</span> <span class="o">/</span> <span class="n">denom_adj</span><span class="p">))</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="n">p_low</span> <span class="o">=</span> <span class="n">adjust_percentile</span><span class="p">(</span><span class="n">sp_stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a>    <span class="n">p_high</span> <span class="o">=</span> <span class="n">adjust_percentile</span><span class="p">(</span><span class="n">sp_stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a>    <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="n">low</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">p_low</span><span class="p">)),</span>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="n">high</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">p_high</span><span class="p">)),</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75"></a>        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;bca&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bootstrapx.stats.confidence.studentized_interval" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">bootstrapx</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">confidence</span><span class="o">.</span><span class="n">studentized_interval</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">theta_hat</span><span class="p">,</span> <span class="n">boot_stats</span><span class="p">,</span> <span class="n">boot_se</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span></code>
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>bootstrapx/stats/confidence.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-79">79</a></span>
-<span class="normal"><a href="#__codelineno-0-80">80</a></span>
-<span class="normal"><a href="#__codelineno-0-81">81</a></span>
-<span class="normal"><a href="#__codelineno-0-82">82</a></span>
-<span class="normal"><a href="#__codelineno-0-83">83</a></span>
-<span class="normal"><a href="#__codelineno-0-84">84</a></span>
-<span class="normal"><a href="#__codelineno-0-85">85</a></span>
-<span class="normal"><a href="#__codelineno-0-86">86</a></span>
-<span class="normal"><a href="#__codelineno-0-87">87</a></span>
-<span class="normal"><a href="#__codelineno-0-88">88</a></span>
-<span class="normal"><a href="#__codelineno-0-89">89</a></span>
-<span class="normal"><a href="#__codelineno-0-90">90</a></span>
-<span class="normal"><a href="#__codelineno-0-91">91</a></span>
-<span class="normal"><a href="#__codelineno-0-92">92</a></span>
-<span class="normal"><a href="#__codelineno-0-93">93</a></span>
-<span class="normal"><a href="#__codelineno-0-94">94</a></span>
-<span class="normal"><a href="#__codelineno-0-95">95</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="k">def</span><span class="w"> </span><span class="nf">studentized_interval</span><span class="p">(</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a>    <span class="n">data</span><span class="p">,</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">theta_hat</span><span class="p">,</span> <span class="n">boot_stats</span><span class="p">,</span> <span class="n">boot_se</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="p">):</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a>    <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">confidence_level</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a>    <span class="n">mask</span> <span class="o">=</span> <span class="n">boot_se</span> <span class="o">&gt;</span> <span class="mi">0</span>
-<a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="n">t_vals</span> <span class="o">=</span> <span class="p">(</span><span class="n">boot_stats</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">theta_hat</span><span class="p">)</span> <span class="o">/</span> <span class="n">boot_se</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a>
-<a id="__codelineno-0-86" name="__codelineno-0-86"></a>    <span class="n">t_low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">t_vals</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
-<a id="__codelineno-0-87" name="__codelineno-0-87"></a>    <span class="n">t_high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">t_vals</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-0-88" name="__codelineno-0-88"></a>
-<a id="__codelineno-0-89" name="__codelineno-0-89"></a>    <span class="n">se_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">boot_stats</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<a id="__codelineno-0-90" name="__codelineno-0-90"></a>
-<a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
-<a id="__codelineno-0-92" name="__codelineno-0-92"></a>        <span class="n">low</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">theta_hat</span> <span class="o">-</span> <span class="n">t_low</span> <span class="o">*</span> <span class="n">se_hat</span><span class="p">),</span>
-<a id="__codelineno-0-93" name="__codelineno-0-93"></a>        <span class="n">high</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">theta_hat</span> <span class="o">-</span> <span class="n">t_high</span> <span class="o">*</span> <span class="n">se_hat</span><span class="p">),</span>
-<a id="__codelineno-0-94" name="__codelineno-0-94"></a>        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;studentized&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a>    <span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div><h2 id="utilities">Utilities</h2>
-
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bootstrapx.utils.validate_data" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">bootstrapx</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">validate_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">allow_2d</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>bootstrapx/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-0-10">10</a></span>
-<span class="normal"><a href="#__codelineno-0-11">11</a></span>
-<span class="normal"><a href="#__codelineno-0-12">12</a></span>
-<span class="normal"><a href="#__codelineno-0-13">13</a></span>
-<span class="normal"><a href="#__codelineno-0-14">14</a></span>
-<span class="normal"><a href="#__codelineno-0-15">15</a></span>
-<span class="normal"><a href="#__codelineno-0-16">16</a></span>
-<span class="normal"><a href="#__codelineno-0-17">17</a></span>
-<span class="normal"><a href="#__codelineno-0-18">18</a></span>
-<span class="normal"><a href="#__codelineno-0-19">19</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">allow_2d</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7"></a>    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8"></a>    <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Scalar data is not supported.&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10"></a>    <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">allow_2d</span><span class="p">):</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12"></a>            <span class="sa">f</span><span class="s2">&quot;Expected 1-D array, got shape </span><span class="si">{</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">. &quot;</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13"></a>            <span class="s2">&quot;Pass allow_2d=True for matrix data.&quot;</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14"></a>        <span class="p">)</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">arr</span><span class="p">)):</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data contains NaN values. Remove or impute them first.&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data must have at least 2 observations.&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="k">return</span> <span class="n">arr</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bootstrapx.utils.auto_batch_size" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">bootstrapx</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">auto_batch_size</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">)</span></code>
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>bootstrapx/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-22">22</a></span>
-<span class="normal"><a href="#__codelineno-0-23">23</a></span>
-<span class="normal"><a href="#__codelineno-0-24">24</a></span>
-<span class="normal"><a href="#__codelineno-0-25">25</a></span>
-<span class="normal"><a href="#__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#__codelineno-0-27">27</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="k">def</span><span class="w"> </span><span class="nf">auto_batch_size</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="c1"># Heuristic: aim for chunks that fit in L2 cache but huge enough for vectorization</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="c1"># 32k elements per batch is usually a sweet spot for numpy</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25"></a>    <span class="n">target_elements</span> <span class="o">=</span> <span class="mi">32_768</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a>    <span class="n">bs</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">target_elements</span> <span class="o">//</span> <span class="n">n</span><span class="p">)</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">n_resamples</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div><h2 id="backend">Backend</h2>
-
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bootstrapx.engine.backend.resolve_backend" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">bootstrapx</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">resolve_backend</span><span class="p">(</span><span class="n">requested</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span></code>
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>bootstrapx/engine/backend.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-37">37</a></span>
-<span class="normal"><a href="#__codelineno-0-38">38</a></span>
-<span class="normal"><a href="#__codelineno-0-39">39</a></span>
-<span class="normal"><a href="#__codelineno-0-40">40</a></span>
-<span class="normal"><a href="#__codelineno-0-41">41</a></span>
-<span class="normal"><a href="#__codelineno-0-42">42</a></span>
-<span class="normal"><a href="#__codelineno-0-43">43</a></span>
-<span class="normal"><a href="#__codelineno-0-44">44</a></span>
-<span class="normal"><a href="#__codelineno-0-45">45</a></span>
-<span class="normal"><a href="#__codelineno-0-46">46</a></span>
-<span class="normal"><a href="#__codelineno-0-47">47</a></span>
-<span class="normal"><a href="#__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="k">def</span><span class="w"> </span><span class="nf">resolve_backend</span><span class="p">(</span><span class="n">requested</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BackendKind</span><span class="p">:</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="n">requested</span> <span class="o">=</span> <span class="n">requested</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="k">if</span> <span class="n">requested</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a>        <span class="k">if</span> <span class="n">_cuda_available</span><span class="p">():</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a>            <span class="k">return</span> <span class="n">BackendKind</span><span class="o">.</span><span class="n">NUMBA_CUDA</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a>        <span class="k">elif</span> <span class="n">_numba_available</span><span class="p">():</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a>            <span class="k">return</span> <span class="n">BackendKind</span><span class="o">.</span><span class="n">NUMBA_CPU</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a>        <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a>            <span class="k">return</span> <span class="n">BackendKind</span><span class="o">.</span><span class="n">VANILLA</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a>        <span class="s2">&quot;numba_cpu&quot;</span><span class="p">:</span> <span class="n">BackendKind</span><span class="o">.</span><span class="n">NUMBA_CPU</span><span class="p">,</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="s2">&quot;numba_cuda&quot;</span><span class="p">:</span> <span class="n">BackendKind</span><span class="o">.</span><span class="n">NUMBA_CUDA</span><span class="p">,</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a>        <span class="s2">&quot;vanilla&quot;</span><span class="p">:</span> <span class="n">BackendKind</span><span class="o">.</span><span class="n">VANILLA</span><span class="p">,</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>    <span class="p">}</span>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="k">if</span> <span class="n">requested</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">:</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>        <span class="n">valid</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown backend </span><span class="si">{</span><span class="n">requested</span><span class="si">!r}</span><span class="s2">. Choose from </span><span class="si">{</span><span class="n">valid</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="n">kind</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">requested</span><span class="p">]</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="k">if</span> <span class="n">kind</span> <span class="ow">is</span> <span class="n">BackendKind</span><span class="o">.</span><span class="n">NUMBA_CUDA</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_cuda_available</span><span class="p">():</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;CUDA backend requested but no GPU found.&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="k">return</span> <span class="n">kind</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
 </div>
 
 <div class="doc doc-object doc-class">
 
 
 
-<h2 id="bootstrapx.engine.backend.BackendKind" class="doc doc-heading">
-            <code>bootstrapx.engine.backend.BackendKind</code>
-
-
-</h2>
-
-
+<a id="bootstrapx.ConfidenceInterval"></a>
     <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.Enum">Enum</span></code></p>
 
 
 
@@ -1431,14 +1211,30 @@
 
 
               <details class="mkdocstrings-source">
-                <summary>Source code in <code>bootstrapx/engine/backend.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-13">13</a></span>
-<span class="normal"><a href="#__codelineno-0-14">14</a></span>
-<span class="normal"><a href="#__codelineno-0-15">15</a></span>
-<span class="normal"><a href="#__codelineno-0-16">16</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="k">class</span><span class="w"> </span><span class="nc">BackendKind</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="n">NUMBA_CPU</span> <span class="o">=</span> <span class="s2">&quot;numba_cpu&quot;</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="n">NUMBA_CUDA</span> <span class="o">=</span> <span class="s2">&quot;numba_cuda&quot;</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="n">VANILLA</span> <span class="o">=</span> <span class="s2">&quot;vanilla&quot;</span>
+                <summary>Source code in <code>src/bootstrapx/stats/confidence.py</code></summary>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfidenceInterval</span><span class="p">:</span>
+    <span class="n">low</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">high</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1454,6 +1250,833 @@
 
 
 
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="integrations">Integrations<a class="headerlink" href="#integrations" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="bootstrapx.compat.sklearn_cv.BootstrapCV"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="sklearn.model_selection._split.BaseCrossValidator">BaseCrossValidator</span></code></p>
+
+
+
+        <p>Bootstrap cross-validator compatible with scikit-learn's CV API.</p>
+<p>Generates <code>n_splits</code> bootstrap train/test splits. Each training set
+is a bootstrap resample of size <code>n</code> (with replacement); the test set
+contains the out-of-bag (OOB) observations not selected for training.</p>
+<h3 id="bootstrapx.compat.sklearn_cv.BootstrapCV--parameters">Parameters<a class="headerlink" href="#bootstrapx.compat.sklearn_cv.BootstrapCV--parameters" title="Permanent link">&para;</a></h3>
+<p>n_splits : int, default=200
+    Number of bootstrap iterations.
+random_state : int or np.random.Generator or None
+    Seed for reproducibility.</p>
+<h3 id="bootstrapx.compat.sklearn_cv.BootstrapCV--notes">Notes<a class="headerlink" href="#bootstrapx.compat.sklearn_cv.BootstrapCV--notes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Usable with <code>cross_val_score</code>, <code>cross_validate</code>, <code>GridSearchCV</code>.</li>
+<li>OOB test set size ≈ 0.368 × n per split (Poisson approximation).</li>
+<li>For the 0.632 bootstrap estimator of generalization error, average
+  <code>0.368 * oob_score + 0.632 * train_score</code> across splits.</li>
+</ul>
+
+
+
+
+
+
+
+
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>src/bootstrapx/compat/sklearn_cv.py</code></summary>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BootstrapCV</span><span class="p">(</span><span class="n">BaseCrossValidator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bootstrap cross-validator compatible with scikit-learn&#39;s CV API.</span>
+
+<span class="sd">    Generates ``n_splits`` bootstrap train/test splits. Each training set</span>
+<span class="sd">    is a bootstrap resample of size ``n`` (with replacement); the test set</span>
+<span class="sd">    contains the out-of-bag (OOB) observations not selected for training.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_splits : int, default=200</span>
+<span class="sd">        Number of bootstrap iterations.</span>
+<span class="sd">    random_state : int or np.random.Generator or None</span>
+<span class="sd">        Seed for reproducibility.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Usable with ``cross_val_score``, ``cross_validate``, ``GridSearchCV``.</span>
+<span class="sd">    - OOB test set size ≈ 0.368 × n per split (Poisson approximation).</span>
+<span class="sd">    - For the 0.632 bootstrap estimator of generalization error, average</span>
+<span class="sd">      ``0.368 * oob_score + 0.632 * train_score`` across splits.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_splits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_splits</span> <span class="o">=</span> <span class="n">n_splits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span> <span class="o">=</span> <span class="n">indexable</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)</span>
+            <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">all_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_splits</span><span class="p">):</span>
+            <span class="n">train</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">all_idx</span><span class="p">,</span> <span class="n">train</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">yield</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_n_splits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_splits</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_iter_test_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Required by BaseCrossValidator but not used directly</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="n">all_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_splits</span><span class="p">):</span>
+            <span class="n">train</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">all_idx</span><span class="p">,</span> <span class="n">train</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="bootstrapx.compat.pandas_accessor._BootstrapSeriesAccessor"></a>
+    <div class="doc doc-contents first">
+
+
+
+        <p>Accessor registered as <code>pd.Series.bootstrap</code>.</p>
+
+
+
+
+
+
+
+
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>src/bootstrapx/compat/pandas_accessor.py</code></summary>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">_BootstrapSeriesAccessor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Accessor registered as ``pd.Series.bootstrap``.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span> <span class="o">=</span> <span class="n">obj</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ci</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bca&quot;</span><span class="p">,</span>
+        <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9999</span><span class="p">,</span>
+        <span class="n">confidence_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BootstrapResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run bootstrap and return a :class:`~bootstrapx.BootstrapResult`.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">bootstrap</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">,</span>
+            <span class="n">statistic</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">n_resamples</span><span class="o">=</span><span class="n">n_resamples</span><span class="p">,</span>
+            <span class="n">confidence_level</span><span class="o">=</span><span class="n">confidence_level</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">bca</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9999</span><span class="p">,</span>
+        <span class="n">confidence_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BootstrapResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Shortcut for ``method=&#39;bca&#39;``.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="p">(</span>
+            <span class="n">statistic</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;bca&quot;</span><span class="p">,</span>
+            <span class="n">n_resamples</span><span class="o">=</span><span class="n">n_resamples</span><span class="p">,</span>
+            <span class="n">confidence_level</span><span class="o">=</span><span class="n">confidence_level</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">percentile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9999</span><span class="p">,</span>
+        <span class="n">confidence_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BootstrapResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Shortcut for ``method=&#39;percentile&#39;``.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="p">(</span>
+            <span class="n">statistic</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;percentile&quot;</span><span class="p">,</span>
+            <span class="n">n_resamples</span><span class="o">=</span><span class="n">n_resamples</span><span class="p">,</span>
+            <span class="n">confidence_level</span><span class="o">=</span><span class="n">confidence_level</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bootstrapx.compat.pandas_accessor._BootstrapSeriesAccessor.bca" class="doc doc-heading">
+            <code class=" language-python"><span class="n">bca</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">9999</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+<a href="#bootstrapx.compat.pandas_accessor._BootstrapSeriesAccessor.bca" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Shortcut for <code>method='bca'</code>.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/bootstrapx/compat/pandas_accessor.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">bca</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9999</span><span class="p">,</span>
+    <span class="n">confidence_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BootstrapResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Shortcut for ``method=&#39;bca&#39;``.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="p">(</span>
+        <span class="n">statistic</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;bca&quot;</span><span class="p">,</span>
+        <span class="n">n_resamples</span><span class="o">=</span><span class="n">n_resamples</span><span class="p">,</span>
+        <span class="n">confidence_level</span><span class="o">=</span><span class="n">confidence_level</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bootstrapx.compat.pandas_accessor._BootstrapSeriesAccessor.ci" class="doc doc-heading">
+            <code class=" language-python"><span class="n">ci</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bca&#39;</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">9999</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+<a href="#bootstrapx.compat.pandas_accessor._BootstrapSeriesAccessor.ci" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run bootstrap and return a :class:<code>~bootstrapx.BootstrapResult</code>.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/bootstrapx/compat/pandas_accessor.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ci</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bca&quot;</span><span class="p">,</span>
+    <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9999</span><span class="p">,</span>
+    <span class="n">confidence_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BootstrapResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run bootstrap and return a :class:`~bootstrapx.BootstrapResult`.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">bootstrap</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">,</span>
+        <span class="n">statistic</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">n_resamples</span><span class="o">=</span><span class="n">n_resamples</span><span class="p">,</span>
+        <span class="n">confidence_level</span><span class="o">=</span><span class="n">confidence_level</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bootstrapx.compat.pandas_accessor._BootstrapSeriesAccessor.percentile" class="doc doc-heading">
+            <code class=" language-python"><span class="n">percentile</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">9999</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+<a href="#bootstrapx.compat.pandas_accessor._BootstrapSeriesAccessor.percentile" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Shortcut for <code>method='percentile'</code>.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/bootstrapx/compat/pandas_accessor.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">percentile</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9999</span><span class="p">,</span>
+    <span class="n">confidence_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BootstrapResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Shortcut for ``method=&#39;percentile&#39;``.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="p">(</span>
+        <span class="n">statistic</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;percentile&quot;</span><span class="p">,</span>
+        <span class="n">n_resamples</span><span class="o">=</span><span class="n">n_resamples</span><span class="p">,</span>
+        <span class="n">confidence_level</span><span class="o">=</span><span class="n">confidence_level</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="bootstrapx.compat.pandas_accessor._BootstrapDataFrameAccessor"></a>
+    <div class="doc doc-contents first">
+
+
+
+        <p>Accessor registered as <code>pd.DataFrame.bootstrap</code>.</p>
+<p>Applies bootstrap column-wise and returns a summary DataFrame.</p>
+
+
+
+
+
+
+
+
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>src/bootstrapx/compat/pandas_accessor.py</code></summary>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">_BootstrapDataFrameAccessor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Accessor registered as ``pd.DataFrame.bootstrap``.</span>
+
+<span class="sd">    Applies bootstrap column-wise and returns a summary DataFrame.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span> <span class="o">=</span> <span class="n">obj</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">summary</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bca&quot;</span><span class="p">,</span>
+        <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9999</span><span class="p">,</span>
+        <span class="n">confidence_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a DataFrame with bootstrap CI summary for each column.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            Index: column names of the original DataFrame.</span>
+<span class="sd">            Columns: ``theta_hat``, ``ci_low``, ``ci_high``, ``se``, ``method``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">[</span><span class="n">col</span><span class="p">],</span>
+                <span class="n">statistic</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+                <span class="n">n_resamples</span><span class="o">=</span><span class="n">n_resamples</span><span class="p">,</span>
+                <span class="n">confidence_level</span><span class="o">=</span><span class="n">confidence_level</span><span class="p">,</span>
+                <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">col</span><span class="p">,</span>
+                <span class="s2">&quot;theta_hat&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">theta_hat</span><span class="p">,</span>
+                <span class="s2">&quot;ci_low&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
+                <span class="s2">&quot;ci_high&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">,</span>
+                <span class="s2">&quot;se&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">standard_error</span><span class="p">,</span>
+                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+            <span class="p">})</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;column&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ci</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bca&quot;</span><span class="p">,</span>
+        <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9999</span><span class="p">,</span>
+        <span class="n">confidence_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias for :meth:`summary`.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+            <span class="n">statistic</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">n_resamples</span><span class="o">=</span><span class="n">n_resamples</span><span class="p">,</span>
+            <span class="n">confidence_level</span><span class="o">=</span><span class="n">confidence_level</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bootstrapx.compat.pandas_accessor._BootstrapDataFrameAccessor.ci" class="doc doc-heading">
+            <code class=" language-python"><span class="n">ci</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bca&#39;</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">9999</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+<a href="#bootstrapx.compat.pandas_accessor._BootstrapDataFrameAccessor.ci" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Alias for :meth:<code>summary</code>.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/bootstrapx/compat/pandas_accessor.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ci</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bca&quot;</span><span class="p">,</span>
+    <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9999</span><span class="p">,</span>
+    <span class="n">confidence_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Alias for :meth:`summary`.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+        <span class="n">statistic</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">n_resamples</span><span class="o">=</span><span class="n">n_resamples</span><span class="p">,</span>
+        <span class="n">confidence_level</span><span class="o">=</span><span class="n">confidence_level</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bootstrapx.compat.pandas_accessor._BootstrapDataFrameAccessor.summary" class="doc doc-heading">
+            <code class=" language-python"><span class="n">summary</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bca&#39;</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">9999</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+<a href="#bootstrapx.compat.pandas_accessor._BootstrapDataFrameAccessor.summary" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return a DataFrame with bootstrap CI summary for each column.</p>
+<h4 id="bootstrapx.compat.pandas_accessor._BootstrapDataFrameAccessor.summary--returns">Returns<a class="headerlink" href="#bootstrapx.compat.pandas_accessor._BootstrapDataFrameAccessor.summary--returns" title="Permanent link">&para;</a></h4>
+<p>pd.DataFrame
+    Index: column names of the original DataFrame.
+    Columns: <code>theta_hat</code>, <code>ci_low</code>, <code>ci_high</code>, <code>se</code>, <code>method</code>.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/bootstrapx/compat/pandas_accessor.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">summary</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bca&quot;</span><span class="p">,</span>
+    <span class="n">n_resamples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9999</span><span class="p">,</span>
+    <span class="n">confidence_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a DataFrame with bootstrap CI summary for each column.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        Index: column names of the original DataFrame.</span>
+<span class="sd">        Columns: ``theta_hat``, ``ci_low``, ``ci_high``, ``se``, ``method``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">[</span><span class="n">col</span><span class="p">],</span>
+            <span class="n">statistic</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">n_resamples</span><span class="o">=</span><span class="n">n_resamples</span><span class="p">,</span>
+            <span class="n">confidence_level</span><span class="o">=</span><span class="n">confidence_level</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">col</span><span class="p">,</span>
+            <span class="s2">&quot;theta_hat&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">theta_hat</span><span class="p">,</span>
+            <span class="s2">&quot;ci_low&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
+            <span class="s2">&quot;ci_high&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">,</span>
+            <span class="s2">&quot;se&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">standard_error</span><span class="p">,</span>
+            <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+        <span class="p">})</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;column&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 
@@ -1511,12 +2134,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "content.code.copy", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
   </body>
