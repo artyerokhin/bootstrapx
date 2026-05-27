@@ -8,7 +8,7 @@
 [![PyPI](https://img.shields.io/pypi/v/bootstrapx-lib)](https://pypi.org/project/bootstrapx-lib/)
 [![Downloads](https://img.shields.io/pypi/dm/bootstrapx-lib)](https://pypi.org/project/bootstrapx-lib/)
 [![Python](https://img.shields.io/pypi/pyversions/bootstrapx-lib)](https://pypi.org/project/bootstrapx-lib/)
-[![Coverage](https://codecov.io/gh/artyerokhin/bootstrapx/branch/main/graph/badge.svg)](https://codecov.io/gh/artyerokhin/bootstrapx)
+[![Coverage Status](https://coveralls.io/repos/github/artyerokhin/bootstrapx/badge.svg?branch=main)](https://coveralls.io/github/artyerokhin/bootstrapx?branch=main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-mkdocs-blue)](https://artyerokhin.github.io/bootstrapx)
 

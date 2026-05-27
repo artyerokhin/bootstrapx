@@ -32,12 +32,12 @@ markdown_extensions:
       alternate_style: true
 
 nav:
-  - Home: docs/index.md
-  - Getting Started: docs/getting-started.md
-  - Methods: docs/methods.md
-  - Integrations: docs/integrations.md
-  - A/B Testing: docs/ab-testing.md
-  - Time Series: docs/time-series.md
-  - API Reference: docs/reference.md
-  - Benchmarks: docs/benchmarks.md
-  - Changelog: docs/changelog.md
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Methods: methods.md
+  - Integrations: integrations.md
+  - A/B Testing: ab-testing.md
+  - Time Series: time-series.md
+  - API Reference: reference.md
+  - Benchmarks: benchmarks.md
+  - Changelog: changelog.md
