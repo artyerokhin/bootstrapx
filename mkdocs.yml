@@ -1,60 +1,43 @@
 site_name: bootstrapx
+site_description: Production-grade bootstrap uncertainty estimation for Python
 site_url: https://artyerokhin.github.io/bootstrapx
-site_description: Production-grade uncertainty estimation for Python.
 repo_url: https://github.com/artyerokhin/bootstrapx
 repo_name: artyerokhin/bootstrapx
 
 theme:
   name: material
-  palette:
-    - scheme: default
-      primary: indigo
-      accent: amber
-      toggle:
-        icon: material/brightness-7
-        name: Dark mode
-    - scheme: slate
-      primary: indigo
-      accent: amber
-      toggle:
-        icon: material/brightness-4
-        name: Light mode
   features:
-    - navigation.tabs
     - navigation.sections
+    - navigation.expand
     - content.code.copy
-    - content.code.annotate
-
-nav:
-  - Home: index.md
-  - Getting Started: getting-started.md
-  - API Reference: reference.md
-  - Methods Guide: methods.md
-  - Benchmarks: benchmarks.md
-  - Changelog: changelog.md
-
-markdown_extensions:
-  - admonition
-  - pymdownx.details
-  - pymdownx.superfences
-  - pymdownx.arithmatex:
-      generic: true
-  - pymdownx.highlight:
-      anchor_linenums: true
-  - pymdownx.tabbed:
-      alternate_style: true
-  - tables
-  - attr_list
-  - md_in_html
+    - search.suggest
+    - search.highlight
 
 plugins:
   - search
   - mkdocstrings:
       handlers:
         python:
-          options:
-            show_source: true
-            show_root_heading: true
+          paths: [src]
 
-extra_javascript:
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Home: docs/index.md
+  - Getting Started: docs/getting-started.md
+  - Methods: docs/methods.md
+  - Integrations: docs/integrations.md
+  - A/B Testing: docs/ab-testing.md
+  - Time Series: docs/time-series.md
+  - API Reference: docs/reference.md
+  - Benchmarks: docs/benchmarks.md
+  - Changelog: docs/changelog.md

@@ -1,45 +1,59 @@
 # Changelog
 
-All notable changes to **bootstrapx** will be documented in this file.
+All notable changes to this project will be documented in this file.
+Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [0.3.0] — 2026-05-24
 
-## [Unreleased]
+### Fixed (correctness)
+- **Bayesian bootstrap**: `_collect_bayesian` was creating a new unseeded
+  `np.random.default_rng()` on every sample, making results non-reproducible
+  even when `random_state` was set.  Now uses the caller's RNG throughout.
+- **Studentized interval**: `t_q_lo` and `t_q_hi` quantile assignments were
+  swapped, reflecting the interval around θ̂ for asymmetric distributions.
+  Fixed per Hall (1992) §3.5.
+- **CUDA backend**: was advertised but never implemented.  Now raises
+  `NotImplementedError` with a clear message instead of a misleading
+  `RuntimeError("no GPU found")`.
 
-### Planned
-- Automatic block length selection (Politis & White, 2004)
-- Permutation-based confidence intervals
-- Registry-based method dispatch
+### Fixed (performance)
+- **Sieve bootstrap**: replaced nested Python AR(p) loop with
+  `scipy.signal.lfilter`.  Measured speedup: **~16×** for n=300,
+  n_resamples=9 999 (691 ms → 43 ms).
+- **`auto_batch_size`**: was dividing `target_elements=65536` by `n` without
+  accounting for `itemsize`, producing float64 batches **8× too large** for
+  L2 cache.  Fixed to `target_bytes // (n * itemsize)`.
+- **`_jackknife`**: replaced `N` calls to `np.concatenate` (O(n²) total
+  allocations, 191 MB for n=5 000) with a single preallocated buffer (39 KB).
 
-## [0.2.0] — 2026-03-06
-
-### Added
-- **Bayesian bootstrap** method via Dirichlet(1,...,1) weights (Rubin, 1981).
-- **`vectorized`** parameter — call `statistic(batch, axis=1)` for 10-50x speedup.
-- **`ci_method`** parameter for generator-based methods (percentile or basic).
-- **`pandas.DataFrame`** and `pandas.Series` input support in `validate_data()`.
-- **Parallel jackknife** via joblib for BCa on large datasets (`n_jobs` parameter).
-- **`ConfidenceInterval.width`** property and `__contains__` method.
-- **`py.typed`** PEP 561 marker for mypy.
-- **CI workflow** (`.github/workflows/ci.yml`) — Python 3.9–3.13 matrix.
-
-### Fixed
-- **Version sync** — `__version__` now uses `importlib.metadata` (single source).
-- **Poisson/Bernoulli weights** — use `np.repeat` for correct multiplicity handling
-  instead of binary mask filtering.
-- **Studentized bootstrap** — batched outer loop (no full `(n_resamples, n)` allocation).
-- **CBB validation** — added `block_length >= n` check.
+### Fixed (thread safety)
+- **Numba `_batch_indices_numba`**: called `np.random.seed()` inside `prange`
+  — a write to global legacy state from multiple threads.  Removed from index
+  generation entirely; index generation now always uses NumPy PCG64 (already
+  SIMD-vectorised and statistically stronger).
 
 ### Changed
-- `auto_batch_size()` target increased from 32K to 64K elements.
-- Type hints added throughout all modules.
-
-## [0.1.0] — 2026-02-16
+- `numba` moved from required to optional dependency (`pip install bootstrapx-lib[numba]`).
+- `parallel=True` removed from remaining Numba kernels in `timeseries.py` to
+  prevent seed-racing on machines with multiple cores.
+- Time-series `_batch_gen` now uses `np.random.SeedSequence.spawn` for
+  per-sample seeds instead of `seed_base+i` (which could collide for small seeds).
 
 ### Added
-- Initial release with 14 bootstrap methods, Numba acceleration, generator batching.
+- **`BootstrapCV`**: scikit-learn-compatible cross-validator using OOB bootstrap
+  splits.  Works with `cross_val_score`, `GridSearchCV`, etc.
+- **pandas accessor**: `pd.Series.bootstrap.bca()`, `.percentile()`, `.ci()`;
+  `pd.DataFrame.bootstrap.summary()` for column-wise CI tables.
+- **CI workflow** (`.github/workflows/ci.yml`): matrix across Python 3.9–3.13,
+  Ubuntu/Windows/macOS, with Codecov coverage upload.
+- **Notebooks**: `03_ml_model_uncertainty.ipynb`, `04_ab_test_cluster_bootstrap.ipynb`,
+  `05_timeseries_finance.ipynb`.
+- **Keywords** expanded in `pyproject.toml` for PyPI search discoverability.
 
-[Unreleased]: https://github.com/artyerokhin/bootstrapx/compare/v0.2.0...HEAD
-[0.2.0]: https://github.com/artyerokhin/bootstrapx/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/artyerokhin/bootstrapx/releases/tag/v0.1.0
+## [0.2.0] — 2025-12-01
+
+### Added
+- 14 bootstrap methods (iid, time-series, hierarchical)
+- Numba JIT acceleration
+- Memory-safe batched generation
+- MkDocs documentation site

@@ -1,14 +1,21 @@
-"""Time-series bootstrap generators with optional Numba acceleration."""
+"""Time-series bootstrap generators.
+
+Hotfix:
+- Fix SeedSequence.spawn usage: child.entropy is identical for all children, so
+  using it as the actual seed made all MBB/CBB/stationary samples identical.
+- Use child.generate_state(1)[0] to obtain a unique 32-bit seed per child.
+"""
 from __future__ import annotations
 
 from typing import Generator
 
 import numpy as np
+from scipy.signal import lfilter
 
 try:
     from numba import njit
 
-    @njit(cache=True)
+    @njit(cache=True, parallel=False)
     def _mbb_idx(n: int, bl: int, seed: int) -> np.ndarray:
         np.random.seed(seed)
         out = np.empty(n, dtype=np.int64)
@@ -23,7 +30,7 @@ try:
                 pos += 1
         return out
 
-    @njit(cache=True)
+    @njit(cache=True, parallel=False)
     def _cbb_idx(n: int, bl: int, seed: int) -> np.ndarray:
         np.random.seed(seed)
         out = np.empty(n, dtype=np.int64)
@@ -37,7 +44,7 @@ try:
                 pos += 1
         return out
 
-    @njit(cache=True)
+    @njit(cache=True, parallel=False)
     def _stat_idx(n: int, mb: float, seed: int) -> np.ndarray:
         np.random.seed(seed)
         p = 1.0 - 1.0 / mb
@@ -49,13 +56,8 @@ try:
             else:
                 out[i] = np.random.randint(0, n)
         return out
-
-    _NUMBA = True
-
 except ImportError:
-    _NUMBA = False
-
-    def _mbb_idx(n, bl, seed):
+    def _mbb_idx(n: int, bl: int, seed: int) -> np.ndarray:
         r = np.random.RandomState(seed)
         out = np.empty(n, dtype=np.int64)
         pos = 0
@@ -68,7 +70,7 @@ except ImportError:
                 pos += 1
         return out
 
-    def _cbb_idx(n, bl, seed):
+    def _cbb_idx(n: int, bl: int, seed: int) -> np.ndarray:
         r = np.random.RandomState(seed)
         out = np.empty(n, dtype=np.int64)
         pos = 0
@@ -81,7 +83,7 @@ except ImportError:
                 pos += 1
         return out
 
-    def _stat_idx(n, mb, seed):
+    def _stat_idx(n: int, mb: float, seed: int) -> np.ndarray:
         r = np.random.RandomState(seed)
         p = 1.0 - 1.0 / mb
         out = np.empty(n, dtype=np.int64)
@@ -94,15 +96,29 @@ except ImportError:
         return out
 
 
-def _batch_gen(data, n_resamples, batch_size, rng, idx_fn, **kw):
+def _spawn_uint32_seeds(rng: np.random.Generator, n_resamples: int) -> list[int]:
+    ss = np.random.SeedSequence(int(rng.integers(0, 2**63)))
+    children = ss.spawn(n_resamples)
+    return [int(child.generate_state(1, dtype=np.uint32)[0]) for child in children]
+
+
+def _batch_gen(
+    data: np.ndarray,
+    n_resamples: int,
+    batch_size: int,
+    rng: np.random.Generator,
+    idx_fn,
+    **kw,
+) -> Generator[np.ndarray, None, None]:
     n = data.shape[0]
     done = 0
+    child_seeds = _spawn_uint32_seeds(rng, n_resamples)
     while done < n_resamples:
         bs = min(batch_size, n_resamples - done)
-        sb = int(rng.integers(0, 2**31))
         batch = np.empty((bs, n), dtype=data.dtype)
         for i in range(bs):
-            batch[i] = data[idx_fn(n, seed=sb + i, **kw)]
+            seed_i = child_seeds[done + i]
+            batch[i] = data[idx_fn(n, seed=seed_i, **kw)]
         yield batch
         done += bs
 
@@ -141,13 +157,13 @@ def tapered_block_resample(data, n_resamples, batch_size, rng, block_length=10, 
         raise ValueError("block_length must be < len(data).")
     win = sw.get_window(taper, block_length)
     win = win / win.sum() * block_length
+    child_seeds = _spawn_uint32_seeds(rng, n_resamples)
     done = 0
     while done < n_resamples:
         bs = min(batch_size, n_resamples - done)
-        sb = int(rng.integers(0, 2**31))
         batch = np.empty((bs, n), dtype=np.float64)
         for i in range(bs):
-            raw = data[_mbb_idx(n, block_length, sb + i)].astype(np.float64)
+            raw = data[_mbb_idx(n, block_length, child_seeds[done + i])].astype(np.float64)
             for s in range(0, n, block_length):
                 e = min(s + block_length, n)
                 raw[s:e] *= win[: e - s]
@@ -164,32 +180,29 @@ def sieve_resample(data, n_resamples, batch_size, rng, ar_order=None):
         ar_order = 1
     mu = data.mean()
     c = data - mu
-    ac = np.correlate(c, c, mode="full")[n - 1:][:ar_order + 1]
+    ac = np.correlate(c, c, mode="full")[n - 1:][: ar_order + 1]
     R = np.empty((ar_order, ar_order), dtype=np.float64)
     for i in range(ar_order):
         for j in range(ar_order):
             R[i, j] = ac[abs(i - j)]
-    phi = np.linalg.solve(R, ac[1:ar_order + 1])
+    phi = np.linalg.solve(R, ac[1: ar_order + 1])
     ft = np.zeros(n, dtype=np.float64)
     for t in range(ar_order, n):
         for k in range(ar_order):
             ft[t] += phi[k] * c[t - k - 1]
-    res = c.copy()
-    res[ar_order:] -= ft[ar_order:]
+    residuals = (c - ft)[ar_order:]
+    residuals -= residuals.mean()
+    a_coef = np.concatenate([[1.0], -phi])
+    burnin = max(50, ar_order * 5)
+    n_draw = n + burnin
     done = 0
     while done < n_resamples:
         bs = min(batch_size, n_resamples - done)
         batch = np.empty((bs, n), dtype=np.float64)
         for i in range(bs):
-            eps = res[rng.integers(0, n, size=n)]
-            y = np.zeros(n, dtype=np.float64)
-            y[:ar_order] = c[:ar_order]
-            for t in range(ar_order, n):
-                s = eps[t]
-                for k in range(ar_order):
-                    s += phi[k] * y[t - k - 1]
-                y[t] = s
-            batch[i] = y + mu
+            eps = residuals[rng.integers(0, len(residuals), size=n_draw)]
+            y_full = lfilter([1.0], a_coef, eps)
+            batch[i] = y_full[burnin:] + mu
         yield batch
         done += bs
 
@@ -198,7 +211,9 @@ def wild_resample(data, n_resamples, batch_size, rng, fitted=None, distribution=
     n = data.shape[0]
     if fitted is None:
         fitted = np.full(n, data.mean(), dtype=np.float64)
-    resid = data - fitted
+    resid = (data - fitted).astype(np.float64)
+    if distribution not in ("rademacher", "mammen"):
+        raise ValueError(f"Unknown distribution {distribution!r}. Choose 'rademacher' or 'mammen'.")
     done = 0
     while done < n_resamples:
         bs = min(batch_size, n_resamples - done)
@@ -206,12 +221,10 @@ def wild_resample(data, n_resamples, batch_size, rng, fitted=None, distribution=
         for i in range(bs):
             if distribution == "rademacher":
                 v = rng.choice(np.array([-1.0, 1.0]), size=n)
-            elif distribution == "mammen":
-                s5 = np.sqrt(5.0)
-                p = (s5 + 1) / (2 * s5)
-                v = np.where(rng.random(n) < p, -(s5 - 1) / 2, (s5 + 1) / 2)
             else:
-                raise ValueError(f"Unknown distribution: {distribution!r}")
+                s5 = np.sqrt(5.0)
+                p = (s5 + 1.0) / (2.0 * s5)
+                v = np.where(rng.random(n) < p, -(s5 - 1.0) / 2.0, (s5 + 1.0) / 2.0)
             batch[i] = fitted + resid * v
         yield batch
         done += bs

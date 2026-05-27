@@ -1,29 +1,17 @@
 # API Reference
 
-## Main Entry Point
+## Top-level API
 
-::: bootstrapx.api.bootstrap
-    options:
-      show_root_heading: true
-      show_source: false
+::: bootstrapx.bootstrap
 
-::: bootstrapx.api.BootstrapResult
-    options:
-      show_root_heading: true
+::: bootstrapx.BootstrapResult
 
-## Confidence Intervals
+::: bootstrapx.ConfidenceInterval
 
-::: bootstrapx.stats.confidence.percentile_interval
-::: bootstrapx.stats.confidence.basic_interval
-::: bootstrapx.stats.confidence.bca_interval
-::: bootstrapx.stats.confidence.studentized_interval
+## Integrations
 
-## Utilities
+::: bootstrapx.compat.sklearn_cv.BootstrapCV
 
-::: bootstrapx.utils.validate_data
-::: bootstrapx.utils.auto_batch_size
+::: bootstrapx.compat.pandas_accessor._BootstrapSeriesAccessor
 
-## Backend
-
-::: bootstrapx.engine.backend.resolve_backend
-::: bootstrapx.engine.backend.BackendKind
+::: bootstrapx.compat.pandas_accessor._BootstrapDataFrameAccessor
