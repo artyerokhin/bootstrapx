@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://artyerokhin.github.io/bootstrapx/methods/">
       
       
+        <link rel="prev" href="../getting-started/">
+      
+      
+        <link rel="next" href="../integrations/">
       
       
         
@@ -224,7 +228,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docs/index.md" class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -251,7 +255,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docs/getting-started.md" class="md-nav__link">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   
@@ -275,10 +279,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../docs/methods.md" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -294,6 +325,242 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#iid-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IID methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IID methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bca-methodbca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BCa (method="bca")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#percentile-methodpercentile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Percentile (method="percentile")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-methodbasic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic (method="basic")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#studentized-methodstudentized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Studentized (method="studentized")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bayesian-methodbayesian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bayesian (method="bayesian")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poisson-bernoulli-subsampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Poisson / Bernoulli / Subsampling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#time-series-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time-series methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Time-series methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#moving-block-bootstrap-mbb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Moving Block Bootstrap (mbb)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#circular-block-bootstrap-cbb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Circular Block Bootstrap (cbb)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stationary-bootstrap-stationary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stationary Bootstrap (stationary)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tapered-block-bootstrap-tapered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tapered Block Bootstrap (tapered)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sieve-bootstrap-sieve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sieve Bootstrap (sieve)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wild-bootstrap-wild" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wild Bootstrap (wild)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hierarchical-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hierarchical methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hierarchical methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cluster-bootstrap-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Bootstrap (cluster)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stratified-bootstrap-strata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stratified Bootstrap (strata)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-defaults" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical defaults
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -305,7 +572,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docs/integrations.md" class="md-nav__link">
+      <a href="../integrations/" class="md-nav__link">
         
   
   
@@ -332,7 +599,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docs/ab-testing.md" class="md-nav__link">
+      <a href="../ab-testing/" class="md-nav__link">
         
   
   
@@ -359,7 +626,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docs/time-series.md" class="md-nav__link">
+      <a href="../time-series/" class="md-nav__link">
         
   
   
@@ -386,7 +653,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docs/reference.md" class="md-nav__link">
+      <a href="../reference/" class="md-nav__link">
         
   
   
@@ -413,7 +680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docs/benchmarks.md" class="md-nav__link">
+      <a href="../benchmarks/" class="md-nav__link">
         
   
   
@@ -440,7 +707,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docs/changelog.md" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         
   
   
