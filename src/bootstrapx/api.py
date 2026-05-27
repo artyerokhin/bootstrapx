@@ -6,6 +6,10 @@ Changes vs 0.2.0:
 - studentized bootstrap: inner SE loop is vectorised via a (n_inner, n) index
   matrix instead of a nested Python loop.
 - All generator-based methods forward rng consistently.
+
+Changes vs 0.3.1:
+- studentized bootstrap: inner_idx is now generated per outer sample, not once
+  per batch. Fixes correlated SE* estimates (issue #2).
 """
 from __future__ import annotations
 
@@ -179,7 +183,7 @@ def bootstrap(
     vectorized : bool
         If ``True``, ``statistic`` is called as ``statistic(batch, axis=1)``.
     n_jobs : int
-        Parallelism for jackknife in BCa (effective only for n ≥ 2000).
+        Parallelism for jackknife in BCa (effective only for n >= 2000).
     """
     method = method.lower().strip()
     if method not in _ALL_METHODS:
@@ -227,10 +231,11 @@ def bootstrap(
             while done < n_resamples:
                 bs = min(batch_size, n_resamples - done)
                 outer_idx = rng.integers(0, n, size=(bs, n))
-                # Vectorise inner SE: draw (n_inner, n) indices once per outer sample
-                inner_idx = rng.integers(0, n, size=(n_inner, n))
                 for b in range(bs):
                     sample = arr[outer_idx[b]]
+                    # FIX (issue #2): generate fresh inner_idx per outer sample.
+                    # Previously drawn once per batch => correlated SE* => under-covered CIs.
+                    inner_idx = rng.integers(0, n, size=(n_inner, n))
                     inner_vals = np.array(
                         [float(statistic(sample[inner_idx[k]])) for k in range(n_inner)]
                     )
@@ -243,7 +248,7 @@ def bootstrap(
     else:
         if method == "bayesian":
             gen = bayesian_resample(arr, n_resamples, batch_size, rng)
-            boot_stats_list = _collect_bayesian(gen, statistic, rng)  # pass rng!
+            boot_stats_list = _collect_bayesian(gen, statistic, rng)
 
         elif method == "poisson":
             gen = poisson_resample(arr, n_resamples, batch_size, rng)

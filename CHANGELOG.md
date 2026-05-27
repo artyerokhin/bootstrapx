@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.2] — 2026-05-27
+
+### Fixed
+- **studentized bootstrap**: `inner_idx` now generated independently per
+  outer sample instead of once per batch. Fixes correlated SE* estimates
+  that caused empirical CI coverage ~5–10% below nominal (issue #2).
+- **backend**: removed dead `numba_cpu` stub. Passing `backend='numba_cpu'`
+  now raises `ValueError` with a clear message instead of silently running
+  vanilla Python (issue #3). Use `backend='auto'` or `backend='vanilla'`.
+
+### Changed
+- `_FAST_PATH_N` raised from 500 to 1000: numpy built-in statistics now
+  use the single-matrix fast path for samples up to n=1000.
+
+### Removed
+- `BackendKind.NUMBA_CPU` and `BackendKind.NUMBA_CUDA` enum values removed.
+- `numba` optional dependency removed from `pyproject.toml`.
+
 ## [0.3.1] — 2026-05-27
 
 ### Added (benchmarks)

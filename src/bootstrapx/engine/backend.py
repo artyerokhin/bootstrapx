@@ -1,9 +1,12 @@
-"""Backend dispatcher — v0.3.1 fast path for small samples.
+"""Backend dispatcher.
 
-Compatibility:
-- BackendKind.NUMBA_CUDA retained for API compatibility only.
-- Explicitly raises NotImplementedError at resolve time.
-- auto never returns NUMBA_CUDA.
+v0.3.2 changes:
+- Removed NUMBA_CPU backend: was a dead stub (flag accepted but never
+  dispatched). numpy fast path already covers the main use cases.
+  Passing backend='numba_cpu' now raises ValueError (issue #3).
+- NUMBA_CUDA removed from public API (was already NotImplementedError).
+- auto always returns VANILLA.
+- _FAST_PATH_N raised 500 -> 1000 (closes n=500-1000 performance gap).
 
 v0.3.1 change:
 - apply_statistic_batched(): fast path for n < 500 + numpy built-ins.
@@ -13,7 +16,6 @@ v0.3.1 change:
 from __future__ import annotations
 
 import enum
-import warnings
 from typing import Callable
 
 import numpy as np
@@ -28,46 +30,27 @@ _AXIS_BUILTINS: dict[object, str] = {
     np.max:     "max",     np.nanmax:     "nanmax",
     np.ptp:     "ptp",
 }
-_FAST_PATH_N = 500
+_FAST_PATH_N = 1000  # raised from 500 in v0.3.2
 
 
 class BackendKind(enum.Enum):
-    NUMBA_CPU  = "numba_cpu"
-    NUMBA_CUDA = "numba_cuda"
-    VANILLA    = "vanilla"
-
-
-def _numba_available() -> bool:
-    try:
-        import numba  # noqa: F401
-        return True
-    except ImportError:
-        return False
+    VANILLA = "vanilla"
 
 
 def resolve_backend(requested: str = "auto") -> BackendKind:
     requested = requested.lower().strip()
-    if requested == "numba_cuda":
-        raise NotImplementedError(
-            "CUDA backend retained for compatibility but not implemented. "
-            "Use backend='numba_cpu' or backend='vanilla'."
-        )
-    if requested == "auto":
-        return BackendKind.NUMBA_CPU if _numba_available() else BackendKind.VANILLA
-    mapping = {"numba_cpu": BackendKind.NUMBA_CPU, "vanilla": BackendKind.VANILLA}
-    if requested not in mapping:
+    if requested in ("numba_cpu", "numba_cuda"):
         raise ValueError(
-            f"Unknown backend {requested!r}. "
-            "Choose from ['numba_cpu', 'vanilla'] or 'auto'."
+            f"Backend {requested!r} is not implemented. "
+            "bootstrapx uses numpy fast paths for acceleration. "
+            "Use backend='vanilla' or backend='auto'."
         )
-    kind = mapping[requested]
-    if kind is BackendKind.NUMBA_CPU and not _numba_available():
-        warnings.warn(
-            "numba_cpu requested but numba not installed; falling back to vanilla.",
-            RuntimeWarning, stacklevel=3,
-        )
+    if requested in ("auto", "vanilla"):
         return BackendKind.VANILLA
-    return kind
+    raise ValueError(
+        f"Unknown backend {requested!r}. "
+        "Choose from ['vanilla'] or 'auto'."
+    )
 
 
 def _resample_batch(data: np.ndarray, batch_size: int,
