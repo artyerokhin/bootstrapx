@@ -117,7 +117,6 @@ print(f"AUC: {scores.mean():.4f} ± {scores.std():.4f}")
 import numpy as np
 from bootstrapx import bootstrap
 
-# AR(1) process
 rng = np.random.default_rng(0)
 y = np.zeros(500)
 for t in range(1, 500):
@@ -127,7 +126,7 @@ for t in range(1, 500):
 result = bootstrap(y, np.mean, method="mbb", block_length=15, n_resamples=4999)
 print(result)
 
-# Sieve Bootstrap — fits AR(p) model to residuals (16x faster than 0.2.0)
+# Sieve Bootstrap — fits AR(p) model to residuals
 result = bootstrap(y, np.mean, method="sieve", n_resamples=9999)
 print(result)
 ```
@@ -138,9 +137,8 @@ print(result)
 import numpy as np
 from bootstrapx import bootstrap
 
-# Users clustered by session (standard iid bootstrap underestimates variance)
 n_clusters = 50
-cluster_ids = np.repeat(np.arange(n_clusters), 20)  # 1000 obs, 50 clusters
+cluster_ids = np.repeat(np.arange(n_clusters), 20)
 rng = np.random.default_rng(1)
 data = rng.normal(loc=cluster_ids * 0.1, scale=1.0)
 
@@ -158,16 +156,35 @@ print(result)
 
 ## Performance
 
-Measured on Intel Core i7-12700, Python 3.11, n_resamples=9 999.  
-See [`benchmarks/`](benchmarks/) for reproducible scripts.
+Measured on Apple M1, Python 3.12, `n_resamples=4 999`, median of 5 runs.  
+Run yourself: `python benchmarks/bench_speed.py --quick`
 
-| N | Method | scipy | bootstrapx | Speedup |
-|---|---|---|---|---|
-| 1 000 | BCa | 0.18s | 0.09s | **2.0×** |
-| 5 000 | BCa | 0.80s | 0.27s | **3.0×** |
-| 50 000 | Percentile | 7.29s | 2.01s | **3.6×** |
-| 100 000 | Percentile | 54.34s | 3.99s | **13.6×** |
-| 300 | Sieve | — | 0.19s | scipy N/A |
+**BCa (bias-corrected and accelerated):**
+
+| n | scipy (ms) | bootstrapx (ms) | Speedup |
+|---|---|---|---|
+| 200 | 9.6 | 5.8 | **1.7×** |
+| 2 000 | 69 | 58 | 1.2× |
+| 5 000 | 433 | 156 | **2.8×** |
+| 10 000 | 1 015 | 289 | **3.5×** |
+
+At n < 1 000, scipy and bootstrapx are comparable; bootstrapx applies a
+vectorised fast path for numpy built-ins (mean, median, std, etc.) at n < 500.
+Speedup grows with sample size due to O(n) vectorised jackknife vs O(n²) in scipy.
+
+### Coverage accuracy
+
+BCa empirical coverage at nominal 95%, 1 000 Monte Carlo simulations
+across normal, log-normal, exponential and t(3) distributions:
+bootstrapx matches scipy to within simulation noise (< 0.01) for mean and median.
+
+> **Note:** BCa coverage for `np.std` on heavy-tailed distributions (exponential)
+> is ~91–93% at n = 200 — identical behaviour in both bootstrapx and scipy.
+> This reflects known instability of jackknife acceleration for scale statistics,
+> not a library-specific issue. Use `n_resamples ≥ 9 999` or
+> `method="studentized"` for better coverage when estimating variance.
+
+Run yourself: `python benchmarks/bench_coverage_accuracy.py --fast`
 
 ---
 
@@ -176,7 +193,7 @@ See [`benchmarks/`](benchmarks/) for reproducible scripts.
 📖 **Full docs:** [artyerokhin.github.io/bootstrapx](https://artyerokhin.github.io/bootstrapx)
 
 - [Getting Started](https://artyerokhin.github.io/bootstrapx/getting-started/)
-- [Methods Guide](https://artyerokhin.github.io/bootstrapx/methods/) — math behind each method
+- [Methods Guide](https://artyerokhin.github.io/bootstrapx/methods/)
 - [API Reference](https://artyerokhin.github.io/bootstrapx/reference/)
 - [Benchmarks](https://artyerokhin.github.io/bootstrapx/benchmarks/)
 
@@ -225,7 +242,7 @@ If you use bootstrapx in academic work:
   author  = {Erokhin, Artem},
   title   = {bootstrapx: Production-grade bootstrap uncertainty estimation},
   url     = {https://github.com/artyerokhin/bootstrapx},
-  version = {0.3.0},
+  version = {0.3.1},
   year    = {2026},
 }
 ```

@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.1] — 2026-05-27
+
+### Added (benchmarks)
+- **`benchmarks/` suite** — first public benchmark suite for bootstrapx:
+  - `bench_speed.py`: wall-clock time (median of 5 runs) and peak memory
+    via `tracemalloc` vs `scipy.stats.bootstrap` for BCa and percentile;
+    covers small-sample fast path (n=20–500), large-n memory (n=500–10 000),
+    and arbitrary callable statistics (`trimmed_mean`, `iqr`).
+  - `bench_coverage_accuracy.py`: empirical coverage on 4 distributions
+    (Normal, LogNormal, Pareto, Bernoulli) × 3 statistics × 2 sample sizes.
+    CLI: `--fast` (N_SIM=100, ~40s), default (N_SIM=200, ~3min),
+    `--full` (N_SIM=1000, ~15min).
+  - `plot_results.py`: generates `fig_fastpath.png`, `fig_memory.png`,
+    `fig_coverage.png` from CSV results.
+
+### Fixed (performance)
+- **Small-sample fast path**: `apply_statistic_batched()` now detects
+  `n < 500` combined with NumPy built-ins supporting `axis=`
+  (`mean`, `median`, `std`, `var`, `sum`, `min`, `max`, nan-variants)
+  and runs a single vectorized reduction over a preallocated
+  `(n_resamples, n)` matrix. Removes per-sample Python loop overhead.
+
 ## [0.3.0] — 2026-05-24
 
 ### Fixed (correctness)
