@@ -1,27 +1,23 @@
-"""Backend dispatcher with Numba acceleration and vectorized statistic support."""
+"""Backend dispatcher.
+
+Compatibility hotfix:
+- Keep BackendKind.NUMBA_CUDA symbol for test and API compatibility.
+- Explicitly reject numba_cuda at resolve time with NotImplementedError.
+- auto never returns NUMBA_CUDA.
+"""
 from __future__ import annotations
 
 import enum
-import logging
+import warnings
 from typing import Callable
 
 import numpy as np
 
-logger = logging.getLogger(__name__)
-
 
 class BackendKind(enum.Enum):
     NUMBA_CPU = "numba_cpu"
-    NUMBA_CUDA = "numba_cuda"
+    NUMBA_CUDA = "numba_cuda"  # kept for backward compatibility only
     VANILLA = "vanilla"
-
-
-def _cuda_available() -> bool:
-    try:
-        from numba import cuda
-        return bool(cuda.is_available())
-    except Exception:
-        return False
 
 
 def _numba_available() -> bool:
@@ -34,55 +30,39 @@ def _numba_available() -> bool:
 
 def resolve_backend(requested: str = "auto") -> BackendKind:
     requested = requested.lower().strip()
+
+    if requested == "numba_cuda":
+        raise NotImplementedError(
+            "CUDA backend symbol is retained for compatibility, but GPU execution "
+            "is not implemented. Use backend='numba_cpu' or backend='vanilla'."
+        )
+
     if requested == "auto":
-        if _cuda_available():
-            return BackendKind.NUMBA_CUDA
-        elif _numba_available():
-            return BackendKind.NUMBA_CPU
-        else:
-            return BackendKind.VANILLA
+        return BackendKind.NUMBA_CPU if _numba_available() else BackendKind.VANILLA
 
     mapping = {
         "numba_cpu": BackendKind.NUMBA_CPU,
-        "numba_cuda": BackendKind.NUMBA_CUDA,
         "vanilla": BackendKind.VANILLA,
     }
-
     if requested not in mapping:
-        valid = list(mapping.keys())
-        raise ValueError(f"Unknown backend {requested!r}. Choose from {valid}.")
-
+        raise ValueError(
+            f"Unknown backend {requested!r}. Choose from ['numba_cpu', 'vanilla'] or 'auto'."
+        )
     kind = mapping[requested]
-    if kind is BackendKind.NUMBA_CUDA and not _cuda_available():
-        raise RuntimeError("CUDA backend requested but no GPU found.")
+    if kind is BackendKind.NUMBA_CPU and not _numba_available():
+        warnings.warn(
+            "numba_cpu requested but numba is not installed; falling back to vanilla.",
+            RuntimeWarning,
+            stacklevel=3,
+        )
+        return BackendKind.VANILLA
     return kind
 
 
-try:
-    from numba import njit, prange
-
-    @njit(cache=True, parallel=True)
-    def _batch_indices_numba(n: int, batch_size: int, seed_base: int) -> np.ndarray:
-        out = np.empty((batch_size, n), dtype=np.int64)
-        for b in prange(batch_size):
-            np.random.seed(seed_base + b)
-            for j in range(n):
-                out[b, j] = np.random.randint(0, n)
-        return out
-
-    _HAS_NUMBA = True
-except ImportError:
-    def _batch_indices_numba(n: int, batch_size: int, seed_base: int) -> np.ndarray:  # type: ignore[misc]
-        return np.empty(0)
-
-    _HAS_NUMBA = False
-
-
-def resample_batch_vanilla(
-    data: np.ndarray, batch_size: int, rng: np.random.Generator
-) -> np.ndarray:
+def _resample_batch(data: np.ndarray, batch_size: int, rng: np.random.Generator) -> np.ndarray:
     n = data.shape[0]
-    return data[rng.integers(0, n, size=(batch_size, n))]
+    idx = rng.integers(0, n, size=(batch_size, n))
+    return data[idx]
 
 
 def apply_statistic_batched(
@@ -95,24 +75,11 @@ def apply_statistic_batched(
     *,
     vectorized: bool = False,
 ) -> np.ndarray:
-    """Apply *statistic* to bootstrap resamples in batches.
-
-    Parameters
-    ----------
-    vectorized : bool
-        If True, call statistic(samples, axis=1) for the whole batch.
-    """
-    n = data.shape[0]
     results: list[float] = []
     done = 0
     while done < n_resamples:
         bs = min(batch_size, n_resamples - done)
-        if backend is BackendKind.NUMBA_CPU and _HAS_NUMBA:
-            idx = _batch_indices_numba(n, bs, int(rng.integers(0, 2**31)))
-            samples = data[idx]
-        else:
-            samples = resample_batch_vanilla(data, bs, rng)
-
+        samples = _resample_batch(data, bs, rng)
         if vectorized:
             batch_results = statistic(samples, axis=1)
             results.extend(float(v) for v in np.asarray(batch_results).ravel())

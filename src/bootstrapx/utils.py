@@ -1,4 +1,11 @@
-"""Validation helpers and heuristics."""
+"""Validation helpers and heuristics.
+
+Changes vs 0.2.0:
+- auto_batch_size: previous code divided target_elements (65 536) by n
+  *without accounting for itemsize*, so for float64 the actual batch was
+  65 536 × 8 = 512 KB — 8× larger than the intended L2 target.
+  Fixed: divide target_bytes by (n × itemsize).
+"""
 from __future__ import annotations
 
 from typing import Any
@@ -7,7 +14,7 @@ import numpy as np
 
 
 def validate_data(data: Any, *, allow_2d: bool = False) -> np.ndarray:
-    """Validate and convert input data to a numpy array.
+    """Validate and convert input data to a C-contiguous float64 array.
 
     Accepts numpy arrays, lists, pandas Series and DataFrames.
     """
@@ -41,11 +48,28 @@ def validate_data(data: Any, *, allow_2d: bool = False) -> np.ndarray:
         raise ValueError("Data contains NaN values. Remove or impute them first.")
     if arr.shape[0] < 2:
         raise ValueError("Data must have at least 2 observations.")
-    return arr
+
+    # Ensure C-contiguous layout for downstream index operations
+    return np.ascontiguousarray(arr)
 
 
-def auto_batch_size(n: int, n_resamples: int) -> int:
-    """Heuristic batch sizing targeting ~64 KiB per batch for L2 cache fit."""
-    target_elements = 65_536
-    bs = max(1, target_elements // max(n, 1))
+def auto_batch_size(n: int, n_resamples: int, itemsize: int = 8) -> int:
+    """Heuristic batch sizing targeting ~64 KiB per batch to fit in L2 cache.
+
+    A batch of shape ``(batch_size, n)`` occupies
+    ``batch_size × n × itemsize`` bytes.  The previous implementation divided
+    a *element count* target by ``n``, ignoring itemsize, so float64 batches
+    were 8× too large.
+
+    Parameters
+    ----------
+    n : int
+        Sample size (number of observations).
+    n_resamples : int
+        Total number of resamples requested.
+    itemsize : int
+        Bytes per element (default 8 for float64).
+    """
+    target_bytes = 65_536          # 64 KiB — fits comfortably in most L2 caches
+    bs = max(1, target_bytes // (max(n, 1) * itemsize))
     return min(bs, n_resamples)

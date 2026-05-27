@@ -1,59 +1,59 @@
-# Methods Guide
+# Methods
 
-## IID Methods
+This page explains when to use each method.
 
-### Percentile
-Standard quantile-based CI. Simple but can have poor coverage for skewed distributions.
+## IID methods
 
-### Basic (Reverse Percentile)
-$$CI = [2\hat{\theta} - q_{1-\alpha/2},\; 2\hat{\theta} - q_{\alpha/2}]$$
+### BCa (`method="bca"`)
+Best default when you want strong coverage properties for a scalar statistic.
 
-### BCa (Bias-Corrected and Accelerated)
-The recommended default. Corrects for bias and skewness using jackknife acceleration:
+### Percentile (`method="percentile"`)
+Good when you want a simple interval and your bootstrap distribution is already informative.
 
-$$\hat{a} = \frac{\sum_{i=1}^{n}(\hat{\theta}_{(\cdot)} - \hat{\theta}_{(i)})^3}{6\left[\sum_{i=1}^{n}(\hat{\theta}_{(\cdot)} - \hat{\theta}_{(i)})^2\right]^{3/2}}$$
+### Basic (`method="basic"`)
+Useful as a classic alternative to percentile intervals.
 
-### Studentized (Bootstrap-t)
-Uses pivotal quantity $t^* = (\hat{\theta}^* - \hat{\theta}) / \hat{se}^*$ with nested bootstrap for SE.
+### Studentized (`method="studentized"`)
+Useful when you need bootstrap-t intervals and can afford higher compute cost.
 
-### Poisson Bootstrap
-Weighted resampling with $W \sim \text{Poisson}(1)$. Ideal for streaming/online algorithms.
+### Bayesian (`method="bayesian"`)
+Useful for Bayesian bootstrap style uncertainty without assuming a parametric model.
 
-### Bernoulli Bootstrap
-Binary weights $W \sim \text{Bernoulli}(p)$. Useful for specific ML applications.
+### Poisson / Bernoulli / Subsampling
+Useful for weighted or subsampling-based workflows, especially under heavy tails or sampling constraints.
 
-### Subsampling (m-out-of-n)
-Sampling without replacement, size $m < n$. Required for non-regular statistics (max, min).
+## Time-series methods
 
----
+### Moving Block Bootstrap (`mbb`)
+Preserves local autocorrelation by resampling contiguous blocks.
 
-## Time Series Methods
+### Circular Block Bootstrap (`cbb`)
+Like MBB, but wraps around the series to reduce edge effects.
 
-### Moving Block Bootstrap (MBB)
-Overlapping fixed-length blocks. Set `block_length` based on autocorrelation structure.
+### Stationary Bootstrap (`stationary`)
+Uses random block lengths and is often a strong default for stationary dependent data.
 
-### Circular Block Bootstrap (CBB)
-Wraps data circularly to eliminate edge effects. Same block logic as MBB.
+### Tapered Block Bootstrap (`tapered`)
+Reduces block-boundary artifacts with tapering windows.
 
-### Stationary Bootstrap (Politis & Romano)
-Random block lengths $L \sim \text{Geometric}(1/\bar{L})$ where $\bar{L}$ = `mean_block`.
+### Sieve Bootstrap (`sieve`)
+Fits an AR approximation and resamples residual-driven trajectories. Use it when an AR representation is reasonable.
 
-### Tapered Block Bootstrap
-Applies a tapering window (Tukey, Hanning, etc.) to each block. For spectral density estimation.
+### Wild Bootstrap (`wild`)
+Useful for heteroscedastic residual structures.
 
-### AR-Sieve Bootstrap
-Fits AR(p) model → extracts residuals → resamples residuals → reconstructs series.
+## Hierarchical methods
 
-### Wild Bootstrap
-$$y_t^* = \hat{y}_t + \hat{\varepsilon}_t \cdot v_t$$
-where $v_t$ is Rademacher (±1) or Mammen two-point. Handles heteroskedasticity.
+### Cluster Bootstrap (`cluster`)
+Resample entire clusters, not rows, when observations within a cluster are dependent.
 
----
+### Stratified Bootstrap (`strata`)
+Use when the sampling design or inference target is stratified.
 
-## Hierarchical Methods
+## Practical defaults
 
-### Cluster Bootstrap
-Resamples entire clusters (groups), preserving within-group correlation structure.
-
-### Stratified Bootstrap
-Resamples within each stratum independently, preserving class proportions.
+- General-purpose scalar statistic: `bca`
+- Model metric on iid holdout set: `bca` or `percentile`
+- Financial / dependent series: `stationary` or `mbb`
+- Panel / user-session data: `cluster`
+- Survey-like grouped data: `strata`
