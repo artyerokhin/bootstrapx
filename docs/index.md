@@ -1,8 +1,12 @@
 # bootstrapx
 
-**bootstrapx** is a Python library for production-grade bootstrap uncertainty estimation.
+**bootstrapx** is a Python library for practical bootstrap uncertainty estimation.
 
 It is designed for cases where `scipy.stats.bootstrap` is not enough: time-series dependence, cluster-aware resampling, weighted bootstrap, studentized intervals, and production-safe reproducibility.
+
+The current API focuses on one-sample scalar statistics. Read
+[Current limitations](limitations.md) before using it for experiment
+comparisons, multi-output statistics, or complex survey designs.
 
 ## Why bootstrapx
 

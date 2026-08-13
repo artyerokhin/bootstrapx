@@ -29,6 +29,10 @@ result = bootstrap(data, np.mean, method="bca", n_resamples=4999, random_state=4
 print(result.theta_hat)
 print(result.standard_error)
 print(result.confidence_interval)
+
+# Export a compact record for reports or experiment tracking
+record = result.to_dict()
+frame = result.to_frame()  # requires the pandas extra
 ```
 
 ## Choosing a method

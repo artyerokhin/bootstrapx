@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.4
+
+### Practical workflow polish
+
+- Results export to compact dictionaries and one-row pandas DataFrames.
+- The documented `numba` install extra now exists and has its own CI check.
+- A limitations guide makes one-sample, scalar-output, dependent-data, and
+  pre-1.0 boundaries explicit.
+- DataFrame documentation distinguishes separate column intervals from an
+  actual treatment-effect comparison.
+- Optional-dependency errors, issue forms, and contribution guidance are more
+  actionable for practitioners.
+
 ## 0.4.3
 
 ### Engineering reliability

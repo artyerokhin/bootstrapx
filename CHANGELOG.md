@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.4] — 2026-08-13
+
+### Added
+- `BootstrapResult.to_dict()` returns a compact, mutation-safe result record;
+  the full bootstrap distribution is available through the explicit
+  `include_distribution=True` option.
+- `BootstrapResult.to_frame()` returns a one-row pandas DataFrame suitable for
+  reports, concatenation, and experiment tracking.
+- The documented `numba` extra now exists and is tested independently in CI.
+- A current-limitations guide documents scalar-output, two-sample, missing-data,
+  dependent-data, Monte Carlo, and pre-1.0 compatibility boundaries.
+- Structured bug and practitioner-workflow issue forms, plus a contribution
+  guide with the complete local verification sequence.
+
+### Changed
+- Project wording now describes bootstrapx as practical rather than claiming
+  blanket production readiness while the public API remains pre-1.0.
+- DataFrame examples explicitly state that column-wise intervals do not
+  estimate a difference, ratio, lift, paired effect, or p-value between groups.
+- Missing optional-dependency errors point to the corresponding bootstrapx
+  installation extra.
+
 ## [0.4.3] — 2026-08-13
 
 ### Changed

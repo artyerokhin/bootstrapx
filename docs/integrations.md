@@ -33,6 +33,11 @@ summary = df.bootstrap.summary(np.mean, n_resamples=2999, random_state=42)
 print(summary)
 ```
 
+`DataFrame.bootstrap.summary()` estimates every column independently. It does
+not estimate a difference, ratio, lift, paired effect, or p-value between
+columns. For paired observations, bootstrap the row-wise effect explicitly;
+for repeated observations per unit, use cluster bootstrap at that unit.
+
 ## scikit-learn
 
 `BootstrapCV` implements a scikit-learn compatible cross-validator using bootstrap training samples and out-of-bag evaluation.
@@ -62,4 +67,4 @@ Recommended deployment baseline:
 - NumPy + SciPy core for correctness and portability.
 - Optional pandas for tabular workflows.
 - Optional scikit-learn for model evaluation.
-- Optional numba only where it helps CPU throughput.
+- Optional `bootstrapx-lib[numba]` for JIT-accelerated time-series index generation.

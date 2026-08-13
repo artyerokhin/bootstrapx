@@ -1,4 +1,4 @@
-"""bootstrapx — Production-grade bootstrap uncertainty estimation for Python.
+"""bootstrapx — Practical bootstrap uncertainty estimation for Python.
 
 Provides 16 bootstrap methods: iid (BCa, percentile, basic, studentized,
 Bayesian, Poisson, Bernoulli, subsampling), time-series (MBB, CBB, stationary,
@@ -34,7 +34,7 @@ except ImportError:
 try:
     __version__ = version("bootstrapx-lib")
 except PackageNotFoundError:
-    __version__ = "0.4.3"
+    __version__ = "0.4.4"
 
 __all__ = [
     "bootstrap",

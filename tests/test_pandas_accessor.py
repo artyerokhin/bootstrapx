@@ -37,6 +37,16 @@ class TestSeriesAccessor:
         r2 = series.bootstrap.bca(np.mean, n_resamples=500, random_state=99)
         np.testing.assert_array_equal(r1.bootstrap_distribution, r2.bootstrap_distribution)
 
+    def test_result_to_frame(self, series):
+        result = series.bootstrap.percentile(np.mean, n_resamples=50, random_state=2)
+        frame = result.to_frame()
+
+        assert frame.shape == (1, 8)
+        assert frame.loc[0, "theta_hat"] == result.theta_hat
+        assert frame.loc[0, "ci_method"] == "percentile"
+        assert frame.loc[0, "extra"] == {}
+        assert "bootstrap_distribution" not in frame.columns
+
 
 @pytest.mark.skipif(not _HAS_PANDAS, reason="pandas not installed")
 class TestDataFrameAccessor:

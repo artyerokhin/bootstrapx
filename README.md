@@ -2,7 +2,7 @@
 
 # bootstrapx
 
-**Production-grade bootstrap uncertainty estimation for Python.**
+**Practical bootstrap uncertainty estimation for Python.**
 
 [![CI](https://github.com/artyerokhin/bootstrapx/actions/workflows/ci.yml/badge.svg)](https://github.com/artyerokhin/bootstrapx/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/bootstrapx-lib)](https://pypi.org/project/bootstrapx-lib/)
@@ -47,7 +47,9 @@ The R `boot` package is comprehensive but not Pythonic.
 pip install bootstrapx-lib                  # core (numpy + scipy only)
 pip install "bootstrapx-lib[pandas]"        # + pandas accessor
 pip install "bootstrapx-lib[sklearn]"       # + scikit-learn CV integration
-pip install "bootstrapx-lib[pandas,sklearn]"  # all integrations
+pip install "bootstrapx-lib[numba]"         # + optional time-series JIT acceleration
+pip install "bootstrapx-lib[pandas,sklearn]"  # pandas + scikit-learn integrations
+pip install "bootstrapx-lib[pandas,sklearn,numba]"  # all optional features
 ```
 
 ---
@@ -68,6 +70,10 @@ print(result)
 
 print(result.confidence_interval.low, result.confidence_interval.high)
 print(5.0 in result.confidence_interval)  # True
+
+# Compact exports for reports and experiment tracking
+print(result.to_dict())
+print(result.to_frame())  # requires bootstrapx-lib[pandas]
 ```
 
 ### pandas accessor
@@ -91,6 +97,11 @@ print(df.bootstrap.summary(np.mean))
 # control       1.9973    1.8215    2.1862    0.0941    bca
 # treatment     2.4970    2.3036    2.7048    0.1035    bca
 ```
+
+This DataFrame helper estimates each column separately. It does **not** test
+the treatment effect or account for pairing between columns. For paired rows,
+bootstrap the row-wise effect; unpaired two-sample effects are not yet a native
+workflow. Use the cluster pattern below for repeated observations per unit.
 
 ### scikit-learn cross-validation
 
@@ -262,9 +273,9 @@ If you use bootstrapx in academic work:
 ```bibtex
 @software{bootstrapx,
   author  = {Erokhin, Artem},
-  title   = {bootstrapx: Production-grade bootstrap uncertainty estimation},
+  title   = {bootstrapx: Practical bootstrap uncertainty estimation},
   url     = {https://github.com/artyerokhin/bootstrapx},
-  version = {0.4.3},
+  version = {0.4.4},
   year    = {2026},
 }
 ```

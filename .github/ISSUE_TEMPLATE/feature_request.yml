@@ -1,0 +1,38 @@
+name: Practitioner workflow request
+description: Propose an API or workflow for an applied data-science use case
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Practitioner workflow
+      description: What decision or analysis should become easier?
+      placeholder: Compare treatment and control relative lift while resampling users.
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current workaround
+      description: Show how you solve this today and where it becomes error-prone.
+    validations:
+      required: true
+  - type: textarea
+    id: api
+    attributes:
+      label: Desired API and output
+      description: A short code sketch is helpful but not required.
+      render: python
+  - type: textarea
+    id: assumptions
+    attributes:
+      label: Statistical assumptions or references
+      description: Include sampling units, dependence, pairing, or relevant references.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This solves a recurring applied workflow, not only one private dataset.
+          required: true

@@ -44,7 +44,8 @@ try:
     _SKLEARN = True
 except ImportError as exc:
     raise ImportError(
-        "scikit-learn is required for BootstrapCV. Install with: pip install scikit-learn"
+        "scikit-learn is required for BootstrapCV. "
+        "Install with: pip install 'bootstrapx-lib[sklearn]'"
     ) from exc
 
 
