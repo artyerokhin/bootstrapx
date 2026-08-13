@@ -10,6 +10,9 @@ Changes vs 0.2.0:
 Changes vs 0.3.1:
 - studentized bootstrap: inner_idx is now generated per outer sample, not once
   per batch. Fixes correlated SE* estimates (issue #2).
+
+Changes vs 0.4.1:
+- studentized random draws are independent of the technical batch size.
 """
 
 from __future__ import annotations
@@ -219,7 +222,8 @@ def bootstrap(
         ``"percentile"``. Bayesian, Bernoulli, and subsampling intervals are
         not configurable through this parameter.
     vectorized : bool
-        If ``True``, ``statistic`` is called as ``statistic(batch, axis=1)``.
+        For percentile, basic, and BCa methods, call ``statistic`` as
+        ``statistic(batch, axis=1)``. Other methods reject this option.
     n_jobs : int
         Parallelism for jackknife in BCa (effective only for n >= 2000).
 
@@ -244,6 +248,8 @@ def bootstrap(
         raise TypeError("ci_method must be a string or None.")
     if not isinstance(vectorized, bool):
         raise TypeError("vectorized must be a boolean.")
+    if not isinstance(backend, str):
+        raise TypeError("backend must be a string.")
     if not callable(statistic):
         raise TypeError("statistic must be callable.")
 
@@ -251,6 +257,10 @@ def bootstrap(
     ci_method = ci_method.lower().strip() if ci_method is not None else None
     if method not in _ALL_METHODS:
         raise ValueError(f"Unknown method {method!r}. Choose from {sorted(_ALL_METHODS)}.")
+    if vectorized and method not in {"percentile", "basic", "bca"}:
+        raise ValueError(
+            "vectorized=True is supported only for percentile, basic, and bca methods."
+        )
 
     arr = validate_data(data, allow_2d=(method in _HIER_METHODS))
     n = arr.shape[0]
@@ -287,19 +297,13 @@ def bootstrap(
         n_inner = int(kwargs.get("n_inner", 100))
         boot_stats = np.empty(n_resamples, dtype=np.float64)
         boot_se = np.empty(n_resamples, dtype=np.float64)
-        done = 0
-        while done < n_resamples:
-            bs = min(batch_size, n_resamples - done)
-            outer_idx = rng.integers(0, n, size=(bs, n))
-            for b in range(bs):
-                sample = arr[outer_idx[b]]
-                boot_stats[done + b] = float(statistic(sample))
-                inner_idx = rng.integers(0, n, size=(n_inner, n))
-                inner_vals = np.array(
-                    [float(statistic(sample[inner_idx[k]])) for k in range(n_inner)]
-                )
-                boot_se[done + b] = float(np.std(inner_vals, ddof=1))
-            done += bs
+        for i in range(n_resamples):
+            outer_idx = rng.integers(0, n, size=n)
+            sample = arr[outer_idx]
+            boot_stats[i] = float(statistic(sample))
+            inner_idx = rng.integers(0, n, size=(n_inner, n))
+            inner_vals = np.array([float(statistic(sample[inner_idx[k]])) for k in range(n_inner)])
+            boot_se[i] = float(np.std(inner_vals, ddof=1))
         boot_stats = validate_bootstrap_distribution(boot_stats, n_resamples)
         if not np.all(np.isfinite(boot_se)):
             raise ValueError("statistic returned NaN or inf during studentized bootstrap.")

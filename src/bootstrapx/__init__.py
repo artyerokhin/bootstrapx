@@ -34,12 +34,14 @@ except ImportError:
 try:
     __version__ = version("bootstrapx-lib")
 except PackageNotFoundError:
-    __version__ = "0.4.1"
+    __version__ = "0.4.2"
 
 __all__ = [
     "bootstrap",
     "BootstrapResult",
     "ConfidenceInterval",
-    "BootstrapCV",
     "__version__",
 ]
+
+if _sklearn_available:
+    __all__.append("BootstrapCV")

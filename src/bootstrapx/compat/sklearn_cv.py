@@ -14,11 +14,11 @@ Usage
 >>> scores = []
 >>> for train_idx, test_idx in cv.split(X, y):
 ...     model = LogisticRegression(max_iter=200)
-...     model.fit(X[train_idx], y[train_idx])
+...     _ = model.fit(X[train_idx], y[train_idx])
 ...     scores.append(accuracy_score(y[test_idx], model.predict(X[test_idx])))
 >>>
 >>> scores = np.array(scores)
->>> print(f"Accuracy: {scores.mean():.3f} ± {scores.std():.3f}")
+>>> _ = f"Accuracy: {scores.mean():.3f} ± {scores.std():.3f}"
 
 Notes
 -----
@@ -60,38 +60,47 @@ class BootstrapCV(BaseCrossValidator):
     -----
     - Usable with ``cross_val_score``, ``cross_validate``, ``GridSearchCV``.
     - OOB test set size ≈ 0.368 × n per split (Poisson approximation).
-    - For the 0.632 bootstrap estimator of generalization error, average
-      ``0.368 * oob_score + 0.632 * train_score`` across splits.
+    - For the 0.632 bootstrap estimator, average
+      ``0.368 * train_score + 0.632 * oob_score`` across splits.
     """
 
     def __init__(self, n_splits: int = 200, random_state: int | np.random.Generator | None = None):
+        if isinstance(n_splits, bool) or not isinstance(n_splits, int | np.integer):
+            raise TypeError("n_splits must be an integer.")
+        if n_splits < 1:
+            raise ValueError("n_splits must be at least 1.")
+        if (
+            random_state is not None
+            and not isinstance(random_state, np.random.Generator)
+            and (isinstance(random_state, bool) or not isinstance(random_state, int | np.integer))
+        ):
+            raise TypeError("random_state must be an integer, numpy Generator, or None.")
         self.n_splits = n_splits
         self.random_state = random_state
 
     def split(self, X, y=None, groups=None):
         X, y, groups = indexable(X, y, groups)
         n = len(X)
+        if n < 2:
+            raise ValueError("BootstrapCV requires at least 2 observations.")
         rng = (
             self.random_state
             if isinstance(self.random_state, np.random.Generator)
             else np.random.default_rng(self.random_state)
         )
         all_idx = np.arange(n)
-        for _ in range(self.n_splits):
+        yielded = 0
+        while yielded < self.n_splits:
             train = rng.integers(0, n, size=n)
             test = np.setdiff1d(all_idx, train)
             if len(test) == 0:
                 continue
+            yielded += 1
             yield train, test
 
     def get_n_splits(self, X=None, y=None, groups=None) -> int:
         return self.n_splits
 
     def _iter_test_indices(self, X=None, y=None, groups=None):
-        # Required by BaseCrossValidator but not used directly
-        n = len(X)  # type: ignore[arg-type]
-        rng = np.random.default_rng(self.random_state)
-        all_idx = np.arange(n)
-        for _ in range(self.n_splits):
-            train = rng.integers(0, n, size=n)
-            yield np.setdiff1d(all_idx, train)
+        for _, test in self.split(X, y, groups):
+            yield test

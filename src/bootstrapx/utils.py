@@ -177,7 +177,20 @@ def validate_bootstrap_params(
         ids = np.asarray(identifiers)
         if ids.ndim != 1 or len(ids) != n_observations:
             raise ValueError(f"{name} must be one-dimensional and match data length.")
-        if len(np.unique(ids)) < 2:
+        for identifier in ids:
+            if identifier is None:
+                raise ValueError(f"{name} must not contain missing values.")
+            try:
+                is_missing = identifier != identifier
+                if bool(is_missing):
+                    raise ValueError(f"{name} must not contain missing values.")
+            except TypeError as exc:
+                raise ValueError(f"{name} must contain scalar, non-missing identifiers.") from exc
+        try:
+            unique_ids = np.unique(ids)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"{name} must contain mutually comparable identifiers.") from exc
+        if len(unique_ids) < 2:
             raise ValueError(f"{name} must contain at least two distinct groups.")
 
 
