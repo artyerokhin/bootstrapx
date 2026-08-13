@@ -21,6 +21,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 - Documentation now matches the actual NumPy fast-path boundary of `n < 1000`.
+- Invalid taper windows now produce a stable bootstrapx error across SciPy
+  versions instead of exposing version-specific SciPy wording.
+- Strict typing uses NumPy stubs compatible with its Python 3.10 target, while
+  the runtime matrix continues testing the newest supported NumPy releases.
 - Time-series index generators have explicit Python fallback implementations,
   preserving deterministic behavior when Numba is unavailable.
 

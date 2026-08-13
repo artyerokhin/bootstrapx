@@ -76,7 +76,7 @@ class TestTapered:
         assert np.all(np.isfinite(result.bootstrap_distribution))
 
     def test_invalid_window_is_rejected(self, timeseries_data):
-        with pytest.raises(ValueError, match="Unknown window type"):
+        with pytest.raises(ValueError, match="Unknown taper window 'not-a-window'"):
             bootstrap(
                 timeseries_data,
                 np.mean,

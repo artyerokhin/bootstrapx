@@ -295,6 +295,7 @@ def bootstrap(
 
     result_extra: dict[str, Any] = {}
     result_standard_error: float | None = None
+    boot_stats: FloatArray
 
     if method == "studentized":
         n_inner = int(kwargs.get("n_inner", 100))

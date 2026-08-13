@@ -200,7 +200,11 @@ def tapered_block_resample(
     n = data.shape[0]
     if block_length >= n:
         raise ValueError("block_length must be < len(data).")
-    win = np.asarray(sw.get_window(taper, block_length, fftbins=False), dtype=np.float64)
+    try:
+        window = sw.get_window(taper, block_length, fftbins=False)
+    except ValueError as exc:
+        raise ValueError(f"Unknown taper window {taper!r}.") from exc
+    win = np.asarray(window, dtype=np.float64)
     rms = float(np.sqrt(np.mean(win**2)))
     if not np.isfinite(rms) or rms == 0.0:
         win = np.ones(block_length, dtype=np.float64)
