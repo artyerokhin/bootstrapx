@@ -12,10 +12,17 @@ Changes vs 0.2.0:
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 from scipy import stats as sp_stats
+
+FloatArray = NDArray[np.float64]
+AnyArray = NDArray[Any]
+Statistic = Callable[..., float]
 
 
 @dataclass
@@ -38,7 +45,7 @@ class ConfidenceInterval:
 
 
 def percentile_interval(
-    boot_stats: np.ndarray,
+    boot_stats: FloatArray,
     confidence_level: float = 0.95,
 ) -> ConfidenceInterval:
     alpha = 1.0 - confidence_level
@@ -50,7 +57,7 @@ def percentile_interval(
 
 
 def basic_interval(
-    boot_stats: np.ndarray,
+    boot_stats: FloatArray,
     theta_hat: float,
     confidence_level: float = 0.95,
 ) -> ConfidenceInterval:
@@ -65,7 +72,7 @@ def basic_interval(
 
 
 def root_interval(
-    root_stats: np.ndarray,
+    root_stats: FloatArray,
     theta_hat: float,
     scale_n: float,
     confidence_level: float = 0.95,
@@ -95,10 +102,10 @@ def root_interval(
 
 
 def _jackknife(
-    data: np.ndarray,
-    statistic: callable,
+    data: AnyArray,
+    statistic: Statistic,
     n_jobs: int = 1,
-) -> np.ndarray:
+) -> FloatArray:
     """Leave-one-out jackknife.
 
     Uses a single preallocated buffer (O(n) memory) instead of calling
@@ -137,9 +144,9 @@ def _jackknife(
 
 
 def bca_interval(
-    boot_stats: np.ndarray,
-    data: np.ndarray,
-    statistic: callable,
+    boot_stats: FloatArray,
+    data: AnyArray,
+    statistic: Statistic,
     theta_hat: float,
     confidence_level: float = 0.95,
     n_jobs: int = 1,
@@ -185,11 +192,11 @@ def bca_interval(
 
 
 def studentized_interval(
-    data: np.ndarray,
-    statistic: callable,
+    data: AnyArray,
+    statistic: Statistic,
     theta_hat: float,
-    boot_stats: np.ndarray,
-    boot_se: np.ndarray,
+    boot_stats: FloatArray,
+    boot_se: FloatArray,
     confidence_level: float = 0.95,
 ) -> ConfidenceInterval:
     """Bootstrap-t (studentized) interval.

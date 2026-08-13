@@ -5,11 +5,14 @@ from __future__ import annotations
 from collections.abc import Generator
 
 import numpy as np
+from numpy.typing import NDArray
+
+FloatArray = NDArray[np.float64]
 
 
 def basic_resample(
-    data: np.ndarray, n_resamples: int, batch_size: int, rng: np.random.Generator
-) -> Generator[np.ndarray, None, None]:
+    data: FloatArray, n_resamples: int, batch_size: int, rng: np.random.Generator
+) -> Generator[FloatArray, None, None]:
     n = data.shape[0]
     done = 0
     while done < n_resamples:
@@ -19,8 +22,8 @@ def basic_resample(
 
 
 def poisson_resample(
-    data: np.ndarray, n_resamples: int, batch_size: int, rng: np.random.Generator
-) -> Generator[tuple[np.ndarray, np.ndarray], None, None]:
+    data: FloatArray, n_resamples: int, batch_size: int, rng: np.random.Generator
+) -> Generator[tuple[FloatArray, FloatArray], None, None]:
     """Generate Poisson(1) multiplier weights conditional on positive total weight."""
     n = data.shape[0]
     done = 0
@@ -36,12 +39,12 @@ def poisson_resample(
 
 
 def bernoulli_resample(
-    data: np.ndarray,
+    data: FloatArray,
     n_resamples: int,
     batch_size: int,
     rng: np.random.Generator,
     prob: float = 0.5,
-) -> Generator[tuple[np.ndarray, np.ndarray], None, None]:
+) -> Generator[tuple[FloatArray, FloatArray], None, None]:
     """Generate Bernoulli subsets conditional on being nonempty and nonfull."""
     n = data.shape[0]
     done = 0
@@ -63,12 +66,12 @@ def bernoulli_resample(
 
 
 def subsampling_resample(
-    data: np.ndarray,
+    data: FloatArray,
     n_resamples: int,
     batch_size: int,
     rng: np.random.Generator,
     subsample_size: int | None = None,
-) -> Generator[np.ndarray, None, None]:
+) -> Generator[FloatArray, None, None]:
     n = data.shape[0]
     m = subsample_size or max(1, int(np.sqrt(n)))
     if m >= n:
@@ -84,8 +87,8 @@ def subsampling_resample(
 
 
 def bayesian_resample(
-    data: np.ndarray, n_resamples: int, batch_size: int, rng: np.random.Generator
-) -> Generator[tuple[np.ndarray, np.ndarray], None, None]:
+    data: FloatArray, n_resamples: int, batch_size: int, rng: np.random.Generator
+) -> Generator[tuple[FloatArray, FloatArray], None, None]:
     """Bayesian bootstrap: Dirichlet(1,...,1) weights (Rubin, 1981)."""
     n = data.shape[0]
     done = 0

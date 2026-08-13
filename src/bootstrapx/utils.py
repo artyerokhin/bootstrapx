@@ -13,9 +13,12 @@ from collections.abc import Mapping
 from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
+
+FloatArray = NDArray[np.float64]
 
 
-def validate_data(data: Any, *, allow_2d: bool = False) -> np.ndarray:
+def validate_data(data: Any, *, allow_2d: bool = False) -> FloatArray:
     """Validate and convert input data to a C-contiguous float64 array.
 
     Accepts numpy arrays, lists, pandas Series and DataFrames.
@@ -51,7 +54,7 @@ def validate_data(data: Any, *, allow_2d: bool = False) -> np.ndarray:
         raise ValueError("Data must have at least 2 observations.")
 
     # Ensure C-contiguous layout for downstream index operations
-    return np.ascontiguousarray(arr)
+    return np.ascontiguousarray(arr, dtype=np.float64)
 
 
 def validate_bootstrap_params(
@@ -202,7 +205,7 @@ def validate_random_state(random_state: Any) -> None:
         raise TypeError("random_state must be an integer, numpy Generator, or None.")
 
 
-def validate_bootstrap_distribution(distribution: Any, n_resamples: int) -> np.ndarray:
+def validate_bootstrap_distribution(distribution: Any, n_resamples: int) -> FloatArray:
     """Return a finite, correctly shaped bootstrap distribution.
 
     A custom vectorized statistic can otherwise silently return a different

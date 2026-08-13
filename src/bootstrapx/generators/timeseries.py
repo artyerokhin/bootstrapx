@@ -8,94 +8,102 @@ Hotfix:
 
 from __future__ import annotations
 
-from collections.abc import Generator
+from collections.abc import Callable, Generator
+from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 from scipy.signal import lfilter
+
+FloatArray = NDArray[np.float64]
+IntArray = NDArray[np.int64]
+IndexFunction = Callable[..., IntArray]
+
+
+def _mbb_idx_python(n: int, bl: int, seed: int) -> IntArray:
+    r = np.random.RandomState(seed)
+    out = np.empty(n, dtype=np.int64)
+    pos = 0
+    while pos < n:
+        start = r.randint(0, n - bl + 1)
+        end = min(pos + bl, n)
+        out[pos:end] = np.arange(start, start + end - pos)
+        pos = end
+    return out
+
+
+def _cbb_idx_python(n: int, bl: int, seed: int) -> IntArray:
+    r = np.random.RandomState(seed)
+    out = np.empty(n, dtype=np.int64)
+    pos = 0
+    while pos < n:
+        start = r.randint(0, n)
+        end = min(pos + bl, n)
+        out[pos:end] = (start + np.arange(end - pos)) % n
+        pos = end
+    return out
+
+
+def _stat_idx_python(n: int, mb: float, seed: int) -> IntArray:
+    r = np.random.RandomState(seed)
+    continuation_probability = 1.0 - 1.0 / mb
+    out = np.empty(n, dtype=np.int64)
+    out[0] = r.randint(0, n)
+    for i in range(1, n):
+        if r.random() < continuation_probability:
+            out[i] = (out[i - 1] + 1) % n
+        else:
+            out[i] = r.randint(0, n)
+    return out
+
 
 try:
     from numba import njit
 
-    @njit(cache=True, parallel=False)
-    def _mbb_idx(n: int, bl: int, seed: int) -> np.ndarray:
-        np.random.seed(seed)
-        out = np.empty(n, dtype=np.int64)
-        pos = 0
-        ns = n - bl + 1
-        while pos < n:
-            s = np.random.randint(0, ns)
-            for j in range(bl):
-                if pos >= n:
-                    break
-                out[pos] = s + j
-                pos += 1
-        return out
-
-    @njit(cache=True, parallel=False)
-    def _cbb_idx(n: int, bl: int, seed: int) -> np.ndarray:
+    @njit(cache=True)  # type: ignore[untyped-decorator]
+    def _mbb_idx(n: int, bl: int, seed: int) -> IntArray:
         np.random.seed(seed)
         out = np.empty(n, dtype=np.int64)
         pos = 0
         while pos < n:
-            s = np.random.randint(0, n)
+            start = np.random.randint(0, n - bl + 1)
             for j in range(bl):
                 if pos >= n:
                     break
-                out[pos] = (s + j) % n
+                out[pos] = start + j
                 pos += 1
         return out
 
-    @njit(cache=True, parallel=False)
-    def _stat_idx(n: int, mb: float, seed: int) -> np.ndarray:
+    @njit(cache=True)  # type: ignore[untyped-decorator]
+    def _cbb_idx(n: int, bl: int, seed: int) -> IntArray:
         np.random.seed(seed)
-        p = 1.0 - 1.0 / mb
+        out = np.empty(n, dtype=np.int64)
+        pos = 0
+        while pos < n:
+            start = np.random.randint(0, n)
+            for j in range(bl):
+                if pos >= n:
+                    break
+                out[pos] = (start + j) % n
+                pos += 1
+        return out
+
+    @njit(cache=True)  # type: ignore[untyped-decorator]
+    def _stat_idx(n: int, mb: float, seed: int) -> IntArray:
+        np.random.seed(seed)
+        continuation_probability = 1.0 - 1.0 / mb
         out = np.empty(n, dtype=np.int64)
         out[0] = np.random.randint(0, n)
         for i in range(1, n):
-            if np.random.random() < p:
+            if np.random.random() < continuation_probability:
                 out[i] = (out[i - 1] + 1) % n
             else:
                 out[i] = np.random.randint(0, n)
         return out
 except ImportError:
-
-    def _mbb_idx(n: int, bl: int, seed: int) -> np.ndarray:
-        r = np.random.RandomState(seed)
-        out = np.empty(n, dtype=np.int64)
-        pos = 0
-        while pos < n:
-            s = r.randint(0, n - bl + 1)
-            for j in range(bl):
-                if pos >= n:
-                    break
-                out[pos] = s + j
-                pos += 1
-        return out
-
-    def _cbb_idx(n: int, bl: int, seed: int) -> np.ndarray:
-        r = np.random.RandomState(seed)
-        out = np.empty(n, dtype=np.int64)
-        pos = 0
-        while pos < n:
-            s = r.randint(0, n)
-            for j in range(bl):
-                if pos >= n:
-                    break
-                out[pos] = (s + j) % n
-                pos += 1
-        return out
-
-    def _stat_idx(n: int, mb: float, seed: int) -> np.ndarray:
-        r = np.random.RandomState(seed)
-        p = 1.0 - 1.0 / mb
-        out = np.empty(n, dtype=np.int64)
-        out[0] = r.randint(0, n)
-        for i in range(1, n):
-            if r.random() < p:
-                out[i] = (out[i - 1] + 1) % n
-            else:
-                out[i] = r.randint(0, n)
-        return out
+    _mbb_idx = _mbb_idx_python
+    _cbb_idx = _cbb_idx_python
+    _stat_idx = _stat_idx_python
 
 
 def _spawn_uint32_seeds(rng: np.random.Generator, n_resamples: int) -> list[int]:
@@ -105,13 +113,13 @@ def _spawn_uint32_seeds(rng: np.random.Generator, n_resamples: int) -> list[int]
 
 
 def _batch_gen(
-    data: np.ndarray,
+    data: FloatArray,
     n_resamples: int,
     batch_size: int,
     rng: np.random.Generator,
-    idx_fn,
-    **kw,
-) -> Generator[np.ndarray, None, None]:
+    idx_fn: IndexFunction,
+    **kw: Any,
+) -> Generator[FloatArray, None, None]:
     n = data.shape[0]
     done = 0
     child_seeds = _spawn_uint32_seeds(rng, n_resamples)
@@ -125,7 +133,13 @@ def _batch_gen(
         done += bs
 
 
-def mbb_resample(data, n_resamples, batch_size, rng, block_length=10):
+def mbb_resample(
+    data: FloatArray,
+    n_resamples: int,
+    batch_size: int,
+    rng: np.random.Generator,
+    block_length: int = 10,
+) -> Generator[FloatArray, None, None]:
     n = data.shape[0]
     if block_length >= n:
         raise ValueError("block_length must be < len(data).")
@@ -138,7 +152,13 @@ def mbb_resample(data, n_resamples, batch_size, rng, block_length=10):
     )
 
 
-def cbb_resample(data, n_resamples, batch_size, rng, block_length=10):
+def cbb_resample(
+    data: FloatArray,
+    n_resamples: int,
+    batch_size: int,
+    rng: np.random.Generator,
+    block_length: int = 10,
+) -> Generator[FloatArray, None, None]:
     n = data.shape[0]
     if block_length >= n:
         raise ValueError("block_length must be < len(data).")
@@ -151,7 +171,13 @@ def cbb_resample(data, n_resamples, batch_size, rng, block_length=10):
     )
 
 
-def stationary_resample(data, n_resamples, batch_size, rng, mean_block=10.0):
+def stationary_resample(
+    data: FloatArray,
+    n_resamples: int,
+    batch_size: int,
+    rng: np.random.Generator,
+    mean_block: float = 10.0,
+) -> Generator[FloatArray, None, None]:
     return _batch_gen(
         data,
         n_resamples,
@@ -161,7 +187,14 @@ def stationary_resample(data, n_resamples, batch_size, rng, mean_block=10.0):
     )
 
 
-def tapered_block_resample(data, n_resamples, batch_size, rng, block_length=10, taper="tukey"):
+def tapered_block_resample(
+    data: FloatArray,
+    n_resamples: int,
+    batch_size: int,
+    rng: np.random.Generator,
+    block_length: int = 10,
+    taper: str = "tukey",
+) -> Generator[FloatArray, None, None]:
     from scipy.signal import windows as sw
 
     n = data.shape[0]
@@ -190,7 +223,13 @@ def tapered_block_resample(data, n_resamples, batch_size, rng, block_length=10, 
         done += bs
 
 
-def sieve_resample(data, n_resamples, batch_size, rng, ar_order=None):
+def sieve_resample(
+    data: FloatArray,
+    n_resamples: int,
+    batch_size: int,
+    rng: np.random.Generator,
+    ar_order: int | None = None,
+) -> Generator[FloatArray, None, None]:
     n = data.shape[0]
     if ar_order is None:
         ar_order = min(int(np.round(np.log(n))), n // 3)
@@ -232,13 +271,20 @@ def sieve_resample(data, n_resamples, batch_size, rng, ar_order=None):
         batch = np.empty((bs, n), dtype=np.float64)
         for i in range(bs):
             eps = residuals[rng.integers(0, len(residuals), size=n_draw)]
-            y_full = lfilter([1.0], a_coef, eps)
+            y_full = np.asarray(lfilter([1.0], a_coef, eps), dtype=np.float64)
             batch[i] = y_full[burnin:] + mu
         yield batch
         done += bs
 
 
-def wild_resample(data, n_resamples, batch_size, rng, fitted=None, distribution="rademacher"):
+def wild_resample(
+    data: FloatArray,
+    n_resamples: int,
+    batch_size: int,
+    rng: np.random.Generator,
+    fitted: FloatArray | None = None,
+    distribution: str = "rademacher",
+) -> Generator[FloatArray, None, None]:
     n = data.shape[0]
     if fitted is None:
         fitted = np.full(n, data.mean(), dtype=np.float64)
