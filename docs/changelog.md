@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.4.1
+
+### Statistical correctness
+
+- Studentized estimates and nested standard errors now come from the same
+  outer resample.
+- Bayesian bootstrap evaluates functionals directly under Dirichlet weights;
+  custom statistics provide a weighted callable.
+- Subsampling intervals use centered, rate-scaled roots.
+- Bernoulli subsets include a finite-population correction.
+- Statistical regression tests cover scaling, weighting, cluster uncertainty,
+  and nested-resample pairing.
+
+## 0.4.0
+
+### Reliability
+
+- Strict validation for public parameters and resampled statistics.
+- Python 3.10–3.13 CI on Linux, macOS, and Windows.
+- Lint, documentation, package-build, and release-publishing guardrails.
+
 ## 0.3.0
 
 ### Fixed

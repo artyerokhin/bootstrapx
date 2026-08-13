@@ -64,6 +64,31 @@ def basic_interval(
     )
 
 
+def root_interval(
+    root_stats: np.ndarray,
+    theta_hat: float,
+    scale_n: float,
+    confidence_level: float = 0.95,
+    *,
+    method: str,
+) -> ConfidenceInterval:
+    """Construct an interval from a centered, scaled resampling root.
+
+    ``root_stats`` estimates the distribution of
+    ``scale_n * (theta_hat - theta)``.  This is the required construction
+    for subsampling and calibrated delete-fraction procedures; directly
+    taking percentiles of smaller-sample estimates has the wrong scale.
+    """
+    alpha = 1.0 - confidence_level
+    q_low = float(np.percentile(root_stats, 100 * alpha / 2))
+    q_high = float(np.percentile(root_stats, 100 * (1 - alpha / 2)))
+    return ConfidenceInterval(
+        low=theta_hat - q_high / scale_n,
+        high=theta_hat - q_low / scale_n,
+        method=method,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Jackknife — memory-efficient implementation
 # ---------------------------------------------------------------------------

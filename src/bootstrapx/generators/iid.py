@@ -21,11 +21,17 @@ def basic_resample(
 def poisson_resample(
     data: np.ndarray, n_resamples: int, batch_size: int, rng: np.random.Generator
 ) -> Generator[tuple[np.ndarray, np.ndarray], None, None]:
+    """Generate Poisson(1) multiplier weights conditional on positive total weight."""
     n = data.shape[0]
     done = 0
     while done < n_resamples:
         bs = min(batch_size, n_resamples - done)
-        yield data, rng.poisson(1.0, size=(bs, n)).astype(np.float64)
+        weights = rng.poisson(1.0, size=(bs, n))
+        empty = weights.sum(axis=1) == 0
+        while np.any(empty):
+            weights[empty] = rng.poisson(1.0, size=(int(empty.sum()), n))
+            empty = weights.sum(axis=1) == 0
+        yield data, weights.astype(np.float64)
         done += bs
 
 
@@ -36,11 +42,23 @@ def bernoulli_resample(
     rng: np.random.Generator,
     prob: float = 0.5,
 ) -> Generator[tuple[np.ndarray, np.ndarray], None, None]:
+    """Generate Bernoulli subsets conditional on being nonempty and nonfull."""
     n = data.shape[0]
     done = 0
     while done < n_resamples:
         bs = min(batch_size, n_resamples - done)
-        yield data, (rng.random(size=(bs, n)) < prob).astype(np.float64)
+        masks = rng.random(size=(bs, n)) < prob
+        invalid = (masks.sum(axis=1) == 0) | (masks.sum(axis=1) == n)
+        attempts = 0
+        while np.any(invalid):
+            masks[invalid] = rng.random(size=(int(invalid.sum()), n)) < prob
+            invalid = (masks.sum(axis=1) == 0) | (masks.sum(axis=1) == n)
+            attempts += 1
+            if attempts >= 1000:
+                raise ValueError(
+                    "prob is too close to 0 or 1 to generate nondegenerate Bernoulli subsets."
+                )
+        yield data, masks.astype(np.float64)
         done += bs
 
 

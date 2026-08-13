@@ -10,6 +10,7 @@ Covers:
 import numpy as np
 import pytest
 
+from bootstrapx import api as api_module
 from bootstrapx import bootstrap
 
 RNG_SEED = 42
@@ -26,6 +27,46 @@ def normal_sample() -> np.ndarray:
 
 
 class TestStudentized:
+    def test_se_is_computed_from_matching_outer_sample(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        data = np.arange(1.0, 9.0)
+        n_resamples = 6
+        n_inner = 5
+        seed = 17
+        captured: dict[str, np.ndarray] = {}
+        original = api_module.studentized_interval
+
+        def capture_interval(*args, **kwargs):
+            captured["boot_stats"] = args[3].copy()
+            captured["boot_se"] = args[4].copy()
+            return original(*args, **kwargs)
+
+        monkeypatch.setattr(api_module, "studentized_interval", capture_interval)
+        result = bootstrap(
+            data,
+            np.mean,
+            method="studentized",
+            n_resamples=n_resamples,
+            n_inner=n_inner,
+            batch_size=n_resamples,
+            random_state=seed,
+        )
+
+        rng = np.random.default_rng(seed)
+        outer_idx = rng.integers(0, len(data), size=(n_resamples, len(data)))
+        expected_stats = np.empty(n_resamples)
+        expected_se = np.empty(n_resamples)
+        for b, indices in enumerate(outer_idx):
+            sample = data[indices]
+            expected_stats[b] = np.mean(sample)
+            inner_idx = rng.integers(0, len(data), size=(n_inner, len(data)))
+            expected_se[b] = np.std(np.mean(sample[inner_idx], axis=1), ddof=1)
+
+        np.testing.assert_array_equal(result.bootstrap_distribution, expected_stats)
+        np.testing.assert_array_equal(captured["boot_stats"], expected_stats)
+        np.testing.assert_allclose(captured["boot_se"], expected_se)
+
     def test_basic_run(self, normal_sample: np.ndarray) -> None:
         r = bootstrap(
             normal_sample,

@@ -92,13 +92,21 @@ def validate_bootstrap_params(
     ci_capable = {"percentile", "basic", "bca", "studentized"}
     if method in ci_capable and ci_method is not None:
         raise ValueError("ci_method is only supported for generator-based bootstrap methods.")
-    if method not in ci_capable and ci_method not in (None, "percentile", "basic"):
+    specialized_intervals = {"bayesian", "bernoulli", "subsampling"}
+    if method in specialized_intervals and ci_method is not None:
+        raise ValueError(f"ci_method is not configurable for method={method!r}.")
+    if method not in ci_capable | specialized_intervals and ci_method not in (
+        None,
+        "percentile",
+        "basic",
+    ):
         raise ValueError("ci_method must be 'percentile', 'basic', or None.")
 
     allowed_kwargs = {
         "studentized": {"n_inner"},
+        "bayesian": {"weighted_statistic"},
         "bernoulli": {"prob"},
-        "subsampling": {"subsample_size"},
+        "subsampling": {"subsample_size", "rate"},
         "mbb": {"block_length"},
         "cbb": {"block_length"},
         "stationary": {"mean_block"},
@@ -122,19 +130,23 @@ def validate_bootstrap_params(
             raise ValueError(f"{name} must be at least 1{upper}.")
 
     if method == "studentized":
-        positive_int("n_inner", kwargs.get("n_inner", 50))
-        if kwargs.get("n_inner", 50) < 2:
+        positive_int("n_inner", kwargs.get("n_inner", 100))
+        if kwargs.get("n_inner", 100) < 2:
             raise ValueError("n_inner must be at least 2.")
     if method == "bernoulli":
         prob = kwargs.get("prob", 0.5)
         if (
             not isinstance(prob, int | float | np.number)
             or not np.isfinite(prob)
-            or not 0 < prob <= 1
+            or not 0 < prob < 1
         ):
-            raise ValueError("prob must be a finite number in (0, 1].")
+            raise ValueError("prob must be a finite number strictly between 0 and 1.")
     if method == "subsampling" and kwargs.get("subsample_size") is not None:
         positive_int("subsample_size", kwargs["subsample_size"], maximum=n_observations - 1)
+    if method == "subsampling":
+        rate = kwargs.get("rate", 0.5)
+        if not isinstance(rate, int | float | np.number) or not np.isfinite(rate) or rate <= 0:
+            raise ValueError("rate must be a finite positive number.")
     if method in {"mbb", "cbb", "tapered"}:
         positive_int("block_length", kwargs.get("block_length", 10), maximum=n_observations - 1)
     if method == "stationary":
