@@ -1,76 +1,46 @@
-# Methods
+# Choose a Method
 
-This page explains when to use each method.
+Choose the resampling design first and the interval construction second. A
+more sophisticated interval cannot repair the wrong independence assumption.
 
-## IID methods
+## Decision table
 
-### BCa (`method="bca"`)
-Best default when you want strong coverage properties for a scalar statistic.
+| Situation | Method | Main setting | Main caution |
+|---|---|---|---|
+| Independent observations, general scalar statistic | `bca` | — | can be unstable for tiny samples or nonsmooth statistics |
+| Independent observations, simple baseline | `percentile` | — | transformation and bias behavior can be weak |
+| Independent observations, reflected interval | `basic` | — | relies on a useful error-distribution reflection |
+| Bootstrap-t is scientifically justified | `studentized` | `n_inner=` | much more expensive; nested SE must be stable |
+| Bayesian-bootstrap posterior | `bayesian` | `weighted_statistic=` for custom statistics | bounds are credible, not confidence, intervals |
+| Smaller-sample asymptotics | `subsampling` | `subsample_size=`, `rate=` | rate and sample size require theory |
+| Dependent stationary series | `stationary` | `mean_block=` | result is sensitive to dependence assumptions |
+| Fixed-length local dependence | `mbb` / `cbb` | `block_length=` | compare several plausible block lengths |
+| AR-like stationary series | `sieve` | `ar_order=` | inappropriate for dynamics an AR model cannot represent |
+| Heteroscedastic residual workflow | `wild` | `fitted=`, `distribution=` | caller must supply a meaningful fitted structure |
+| Repeated observations within groups | `cluster` | `cluster_ids=` | one grouping level only |
+| Known strata in the sampling design | `strata` | `strata=` | strata must represent the actual design |
 
-### Percentile (`method="percentile"`)
-Good when you want a simple interval and your bootstrap distribution is already informative.
+## IID intervals
 
-### Basic (`method="basic"`)
-Useful as a classic alternative to percentile intervals.
+`bca` is a reasonable starting point for many smooth scalar statistics, not a
+universal best method. Compare it with `percentile` and investigate large
+disagreements. `studentized` is useful only when the nested standard-error
+estimate is meaningful and its extra cost is acceptable.
 
-### Studentized (`method="studentized"`)
-Useful when you need bootstrap-t intervals and can afford higher compute cost.
-Each outer estimate is paired with a standard error estimated from the same
-outer sample. The default `n_inner=100` is a compromise; strongly skewed or
-unstable statistics may require more inner and outer resamples.
+`bayesian` draws Dirichlet weights. `np.mean`, `np.nanmean`, and `np.average`
+have built-in weighted handling; a custom statistic must provide
+`weighted_statistic(data, weights)`.
 
-### Bayesian (`method="bayesian"`)
-Produces a Bayesian-bootstrap posterior by drawing Dirichlet weights. Built-in
-weighted handling is available for `np.mean`, `np.nanmean`, and `np.average`.
-Custom statistics must provide `weighted_statistic(data, weights)`. The
-resulting percentile bounds are credible intervals, not frequentist confidence
-intervals.
+`poisson`, `bernoulli`, and `subsampling` are specialist tools rather than
+drop-in improvements over BCa. Their smoothness, finite-population, and
+convergence-rate assumptions should come from the analysis design.
 
-### Poisson / Bernoulli / Subsampling
-Poisson uses Poisson(1) multiplier counts and is appropriate for smooth
-functionals where the multiplier bootstrap is justified. Bernoulli uses a
-finite-population-corrected random subset and assumes a smooth root-n
-statistic. Subsampling estimates a centered, scaled root from samples of size
-`subsample_size`; its default `rate=0.5` assumes root-n convergence. For
-heavy-tailed estimators with another convergence rate, set `rate` from the
-relevant statistical theory rather than relying on the default. Subsampling
-theory also assumes `subsample_size < n` and usually works with a subsample
-that is meaningfully smaller than the full data set.
+## Dependent data
 
-## Time-series methods
+Use `cluster` when dependence is explained by a grouping unit. Use block or
+stationary methods when ordering and local serial dependence matter. Use
+`strata` to preserve a known sampling composition, not merely because a useful
+category exists in the dataset.
 
-### Moving Block Bootstrap (`mbb`)
-Preserves local autocorrelation by resampling contiguous blocks.
-
-### Circular Block Bootstrap (`cbb`)
-Like MBB, but wraps around the series to reduce edge effects.
-
-### Stationary Bootstrap (`stationary`)
-Uses random block lengths and is often a strong default for stationary dependent data.
-
-### Tapered Block Bootstrap (`tapered`)
-Reduces block-boundary artifacts with tapering windows. The taper is applied
-to the centered series and normalized to preserve variance scale before the
-sample mean is restored.
-
-### Sieve Bootstrap (`sieve`)
-Fits an AR approximation and resamples residual-driven trajectories. Use it when an AR representation is reasonable.
-
-### Wild Bootstrap (`wild`)
-Useful for heteroscedastic residual structures.
-
-## Hierarchical methods
-
-### Cluster Bootstrap (`cluster`)
-Resample entire clusters, not rows, when observations within a cluster are dependent.
-
-### Stratified Bootstrap (`strata`)
-Use when the sampling design or inference target is stratified.
-
-## Practical defaults
-
-- General-purpose scalar statistic: `bca`
-- Model metric on iid holdout set: `bca` or `percentile`
-- Financial / dependent series: `stationary` or `mbb`
-- Panel / user-session data: `cluster`
-- Survey-like grouped data: `strata`
+For detailed examples, continue to [Grouped and experiment data](ab-testing.md)
+or [Time series](time-series.md).

@@ -1,17 +1,20 @@
 # Time Series
 
-Time-series data violates the iid assumption behind ordinary bootstrap.
-Use one of the dependent-data methods instead.
+Ordinary IID resampling destroys serial dependence. Time-series methods create
+new series while preserving a chosen dependence structure.
 
-## Quick guidance
+## Choose the model you can defend
 
-- `mbb`: simple and reliable for local dependence.
-- `cbb`: useful when edge effects matter.
-- `stationary`: good default for stationary dependent series.
-- `sieve`: useful when an AR approximation is reasonable.
-- `wild`: useful for heteroscedastic residuals.
+| Method | Dependence model | Parameter |
+|---|---|---|
+| `stationary` | stationary series, random block lengths | `mean_block=` |
+| `mbb` | contiguous fixed-length blocks | `block_length=` |
+| `cbb` | fixed blocks with circular wraparound | `block_length=` |
+| `tapered` | fixed blocks with softened boundaries | `block_length=`, `taper=` |
+| `sieve` | autoregressive approximation | `ar_order=` |
+| `wild` | heteroscedastic residual structure | `fitted=`, `distribution=` |
 
-## Moving block bootstrap
+## Block-bootstrap example
 
 ```python
 import numpy as np
@@ -19,22 +22,45 @@ from bootstrapx import bootstrap
 
 rng = np.random.default_rng(0)
 y = np.zeros(500)
-for t in range(1, 500):
+for t in range(1, len(y)):
     y[t] = 0.7 * y[t - 1] + rng.normal()
 
-result = bootstrap(y, np.mean, method="mbb", block_length=15, n_resamples=4999, random_state=42)
-print(result)
+result = bootstrap(
+    y,
+    np.mean,
+    method="stationary",
+    mean_block=15,
+    n_resamples=4999,
+    random_state=42,
+)
+print(result.confidence_interval)
 ```
 
-## Sieve bootstrap
+The method assumes the observed sequence is ordered correctly and a stationary
+dependence model is scientifically plausible. It does not detect trends,
+seasonality, structural breaks, or leakage for you.
+
+## Check block-length sensitivity
+
+There is no universal block length. Compare a small range and report the
+choice when endpoints matter:
 
 ```python
-result = bootstrap(y, np.mean, method="sieve", n_resamples=4999, random_state=42)
-print(result)
+for mean_block in (10, 15, 20, 30):
+    result = bootstrap(
+        y,
+        np.mean,
+        method="stationary",
+        mean_block=mean_block,
+        n_resamples=4999,
+        random_state=42,
+    )
+    ci = result.confidence_interval
+    print(mean_block, ci.low, ci.high)
 ```
 
-Use sieve when the series is reasonably represented by an autoregressive process. If dependence is complex and local, `stationary` or `mbb` is usually safer.
+Large changes are evidence that the inference depends strongly on an unresolved
+modeling choice; they are not a reason to select the narrowest interval.
 
-## Choosing block length
-
-Block length is problem-dependent. Start with a moderate value, validate stability, and compare intervals across nearby choices.
+For repeated block-bootstrap runs, see the optional
+[Numba acceleration](integrations.md#when-numba-helps).

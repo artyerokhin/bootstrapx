@@ -1,46 +1,28 @@
-# Integrations
+# Integrations and Performance
 
-## pandas accessor
+## pandas
 
-When pandas is installed, `bootstrapx` registers a `.bootstrap` accessor.
-
-### Series
-
-```python
-import pandas as pd
-import numpy as np
-import bootstrapx
-
-s = pd.Series(np.random.default_rng(0).normal(5, 2, 300))
-r = s.bootstrap.bca(np.mean, n_resamples=4999, random_state=42)
-print(r)
-```
-
-### DataFrame summary
+Install with `pip install "bootstrapx-lib[pandas]"`. Importing `bootstrapx`
+registers the accessor.
 
 ```python
-import pandas as pd
 import numpy as np
+import pandas as pd
 import bootstrapx
 
-rng = np.random.default_rng(0)
-df = pd.DataFrame({
-    "control": rng.normal(0, 1, 200),
-    "treatment": rng.normal(0.2, 1, 200),
-})
-
-summary = df.bootstrap.summary(np.mean, n_resamples=2999, random_state=42)
-print(summary)
+s = pd.Series(np.random.default_rng(0).normal(size=300))
+result = s.bootstrap.bca(np.mean, n_resamples=4999, random_state=42)
+print(result.to_frame())
 ```
 
-`DataFrame.bootstrap.summary()` estimates every column independently. It does
-not estimate a difference, ratio, lift, paired effect, or p-value between
-columns. For paired observations, bootstrap the row-wise effect explicitly;
-for repeated observations per unit, use cluster bootstrap at that unit.
+`DataFrame.bootstrap.summary()` evaluates columns independently. It is useful
+for a table of separate column estimates, but it does not estimate a
+difference, ratio, lift, paired effect, or p-value between columns.
 
 ## scikit-learn
 
-`BootstrapCV` implements a scikit-learn compatible cross-validator using bootstrap training samples and out-of-bag evaluation.
+Install with `pip install "bootstrapx-lib[sklearn]"`. `BootstrapCV` supplies
+bootstrap training indices and out-of-bag test indices to scikit-learn:
 
 ```python
 from bootstrapx import BootstrapCV
@@ -50,21 +32,44 @@ from sklearn.model_selection import cross_val_score
 
 X, y = load_breast_cancer(return_X_y=True)
 cv = BootstrapCV(n_splits=200, random_state=42)
-
 scores = cross_val_score(
-    GradientBoostingClassifier(n_estimators=100, random_state=0),
-    X, y, cv=cv, scoring="roc_auc"
+    GradientBoostingClassifier(random_state=0),
+    X,
+    y,
+    cv=cv,
+    scoring="roc_auc",
 )
 print(scores.mean(), scores.std())
 ```
 
-## Backend guidance
+The score distribution is based on varying out-of-bag subsets. Its standard
+deviation is not automatically a confidence interval for future deployment
+performance.
 
-`bootstrapx` is CPU-first by design so it works on most developer and production machines with a normal `pip install`.
+## When Numba helps
 
-Recommended deployment baseline:
+The core library does not require Numba. Installing
+`pip install "bootstrapx-lib[numba]"` JIT-compiles index generation for:
 
-- NumPy + SciPy core for correctness and portability.
-- Optional pandas for tabular workflows.
-- Optional scikit-learn for model evaluation.
-- Optional `bootstrapx-lib[numba]` for JIT-accelerated time-series index generation.
+- moving block bootstrap (`mbb`);
+- circular block bootstrap (`cbb`);
+- stationary bootstrap (`stationary`);
+- the block-index part of tapered bootstrap (`tapered`).
+
+It does **not** accelerate IID/BCa methods, the user statistic, pandas,
+scikit-learn, sieve bootstrap, or wild bootstrap. Results and random-state
+behavior are tested with and without the optional dependency.
+
+Use it for repeated block-bootstrap analysis or large series. Skip it when you
+want the smallest environment or only run IID methods. The first call has a JIT
+startup cost; warm calls can be much faster. On one Apple Silicon/Python 3.10
+check, the complete `np.mean` workflow with 500 resamples was 10–25x faster for
+`n=100…10 000`, while cold compilation/loading cost roughly 0.1–0.5 seconds.
+These are indicative numbers, not a cross-machine guarantee.
+
+Reproduce the comparison on your machine:
+
+```bash
+pip install -e ".[numba]"
+python benchmarks/bench_numba.py
+```

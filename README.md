@@ -47,7 +47,7 @@ The R `boot` package is comprehensive but not Pythonic.
 pip install bootstrapx-lib                  # core (numpy + scipy only)
 pip install "bootstrapx-lib[pandas]"        # + pandas accessor
 pip install "bootstrapx-lib[sklearn]"       # + scikit-learn CV integration
-pip install "bootstrapx-lib[numba]"         # + optional time-series JIT acceleration
+pip install "bootstrapx-lib[numba]"         # + faster MBB/CBB/stationary indexing
 pip install "bootstrapx-lib[pandas,sklearn]"  # pandas + scikit-learn integrations
 pip install "bootstrapx-lib[pandas,sklearn,numba]"  # all optional features
 ```

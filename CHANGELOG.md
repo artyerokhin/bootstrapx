@@ -12,6 +12,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `BootstrapResult.to_frame()` returns a one-row pandas DataFrame suitable for
   reports, concatenation, and experiment tracking.
 - The documented `numba` extra now exists and is tested independently in CI.
+- A reproducible benchmark documents Numba's narrow performance scope, cold
+  startup cost, Python fallback, and warm block-bootstrap speedup.
 - A current-limitations guide documents scalar-output, two-sample, missing-data,
   dependent-data, Monte Carlo, and pre-1.0 compatibility boundaries.
 - Structured bug and practitioner-workflow issue forms, plus a contribution
@@ -22,6 +24,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   blanket production readiness while the public API remains pre-1.0.
 - DataFrame examples explicitly state that column-wise intervals do not
   estimate a difference, ratio, lift, paired effect, or p-value between groups.
+- The documentation is reorganized around data shape and practitioner
+  decisions, with result interpretation, grouped-data, experiment,
+  block-sensitivity, and optional-performance guidance.
 - Missing optional-dependency errors point to the corresponding bootstrapx
   installation extra.
 

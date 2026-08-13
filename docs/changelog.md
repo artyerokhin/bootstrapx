@@ -6,10 +6,14 @@
 
 - Results export to compact dictionaries and one-row pandas DataFrames.
 - The documented `numba` install extra now exists and has its own CI check.
+- Numba guidance now states exactly which methods it accelerates, its JIT
+  startup tradeoff, and how to reproduce the fallback comparison.
 - A limitations guide makes one-sample, scalar-output, dependent-data, and
   pre-1.0 boundaries explicit.
 - DataFrame documentation distinguishes separate column intervals from an
   actual treatment-effect comparison.
+- The guide now starts from data shape and separates supported paired/grouped
+  workflows from unsupported unpaired A/B effects.
 - Optional-dependency errors, issue forms, and contribution guidance are more
   actionable for practitioners.
 

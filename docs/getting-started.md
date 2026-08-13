@@ -1,64 +1,73 @@
-# Getting Started
+# First Analysis
 
-## Installation
-
-Choose the smallest install that fits your workflow.
+## Install only what you use
 
 ```bash
 pip install bootstrapx-lib
 ```
 
-Optional extras:
+The core install contains NumPy/SciPy bootstrap methods. Extras are independent:
 
-```bash
-pip install "bootstrapx-lib[pandas]"
-pip install "bootstrapx-lib[sklearn]"
-pip install "bootstrapx-lib[numba]"
-pip install "bootstrapx-lib[pandas,sklearn,numba]"
-```
+| Extra | Install command | Use it when |
+|---|---|---|
+| pandas | `pip install "bootstrapx-lib[pandas]"` | using `.bootstrap` or `to_frame()` |
+| sklearn | `pip install "bootstrapx-lib[sklearn]"` | using `BootstrapCV` |
+| numba | `pip install "bootstrapx-lib[numba]"` | repeatedly running block-bootstrap methods |
 
-## First bootstrap interval
+Numba is a performance option, not a correctness requirement. See
+[When Numba helps](integrations.md#when-numba-helps).
+
+## Estimate and inspect an interval
 
 ```python
 import numpy as np
 from bootstrapx import bootstrap
 
-data = np.random.default_rng(0).normal(loc=5.0, scale=2.0, size=200)
-result = bootstrap(data, np.mean, method="bca", n_resamples=4999, random_state=42)
+rng = np.random.default_rng(0)
+data = rng.lognormal(mean=1.0, sigma=0.8, size=300)
 
-print(result.theta_hat)
-print(result.standard_error)
-print(result.confidence_interval)
+result = bootstrap(
+    data,
+    np.median,
+    method="bca",
+    confidence_level=0.95,
+    n_resamples=4999,
+    random_state=42,
+)
 
-# Export a compact record for reports or experiment tracking
+print(f"estimate: {result.theta_hat:.3f}")
+print(
+    f"95% {result.confidence_interval.method} interval: "
+    f"[{result.confidence_interval.low:.3f}, "
+    f"{result.confidence_interval.high:.3f}]"
+)
+print(f"bootstrap SE: {result.standard_error:.3f}")
+```
+
+`confidence_level=0.95` describes the requested procedure; it does not mean
+there is a 95% probability that this already-computed frequentist interval
+contains the parameter.
+
+## Export a compact result
+
+```python
 record = result.to_dict()
+# Includes the estimate, interval, SE, method, and metadata.
+# The potentially large bootstrap_distribution is omitted by default.
+
+complete = result.to_dict(include_distribution=True)
 frame = result.to_frame()  # requires the pandas extra
 ```
 
-## Choosing a method
+## Checks before trusting the result
 
-- `bca`: best default for general statistics.
-- `percentile`: simplest and fast.
-- `basic`: useful when symmetry assumptions are acceptable.
-- `studentized`: higher compute cost, useful when bootstrap-t is desired.
-- `mbb`, `stationary`, `sieve`: for dependent time series.
-- `cluster`, `strata`: for grouped or sampled data.
+1. Confirm the resampling unit matches how observations became dependent.
+2. Inspect the data and statistic; NaN and infinite values are rejected.
+3. Repeat with a second seed or more resamples when endpoints affect a decision.
+4. For block methods, compare nearby block lengths.
+5. Do not infer a treatment effect from overlapping or non-overlapping
+   one-group intervals.
 
-## Reproducibility
-
-Always pass `random_state` in production code:
-
-```python
-result = bootstrap(data, np.mean, random_state=123)
-```
-
-This is especially important for pipelines, tests, and repeated model evaluation.
-
-## Local development
-
-```bash
-git clone https://github.com/artyerokhin/bootstrapx.git
-cd bootstrapx
-pip install -e ".[dev]"
-pytest tests/ -v
-```
+Use `random_state` in saved analyses and tests. Use at least a few thousand
+resamples for final percentile-based endpoints; the right number still depends
+on the stability you need, not on a universal constant.

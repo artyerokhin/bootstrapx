@@ -1,38 +1,26 @@
 # Benchmarks
 
-`bootstrapx` focuses on CPU-portable performance that works on most machines.
+Performance claims are meaningful only when the method, statistic, sample size,
+resample count, warm-up state, and dependency set match.
 
-## What is fast
-
-- Batched iid resampling for scalar statistics.
-- Vectorized statistics where the user provides a batch-aware callable.
-- Time-series sieve implementation with efficient filtering-based generation.
-
-## Benchmark philosophy
-
-Compare methods under the same:
-
-- sample size
-- number of resamples
-- statistic
-- confidence method
-- random seed when possible
-
-## Reproducible benchmark command
+## General comparison
 
 ```bash
 python benchmarks/bench_speed.py
 ```
 
-## What to report
+## Optional Numba comparison
 
-When publishing benchmark numbers, include:
+```bash
+pip install -e ".[numba]"
+python benchmarks/bench_numba.py
+```
 
-- CPU model
-- Python version
-- NumPy / SciPy version
-- method name
-- `n_resamples`
-- sample size `n`
+The Numba benchmark compares the same time-series resampling workflow against
+bootstrapx's Python fallback in one process. It reports cold-call latency and
+warm median runtime separately. It is intentionally limited to methods whose
+index generators actually use Numba.
 
-This keeps performance claims credible and repeatable.
+When publishing numbers, include CPU, OS, Python, NumPy, SciPy and Numba
+versions, `n`, `n_resamples`, statistic, method, block setting, and whether the
+measurement includes JIT startup.
