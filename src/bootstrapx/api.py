@@ -41,6 +41,7 @@ from bootstrapx.stats.confidence import (
     basic_interval,
     bca_interval,
     percentile_interval,
+    root_interval,
     studentized_interval,
 )
 from bootstrapx.utils import (
@@ -94,33 +95,53 @@ def _collect_weighted(
         for i in range(weights.shape[0]):
             w = weights[i]
             idx = np.repeat(np.arange(len(w)), np.maximum(w, 0).astype(np.intp))
-            if len(idx) > 0:
-                results.append(float(statistic(data_ref[idx])))
-            else:
-                results.append(float(statistic(data_ref)))
+            results.append(float(statistic(data_ref[idx])))
     return results
 
 
 def _collect_bayesian(
     gen: Any,
-    statistic: Callable[..., float],
-    rng: np.random.Generator,  # ← now receives caller's rng
+    weighted_statistic: Callable[[np.ndarray, np.ndarray], float],
 ) -> list[float]:
-    """Collect stats from Bayesian (Dirichlet) generators.
-
-    Fix: the original code called ``np.random.default_rng()`` (no seed) inside
-    the collection loop, making results non-reproducible even when the caller
-    passed ``random_state``.  We now use the caller's Generator throughout.
-    """
+    """Evaluate a functional directly under Bayesian-bootstrap weights."""
     results: list[float] = []
     for batch in gen:
         data_ref, weights = batch
-        n = len(data_ref)
         for i in range(weights.shape[0]):
-            w = weights[i]
-            idx = rng.choice(n, size=n, replace=True, p=w)
-            results.append(float(statistic(data_ref[idx])))
+            results.append(float(weighted_statistic(data_ref, weights[i])))
     return results
+
+
+def _resolve_weighted_statistic(
+    statistic: Callable[..., float],
+    candidate: Any,
+) -> Callable[[np.ndarray, np.ndarray], float]:
+    """Resolve the exact weighted functional used by Bayesian bootstrap."""
+    if candidate is not None:
+        if not callable(candidate):
+            raise TypeError("weighted_statistic must be callable.")
+        return candidate
+    if any(statistic is built_in for built_in in (np.mean, np.nanmean, np.average)):
+        return lambda data, weights: float(np.average(data, weights=weights))
+    raise ValueError(
+        "Bayesian bootstrap requires `weighted_statistic(data, weights)` for "
+        "custom statistics. np.mean, np.nanmean, and np.average are supported directly."
+    )
+
+
+def _collect_bernoulli(
+    gen: Any,
+    statistic: Callable[..., float],
+) -> tuple[np.ndarray, np.ndarray]:
+    """Collect Bernoulli-subset statistics and their realized sample sizes."""
+    stats: list[float] = []
+    sizes: list[int] = []
+    for data_ref, masks in gen:
+        for mask in masks:
+            idx = np.flatnonzero(mask)
+            stats.append(float(statistic(data_ref[idx])))
+            sizes.append(len(idx))
+    return np.asarray(stats, dtype=np.float64), np.asarray(sizes, dtype=np.float64)
 
 
 def _collect_arrays(
@@ -193,12 +214,29 @@ def bootstrap(
         bayesian, subsampling, mbb, cbb, stationary, tapered, sieve,
         wild, cluster, strata.
     ci_method : str or None
-        CI construction for generator-based methods: ``"percentile"`` or
-        ``"basic"``.  Defaults to ``"percentile"``.
+        CI construction for generator-based methods that do not define a
+        specialized interval: ``"percentile"`` or ``"basic"``. Defaults to
+        ``"percentile"``. Bayesian, Bernoulli, and subsampling intervals are
+        not configurable through this parameter.
     vectorized : bool
         If ``True``, ``statistic`` is called as ``statistic(batch, axis=1)``.
     n_jobs : int
         Parallelism for jackknife in BCa (effective only for n >= 2000).
+
+    Other Parameters
+    ----------------
+    weighted_statistic : callable
+        Required for custom Bayesian-bootstrap statistics. Called as
+        ``weighted_statistic(data, weights)`` for each Dirichlet draw.
+    subsample_size : int
+        Number of observations in each subsample.
+    rate : float
+        Convergence-rate exponent for subsampling. ``0.5`` means root-n.
+    prob : float
+        Inclusion probability for Bernoulli subsampling; strictly between 0 and 1.
+    n_inner : int
+        Number of inner resamples per outer sample for the studentized method.
+        Defaults to 100.
     """
     if not isinstance(method, str):
         raise TypeError("method must be a string.")
@@ -242,7 +280,40 @@ def bootstrap(
     if not np.isfinite(theta_hat):
         raise ValueError("statistic must return a finite scalar value for the observed data.")
 
-    if method in _CI_CAPABLE:
+    result_extra: dict[str, Any] = {}
+    result_standard_error: float | None = None
+
+    if method == "studentized":
+        n_inner = int(kwargs.get("n_inner", 100))
+        boot_stats = np.empty(n_resamples, dtype=np.float64)
+        boot_se = np.empty(n_resamples, dtype=np.float64)
+        done = 0
+        while done < n_resamples:
+            bs = min(batch_size, n_resamples - done)
+            outer_idx = rng.integers(0, n, size=(bs, n))
+            for b in range(bs):
+                sample = arr[outer_idx[b]]
+                boot_stats[done + b] = float(statistic(sample))
+                inner_idx = rng.integers(0, n, size=(n_inner, n))
+                inner_vals = np.array(
+                    [float(statistic(sample[inner_idx[k]])) for k in range(n_inner)]
+                )
+                boot_se[done + b] = float(np.std(inner_vals, ddof=1))
+            done += bs
+        boot_stats = validate_bootstrap_distribution(boot_stats, n_resamples)
+        if not np.all(np.isfinite(boot_se)):
+            raise ValueError("statistic returned NaN or inf during studentized bootstrap.")
+        ci = studentized_interval(
+            arr,
+            statistic,
+            theta_hat,
+            boot_stats,
+            boot_se,
+            confidence_level,
+        )
+        result_extra["n_inner"] = n_inner
+
+    elif method in _CI_CAPABLE:
         boot_stats = apply_statistic_batched(
             arr,
             statistic,
@@ -270,38 +341,13 @@ def bootstrap(
                 n_jobs=n_jobs,
             )
 
-        elif method == "studentized":
-            n_inner = int(kwargs.get("n_inner", 50))
-            boot_se = np.empty(n_resamples, dtype=np.float64)
-            done = 0
-            while done < n_resamples:
-                bs = min(batch_size, n_resamples - done)
-                outer_idx = rng.integers(0, n, size=(bs, n))
-                for b in range(bs):
-                    sample = arr[outer_idx[b]]
-                    # FIX (issue #2): generate fresh inner_idx per outer sample.
-                    # Previously drawn once per batch => correlated SE* => under-covered CIs.
-                    inner_idx = rng.integers(0, n, size=(n_inner, n))
-                    inner_vals = np.array(
-                        [float(statistic(sample[inner_idx[k]])) for k in range(n_inner)]
-                    )
-                    boot_se[done + b] = float(np.std(inner_vals, ddof=1))
-                done += bs
-            if not np.all(np.isfinite(boot_se)):
-                raise ValueError("statistic returned NaN or inf during studentized bootstrap.")
-            ci = studentized_interval(
-                arr,
-                statistic,
-                theta_hat,
-                boot_stats,
-                boot_se,
-                confidence_level,
-            )
-
     else:
         if method == "bayesian":
+            weighted_statistic = _resolve_weighted_statistic(
+                statistic, kwargs.get("weighted_statistic")
+            )
             gen = bayesian_resample(arr, n_resamples, batch_size, rng)
-            boot_stats_list = _collect_bayesian(gen, statistic, rng)
+            boot_stats_list = _collect_bayesian(gen, weighted_statistic)
 
         elif method == "poisson":
             gen = poisson_resample(arr, n_resamples, batch_size, rng)
@@ -310,7 +356,7 @@ def bootstrap(
         elif method == "bernoulli":
             prob = float(kwargs.get("prob", 0.5))
             gen = bernoulli_resample(arr, n_resamples, batch_size, rng, prob=prob)
-            boot_stats_list = _collect_weighted(gen, statistic, arr)
+            boot_stats, subset_sizes = _collect_bernoulli(gen, statistic)
 
         elif method == "cluster":
             cids = kwargs["cluster_ids"]
@@ -369,21 +415,63 @@ def bootstrap(
         else:
             raise ValueError(f"Method {method!r} not implemented.")
 
-        boot_stats = np.array(boot_stats_list, dtype=np.float64)
+        if method != "bernoulli":
+            boot_stats = np.array(boot_stats_list, dtype=np.float64)
 
         boot_stats = validate_bootstrap_distribution(boot_stats, n_resamples)
 
-        _ci_method = ci_method or "percentile"
-        if _ci_method == "basic":
-            ci = basic_interval(boot_stats, theta_hat, confidence_level)
-        else:
+        if method == "bayesian":
             ci = percentile_interval(boot_stats, confidence_level)
+            ci.method = "bayesian"
+            result_extra["interval_type"] = "credible"
+        elif method == "subsampling":
+            subsample_size = int(kwargs.get("subsample_size") or max(1, np.sqrt(n)))
+            rate = float(kwargs.get("rate", 0.5))
+            scale_subsample = float(subsample_size**rate)
+            scale_n = float(n**rate)
+            root_stats = scale_subsample * (boot_stats - theta_hat)
+            ci = root_interval(
+                root_stats,
+                theta_hat,
+                scale_n,
+                confidence_level,
+                method="subsampling",
+            )
+            result_standard_error = float(np.std(root_stats, ddof=1) / scale_n)
+            result_extra.update(
+                {"subsample_size": subsample_size, "rate": rate, "root_distribution": root_stats}
+            )
+        elif method == "bernoulli":
+            fractions = subset_sizes / n
+            root_stats = np.sqrt(subset_sizes / (1.0 - fractions)) * (boot_stats - theta_hat)
+            ci = root_interval(
+                root_stats,
+                theta_hat,
+                np.sqrt(n),
+                confidence_level,
+                method="bernoulli",
+            )
+            result_standard_error = float(np.std(root_stats, ddof=1) / np.sqrt(n))
+            result_extra.update(
+                {"prob": prob, "subset_sizes": subset_sizes, "root_distribution": root_stats}
+            )
+        else:
+            _ci_method = ci_method or "percentile"
+            if _ci_method == "basic":
+                ci = basic_interval(boot_stats, theta_hat, confidence_level)
+            else:
+                ci = percentile_interval(boot_stats, confidence_level)
 
     return BootstrapResult(
         confidence_interval=ci,
         bootstrap_distribution=boot_stats,
         theta_hat=theta_hat,
-        standard_error=float(np.std(boot_stats, ddof=1)),
+        standard_error=(
+            result_standard_error
+            if result_standard_error is not None
+            else float(np.std(boot_stats, ddof=1))
+        ),
         n_resamples=len(boot_stats),
         method=method,
+        extra=result_extra,
     )

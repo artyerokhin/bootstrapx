@@ -61,6 +61,8 @@ class TestBootstrapParameterValidation:
             ("stationary", {"mean_block": 1}, "mean_block"),
             ("studentized", {"n_inner": 1}, "n_inner"),
             ("bernoulli", {"prob": 0}, "prob"),
+            ("bernoulli", {"prob": 1}, "prob"),
+            ("subsampling", {"rate": 0}, "rate"),
             ("wild", {"distribution": "normal"}, "distribution"),
         ],
     )
