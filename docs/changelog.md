@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.3
+
+### Engineering reliability
+
+- Strict `mypy` validation now covers the complete source tree and runs in CI.
+- Time-series tests cover all six methods across batch sizes, optional Numba
+  fallback, taper variants, wild multipliers, and sieve edge cases.
+- GitHub Actions use immutable commit pins maintained by Dependabot.
+- Publishing can be rerun safely after a partial release: an existing complete
+  PyPI version is skipped and the GitHub Release is created or updated.
+- Release checks include an 85% coverage floor, dependency consistency,
+  byte-compilation, and core import smoke tests.
+
 ## 0.4.2
 
 ### Correctness and release safety

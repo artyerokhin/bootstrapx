@@ -191,7 +191,7 @@ Run yourself: `python benchmarks/bench_speed.py --quick`
 | 10 000 | 1 015 | 289 | **3.5×** |
 
 At n < 1 000, scipy and bootstrapx are comparable; bootstrapx applies a
-vectorised fast path for numpy built-ins (mean, median, std, etc.) at n < 500.
+vectorised fast path for numpy built-ins (mean, median, std, etc.) at n < 1000.
 Speedup grows with sample size due to O(n) vectorised jackknife vs O(n²) in scipy.
 
 ### Coverage accuracy
@@ -264,7 +264,7 @@ If you use bootstrapx in academic work:
   author  = {Erokhin, Artem},
   title   = {bootstrapx: Production-grade bootstrap uncertainty estimation},
   url     = {https://github.com/artyerokhin/bootstrapx},
-  version = {0.4.2},
+  version = {0.4.3},
   year    = {2026},
 }
 ```

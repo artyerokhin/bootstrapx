@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.3] — 2026-08-13
+
+### Changed
+- The complete source tree now passes strict `mypy` validation. Public and
+  internal array, generator, statistic, and compatibility-layer contracts use
+  explicit types, and CI rejects new typing regressions.
+- GitHub Actions are pinned to full commit SHAs. Dependabot checks these pins
+  weekly, while workflow permissions default to read-only.
+- PyPI publication is safely repeatable: reruns skip an already complete PyPI
+  version and create or update the matching GitHub Release.
+- Release and package jobs now run `pip check`, byte-compilation, and import
+  smoke tests in addition to the existing test, documentation, and build checks.
+- The enforced coverage floor is raised from 70% to 85%.
+
+### Fixed
+- Documentation now matches the actual NumPy fast-path boundary of `n < 1000`.
+- Time-series index generators have explicit Python fallback implementations,
+  preserving deterministic behavior when Numba is unavailable.
+
+### Tests
+- Expanded time-series tests cover taper windows and invalid windows, Mammen
+  multipliers with fitted values, nonconstant and singular sieve fits,
+  no-Numba fallback execution, boundary block lengths, and reproducibility of
+  all six time-series methods across different batch sizes.
+- Time-series generator coverage increased from 48% to 79%; total source
+  coverage increased from 81% to 88%.
+
 ## [0.4.2] — 2026-08-13
 
 ### Fixed

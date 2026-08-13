@@ -10,16 +10,16 @@ jobs:
     name: Build and publish to PyPI
     runs-on: ubuntu-latest
     permissions:
-          id-token: write
-          contents: write
+      id-token: write
+      contents: write
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       with:
         fetch-depth: 0
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
       with:
         python-version: "3.13"
 
@@ -39,7 +39,7 @@ jobs:
         git fetch origin main
         git merge-base --is-ancestor "$GITHUB_SHA" origin/main
 
-    - name: Verify version is not already published
+    - name: Check whether version is already published
       run: |
         python - <<'PY'
         import json
@@ -56,8 +56,18 @@ jobs:
                 raise
             releases = {}
 
-        if version in releases:
-            raise SystemExit(f"bootstrapx-lib {version} is already published")
+        files = releases.get(version, [])
+        exists = bool(files)
+        if exists:
+            filenames = {item["filename"] for item in files}
+            if not any(name.endswith(".whl") for name in filenames):
+                raise SystemExit(f"Published bootstrapx-lib {version} has no wheel")
+            if not any(name.endswith(".tar.gz") for name in filenames):
+                raise SystemExit(f"Published bootstrapx-lib {version} has no source distribution")
+            print(f"bootstrapx-lib {version} is already complete on PyPI; upload will be skipped")
+
+        with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env_file:
+            env_file.write(f"PYPI_VERSION_EXISTS={'true' if exists else 'false'}\n")
         PY
 
     - name: Install release dependencies
@@ -69,9 +79,13 @@ jobs:
       run: |
         ruff format --check src tests
         ruff check src tests
-        pytest --cov=bootstrapx --cov-fail-under=70
+        mypy src
+        pytest --cov=bootstrapx --cov-fail-under=85
         pytest --doctest-modules src/bootstrapx
         mkdocs build --strict
+        pip check
+        python -m compileall -q src/bootstrapx
+        python -c "from bootstrapx import bootstrap; import bootstrapx; assert callable(bootstrap); assert bootstrapx.__version__"
 
     - name: Build package
       run: |
@@ -79,9 +93,15 @@ jobs:
         twine check dist/*
 
     - name: Publish to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
+      if: env.PYPI_VERSION_EXISTS != 'true'
+      uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1
 
-    - name: Create GitHub Release
+    - name: Create or update GitHub Release
       env:
         GH_TOKEN: ${{ github.token }}
-      run: gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --generate-notes
+      run: |
+        if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+          gh release upload "$GITHUB_REF_NAME" dist/* --clobber
+        else
+          gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --generate-notes
+        fi
