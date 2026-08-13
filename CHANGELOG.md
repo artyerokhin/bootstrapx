@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.1] — 2026-08-13
+
+### Fixed
+- **Studentized bootstrap** now computes each outer estimate and its nested
+  standard error from the same outer resample. Previously, independently drawn
+  outer samples were paired in the bootstrap-t root, which could distort
+  coverage for skewed or scale-dependent statistics. The default number of
+  inner resamples is increased from 50 to 100 to reduce Monte Carlo noise.
+- **Bayesian bootstrap** now evaluates the statistic directly under
+  `Dirichlet(1, ..., 1)` weights. The previous implementation performed an
+  additional multinomial draw, adding posterior-predictive sampling noise and
+  inflating the variance by about `sqrt(2)` for the sample mean.
+- **Subsampling intervals** now use the centered and scaled subsampling root
+  instead of percentiles of the smaller-sample estimates. The default
+  convergence rate is root-n and can be configured with `rate`.
+- **Bernoulli subsampling** now applies the realized subset-size and
+  finite-population correction required for smooth root-n statistics.
+- Poisson multiplier samples are conditioned on positive total weight instead
+  of replacing an empty resample with the original data.
+
+### Changed
+- Custom Bayesian-bootstrap statistics must provide
+  `weighted_statistic(data, weights)`. `np.mean`, `np.nanmean`, and
+  `np.average` have built-in weighted implementations.
+- Bayesian intervals are explicitly labelled as credible intervals in result
+  metadata. Subsampling and Bernoulli intervals use their own method labels.
+- Bernoulli `prob` must now be strictly between 0 and 1.
+
+### Tests
+- Added exact algorithm regression tests for Bayesian weights, studentized
+  outer/inner pairing, subsampling scaling, Bernoulli finite-population
+  correction, Poisson empty samples, and cluster-level uncertainty.
+
 ## [0.4.0] — 2026-08-13
 
 ### Breaking changes

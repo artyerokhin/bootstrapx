@@ -15,12 +15,27 @@ Useful as a classic alternative to percentile intervals.
 
 ### Studentized (`method="studentized"`)
 Useful when you need bootstrap-t intervals and can afford higher compute cost.
+Each outer estimate is paired with a standard error estimated from the same
+outer sample. The default `n_inner=100` is a compromise; strongly skewed or
+unstable statistics may require more inner and outer resamples.
 
 ### Bayesian (`method="bayesian"`)
-Useful for Bayesian bootstrap style uncertainty without assuming a parametric model.
+Produces a Bayesian-bootstrap posterior by drawing Dirichlet weights. Built-in
+weighted handling is available for `np.mean`, `np.nanmean`, and `np.average`.
+Custom statistics must provide `weighted_statistic(data, weights)`. The
+resulting percentile bounds are credible intervals, not frequentist confidence
+intervals.
 
 ### Poisson / Bernoulli / Subsampling
-Useful for weighted or subsampling-based workflows, especially under heavy tails or sampling constraints.
+Poisson uses Poisson(1) multiplier counts and is appropriate for smooth
+functionals where the multiplier bootstrap is justified. Bernoulli uses a
+finite-population-corrected random subset and assumes a smooth root-n
+statistic. Subsampling estimates a centered, scaled root from samples of size
+`subsample_size`; its default `rate=0.5` assumes root-n convergence. For
+heavy-tailed estimators with another convergence rate, set `rate` from the
+relevant statistical theory rather than relying on the default. Subsampling
+theory also assumes `subsample_size < n` and usually works with a subsample
+that is meaningfully smaller than the full data set.
 
 ## Time-series methods
 

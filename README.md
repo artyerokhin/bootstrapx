@@ -29,7 +29,7 @@ The R `boot` package is comprehensive but not Pythonic.
 | BCa interval | ✅ | ❌ | ✅ |
 | Studentized (bootstrap-t) | ❌ | ❌ | ✅ |
 | Bayesian bootstrap | ❌ | ❌ | ✅ |
-| Poisson / Bernoulli weights | ❌ | ❌ | ✅ |
+| Poisson weights / Bernoulli subsets | ❌ | ❌ | ✅ |
 | MBB / CBB / Stationary block | ❌ | ✅ | ✅ |
 | Sieve (AR-based) | ❌ | ❌ | ✅ |
 | Wild bootstrap | ❌ | ✅ | ✅ |
@@ -152,6 +152,28 @@ print(result)
 # Correctly wider CI that accounts for within-cluster correlation
 ```
 
+### Bayesian bootstrap with a custom statistic
+
+Bayesian bootstrap evaluates a functional directly under Dirichlet weights.
+`np.mean`, `np.nanmean`, and `np.average` work without extra configuration.
+For a custom statistic, provide its weighted form explicitly:
+
+```python
+def second_moment(x):
+    return np.mean(x**2)
+
+def weighted_second_moment(x, weights):
+    return np.sum(weights * x**2)
+
+result = bootstrap(
+    data,
+    second_moment,
+    method="bayesian",
+    weighted_statistic=weighted_second_moment,
+    random_state=42,
+)
+```
+
 ---
 
 ## Performance
@@ -209,8 +231,8 @@ Run yourself: `python benchmarks/bench_coverage_accuracy.py --fast`
 | Studentized | `"studentized"` | Known variance structure |
 | Bayesian | `"bayesian"` | Bayesian UQ, non-parametric posterior |
 | Poisson weights | `"poisson"` | Weighted bootstrap, survey data |
-| Bernoulli weights | `"bernoulli"` | Subsampling variant |
-| Subsampling | `"subsampling"` | Heavy tails, no finite variance |
+| Bernoulli subsets | `"bernoulli"` | Calibrated random-subset inference |
+| Subsampling | `"subsampling"` | Root-scaled inference from smaller samples |
 | Moving Block (MBB) | `"mbb"` | Stationary time series |
 | Circular Block (CBB) | `"cbb"` | Stationary TS, edge-effect free |
 | Stationary | `"stationary"` | Politis & Romano (1994) |
@@ -242,7 +264,7 @@ If you use bootstrapx in academic work:
   author  = {Erokhin, Artem},
   title   = {bootstrapx: Production-grade bootstrap uncertainty estimation},
   url     = {https://github.com/artyerokhin/bootstrapx},
-  version = {0.4.0},
+  version = {0.4.1},
   year    = {2026},
 }
 ```
