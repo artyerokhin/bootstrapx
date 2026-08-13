@@ -10,6 +10,8 @@
 - GitHub Actions use immutable commit pins maintained by Dependabot.
 - Publishing can be rerun safely after a partial release: an existing complete
   PyPI version is skipped and the GitHub Release is created or updated.
+- Documentation is automatically deployed to GitHub Pages when relevant
+  changes reach `main`, and can also be deployed manually.
 - Release checks include an 85% coverage floor, dependency consistency,
   byte-compilation, and core import smoke tests.
 

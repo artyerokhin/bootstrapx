@@ -15,6 +15,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   version and create or update the matching GitHub Release.
 - Release and package jobs now run `pip check`, byte-compilation, and import
   smoke tests in addition to the existing test, documentation, and build checks.
+- Documentation is automatically rebuilt and deployed to GitHub Pages after
+  relevant changes reach `main`, with an additional manual-run option.
 - The enforced coverage floor is raised from 70% to 85%.
 
 ### Fixed
