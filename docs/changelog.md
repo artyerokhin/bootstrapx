@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.3
+
+### Engineering reliability
+
+- Strict `mypy` validation now covers the complete source tree and runs in CI.
+- Time-series tests cover all six methods across batch sizes, optional Numba
+  fallback, taper variants, wild multipliers, and sieve edge cases.
+- Invalid taper-window errors are stable across supported SciPy versions, and
+  strict typing uses NumPy stubs compatible with the Python 3.10 target.
+- GitHub Actions use immutable commit pins maintained by Dependabot.
+- Publishing can be rerun safely after a partial release: an existing complete
+  PyPI version is skipped and the GitHub Release is created or updated.
+- Documentation is automatically deployed to GitHub Pages when relevant
+  changes reach `main`, and can also be deployed manually.
+- Release checks include an 85% coverage floor, dependency consistency,
+  byte-compilation, and core import smoke tests.
+
 ## 0.4.2
 
 ### Correctness and release safety

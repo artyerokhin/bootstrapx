@@ -6,14 +6,17 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: Lint and formatting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.13"
 
@@ -26,6 +29,22 @@ jobs:
       - name: Lint
         run: ruff check src tests
 
+  typing:
+    name: Strict typing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.10"
+
+      - name: Install typing dependencies
+        run: pip install "numpy<2.3" -e ".[dev,pandas,sklearn]"
+
+      - name: Check strict typing
+        run: mypy src
+
   test:
     name: Python ${{ matrix.python }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -35,10 +54,10 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python: ["3.10", "3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: ${{ matrix.python }}
 
@@ -52,9 +71,9 @@ jobs:
     name: Coverage
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.13"
 
@@ -62,10 +81,10 @@ jobs:
         run: pip install -e ".[dev,pandas,sklearn]"
 
       - name: Run tests with coverage
-        run: pytest --cov=bootstrapx --cov-report=xml --cov-report=term-missing --cov-fail-under=70
+        run: pytest --cov=bootstrapx --cov-report=xml --cov-report=term-missing --cov-fail-under=85
 
       - name: Upload coverage to Coveralls
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           file: coverage.xml
@@ -75,9 +94,9 @@ jobs:
     name: Documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.13"
 
@@ -94,9 +113,9 @@ jobs:
     name: Minimum dependencies
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.10"
 
@@ -108,16 +127,18 @@ jobs:
       - name: Test core package without optional dependencies
         run: |
           pytest
-          python -c "from bootstrapx import *"
+          pip check
+          python -m compileall -q src/bootstrapx
+          python -c "from bootstrapx import *; assert callable(bootstrap); assert __version__"
 
   package:
     name: Build and install distribution
-    needs: [lint, test]
+    needs: [lint, typing, test]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.13"
 
@@ -130,4 +151,5 @@ jobs:
       - name: Install wheel and smoke test
         run: |
           pip install --force-reinstall dist/*.whl
-          python -c "import bootstrapx; print(bootstrapx.__version__)"
+          pip check
+          python -c "import bootstrapx, compileall; assert compileall.compile_dir(bootstrapx.__path__[0], quiet=1); print(bootstrapx.__version__)"

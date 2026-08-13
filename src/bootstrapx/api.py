@@ -19,9 +19,10 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
+from numpy.typing import NDArray
 
 from bootstrapx.engine.backend import apply_statistic_batched, resolve_backend
 from bootstrapx.generators.hierarchical import cluster_resample, strata_resample
@@ -55,13 +56,15 @@ from bootstrapx.utils import (
     validate_random_state,
 )
 
+FloatArray = NDArray[np.float64]
+
 
 @dataclass
 class BootstrapResult:
     """Container for bootstrap estimation results."""
 
     confidence_interval: ConfidenceInterval
-    bootstrap_distribution: np.ndarray
+    bootstrap_distribution: FloatArray
     theta_hat: float
     standard_error: float
     n_resamples: int
@@ -86,7 +89,7 @@ class BootstrapResult:
 def _collect_weighted(
     gen: Any,
     statistic: Callable[..., float],
-    data: np.ndarray,
+    data: FloatArray,
 ) -> list[float]:
     """Collect stats from weighted generators (poisson / bernoulli).
 
@@ -104,7 +107,7 @@ def _collect_weighted(
 
 def _collect_bayesian(
     gen: Any,
-    weighted_statistic: Callable[[np.ndarray, np.ndarray], float],
+    weighted_statistic: Callable[[FloatArray, FloatArray], float],
 ) -> list[float]:
     """Evaluate a functional directly under Bayesian-bootstrap weights."""
     results: list[float] = []
@@ -118,12 +121,12 @@ def _collect_bayesian(
 def _resolve_weighted_statistic(
     statistic: Callable[..., float],
     candidate: Any,
-) -> Callable[[np.ndarray, np.ndarray], float]:
+) -> Callable[[FloatArray, FloatArray], float]:
     """Resolve the exact weighted functional used by Bayesian bootstrap."""
     if candidate is not None:
         if not callable(candidate):
             raise TypeError("weighted_statistic must be callable.")
-        return candidate
+        return cast(Callable[[FloatArray, FloatArray], float], candidate)
     if any(statistic is built_in for built_in in (np.mean, np.nanmean, np.average)):
         return lambda data, weights: float(np.average(data, weights=weights))
     raise ValueError(
@@ -135,7 +138,7 @@ def _resolve_weighted_statistic(
 def _collect_bernoulli(
     gen: Any,
     statistic: Callable[..., float],
-) -> tuple[np.ndarray, np.ndarray]:
+) -> tuple[FloatArray, FloatArray]:
     """Collect Bernoulli-subset statistics and their realized sample sizes."""
     stats: list[float] = []
     sizes: list[int] = []
@@ -292,6 +295,7 @@ def bootstrap(
 
     result_extra: dict[str, Any] = {}
     result_standard_error: float | None = None
+    boot_stats: FloatArray
 
     if method == "studentized":
         n_inner = int(kwargs.get("n_inner", 100))
@@ -350,71 +354,86 @@ def bootstrap(
             weighted_statistic = _resolve_weighted_statistic(
                 statistic, kwargs.get("weighted_statistic")
             )
-            gen = bayesian_resample(arr, n_resamples, batch_size, rng)
-            boot_stats_list = _collect_bayesian(gen, weighted_statistic)
+            boot_stats_list = _collect_bayesian(
+                bayesian_resample(arr, n_resamples, batch_size, rng), weighted_statistic
+            )
 
         elif method == "poisson":
-            gen = poisson_resample(arr, n_resamples, batch_size, rng)
-            boot_stats_list = _collect_weighted(gen, statistic, arr)
+            boot_stats_list = _collect_weighted(
+                poisson_resample(arr, n_resamples, batch_size, rng), statistic, arr
+            )
 
         elif method == "bernoulli":
             prob = float(kwargs.get("prob", 0.5))
-            gen = bernoulli_resample(arr, n_resamples, batch_size, rng, prob=prob)
-            boot_stats, subset_sizes = _collect_bernoulli(gen, statistic)
+            boot_stats, subset_sizes = _collect_bernoulli(
+                bernoulli_resample(arr, n_resamples, batch_size, rng, prob=prob), statistic
+            )
 
         elif method == "cluster":
             cids = kwargs["cluster_ids"]
-            gen = cluster_resample(arr, np.asarray(cids), n_resamples, batch_size, rng)
-            boot_stats_list = _collect_arrays(gen, statistic)
+            boot_stats_list = _collect_arrays(
+                cluster_resample(arr, np.asarray(cids), n_resamples, batch_size, rng), statistic
+            )
 
         elif method == "strata":
             sids = kwargs["strata_ids"]
-            gen = strata_resample(arr, np.asarray(sids), n_resamples, batch_size, rng)
-            boot_stats_list = _collect_arrays(gen, statistic)
+            boot_stats_list = _collect_arrays(
+                strata_resample(arr, np.asarray(sids), n_resamples, batch_size, rng), statistic
+            )
 
         elif method == "subsampling":
             ss = kwargs.get("subsample_size")
-            gen = subsampling_resample(arr, n_resamples, batch_size, rng, subsample_size=ss)
-            boot_stats_list = _collect_arrays(gen, statistic)
+            boot_stats_list = _collect_arrays(
+                subsampling_resample(arr, n_resamples, batch_size, rng, subsample_size=ss),
+                statistic,
+            )
 
         elif method == "mbb":
             bl = int(kwargs.get("block_length", 10))
-            gen = mbb_resample(arr, n_resamples, batch_size, rng, block_length=bl)
-            boot_stats_list = _collect_arrays(gen, statistic)
+            boot_stats_list = _collect_arrays(
+                mbb_resample(arr, n_resamples, batch_size, rng, block_length=bl), statistic
+            )
 
         elif method == "cbb":
             bl = int(kwargs.get("block_length", 10))
-            gen = cbb_resample(arr, n_resamples, batch_size, rng, block_length=bl)
-            boot_stats_list = _collect_arrays(gen, statistic)
+            boot_stats_list = _collect_arrays(
+                cbb_resample(arr, n_resamples, batch_size, rng, block_length=bl), statistic
+            )
 
         elif method == "stationary":
             mb = float(kwargs.get("mean_block", 10.0))
-            gen = stationary_resample(arr, n_resamples, batch_size, rng, mean_block=mb)
-            boot_stats_list = _collect_arrays(gen, statistic)
+            boot_stats_list = _collect_arrays(
+                stationary_resample(arr, n_resamples, batch_size, rng, mean_block=mb), statistic
+            )
 
         elif method == "tapered":
             bl = int(kwargs.get("block_length", 10))
             tp = str(kwargs.get("taper", "tukey"))
-            gen = tapered_block_resample(
-                arr,
-                n_resamples,
-                batch_size,
-                rng,
-                block_length=bl,
-                taper=tp,
+            boot_stats_list = _collect_arrays(
+                tapered_block_resample(
+                    arr,
+                    n_resamples,
+                    batch_size,
+                    rng,
+                    block_length=bl,
+                    taper=tp,
+                ),
+                statistic,
             )
-            boot_stats_list = _collect_arrays(gen, statistic)
 
         elif method == "sieve":
             ar = kwargs.get("ar_order")
-            gen = sieve_resample(arr, n_resamples, batch_size, rng, ar_order=ar)
-            boot_stats_list = _collect_arrays(gen, statistic)
+            boot_stats_list = _collect_arrays(
+                sieve_resample(arr, n_resamples, batch_size, rng, ar_order=ar), statistic
+            )
 
         elif method == "wild":
             fit = kwargs.get("fitted")
             dist = str(kwargs.get("distribution", "rademacher"))
-            gen = wild_resample(arr, n_resamples, batch_size, rng, fitted=fit, distribution=dist)
-            boot_stats_list = _collect_arrays(gen, statistic)
+            boot_stats_list = _collect_arrays(
+                wild_resample(arr, n_resamples, batch_size, rng, fitted=fit, distribution=dist),
+                statistic,
+            )
 
         else:
             raise ValueError(f"Method {method!r} not implemented.")

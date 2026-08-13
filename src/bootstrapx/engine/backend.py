@@ -9,7 +9,7 @@ v0.3.2 changes:
 - _FAST_PATH_N raised 500 -> 1000 (closes n=500-1000 performance gap).
 
 v0.3.1 change:
-- apply_statistic_batched(): fast path for n < 500 + numpy built-ins.
+- apply_statistic_batched(): fast path for small samples + numpy built-ins.
   Allocates single (n_resamples, n) matrix, axis=1 reduction.
   Removes per-sample Python loop overhead (~5x faster at n=50).
 """
@@ -20,6 +20,9 @@ import enum
 from collections.abc import Callable
 
 import numpy as np
+from numpy.typing import NDArray
+
+FloatArray = NDArray[np.float64]
 
 _AXIS_BUILTINS: dict[object, str] = {
     np.mean: "mean",
@@ -58,18 +61,18 @@ def resolve_backend(requested: str = "auto") -> BackendKind:
     raise ValueError(f"Unknown backend {requested!r}. Choose from ['vanilla'] or 'auto'.")
 
 
-def _resample_batch(data: np.ndarray, batch_size: int, rng: np.random.Generator) -> np.ndarray:
+def _resample_batch(data: FloatArray, batch_size: int, rng: np.random.Generator) -> FloatArray:
     n = data.shape[0]
-    return data[rng.integers(0, n, size=(batch_size, n))]
+    return np.asarray(data[rng.integers(0, n, size=(batch_size, n))], dtype=np.float64)
 
 
 def _fast_path(
-    data: np.ndarray,
+    data: FloatArray,
     func_name: str,
     batch_size: int,
     n_resamples: int,
     rng: np.random.Generator,
-) -> np.ndarray:
+) -> FloatArray:
     """Apply a NumPy reduction without allocating the full resample matrix."""
     results = np.empty(n_resamples, dtype=np.float64)
     done = 0
@@ -82,7 +85,7 @@ def _fast_path(
 
 
 def apply_statistic_batched(
-    data: np.ndarray,
+    data: FloatArray,
     statistic: Callable[..., float],
     batch_size: int,
     n_resamples: int,
@@ -90,8 +93,9 @@ def apply_statistic_batched(
     rng: np.random.Generator,
     *,
     vectorized: bool = False,
-) -> np.ndarray:
+) -> FloatArray:
     n = data.shape[0]
+    _ = backend
     # fast path: small n + numpy built-in + not custom vectorized
     func_name = next(
         (name for built_in, name in _AXIS_BUILTINS.items() if statistic is built_in), None

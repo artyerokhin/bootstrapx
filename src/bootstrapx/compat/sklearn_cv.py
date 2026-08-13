@@ -29,7 +29,13 @@ in the training set and guarantees ~63.2% unique training samples per split
 
 from __future__ import annotations
 
+from collections.abc import Generator
+from typing import Any
+
 import numpy as np
+from numpy.typing import NDArray
+
+IntArray = NDArray[np.int64]
 
 try:
     from sklearn.model_selection._split import BaseCrossValidator
@@ -42,7 +48,7 @@ except ImportError as exc:
     ) from exc
 
 
-class BootstrapCV(BaseCrossValidator):
+class BootstrapCV(BaseCrossValidator):  # type: ignore[misc]
     """Bootstrap cross-validator compatible with scikit-learn's CV API.
 
     Generates ``n_splits`` bootstrap train/test splits. Each training set
@@ -78,7 +84,9 @@ class BootstrapCV(BaseCrossValidator):
         self.n_splits = n_splits
         self.random_state = random_state
 
-    def split(self, X, y=None, groups=None):
+    def split(
+        self, X: Any, y: Any = None, groups: Any = None
+    ) -> Generator[tuple[IntArray, IntArray], None, None]:
         X, y, groups = indexable(X, y, groups)
         n = len(X)
         if n < 2:
@@ -98,9 +106,11 @@ class BootstrapCV(BaseCrossValidator):
             yielded += 1
             yield train, test
 
-    def get_n_splits(self, X=None, y=None, groups=None) -> int:
+    def get_n_splits(self, X: Any = None, y: Any = None, groups: Any = None) -> int:
         return self.n_splits
 
-    def _iter_test_indices(self, X=None, y=None, groups=None):
+    def _iter_test_indices(
+        self, X: Any = None, y: Any = None, groups: Any = None
+    ) -> Generator[IntArray, None, None]:
         for _, test in self.split(X, y, groups):
             yield test
