@@ -43,7 +43,13 @@ from bootstrapx.stats.confidence import (
     percentile_interval,
     studentized_interval,
 )
-from bootstrapx.utils import auto_batch_size, validate_bootstrap_params, validate_data
+from bootstrapx.utils import (
+    auto_batch_size,
+    validate_bootstrap_distribution,
+    validate_bootstrap_params,
+    validate_data,
+    validate_random_state,
+)
 
 
 @dataclass
@@ -194,7 +200,17 @@ def bootstrap(
     n_jobs : int
         Parallelism for jackknife in BCa (effective only for n >= 2000).
     """
+    if not isinstance(method, str):
+        raise TypeError("method must be a string.")
+    if ci_method is not None and not isinstance(ci_method, str):
+        raise TypeError("ci_method must be a string or None.")
+    if not isinstance(vectorized, bool):
+        raise TypeError("vectorized must be a boolean.")
+    if not callable(statistic):
+        raise TypeError("statistic must be callable.")
+
     method = method.lower().strip()
+    ci_method = ci_method.lower().strip() if ci_method is not None else None
     if method not in _ALL_METHODS:
         raise ValueError(f"Unknown method {method!r}. Choose from {sorted(_ALL_METHODS)}.")
 
@@ -210,6 +226,7 @@ def bootstrap(
         n_jobs=n_jobs,
         kwargs=kwargs,
     )
+    validate_random_state(random_state)
 
     rng: np.random.Generator = (
         random_state
@@ -221,8 +238,6 @@ def bootstrap(
         batch_size = auto_batch_size(n, n_resamples)
 
     backend_kind = resolve_backend(backend)
-    if not callable(statistic):
-        raise TypeError("statistic must be callable.")
     theta_hat = float(statistic(arr))
     if not np.isfinite(theta_hat):
         raise ValueError("statistic must return a finite scalar value for the observed data.")
@@ -237,6 +252,7 @@ def bootstrap(
             rng,
             vectorized=vectorized,
         )
+        boot_stats = validate_bootstrap_distribution(boot_stats, n_resamples)
 
         if method == "percentile":
             ci = percentile_interval(boot_stats, confidence_level)
@@ -271,6 +287,8 @@ def bootstrap(
                     )
                     boot_se[done + b] = float(np.std(inner_vals, ddof=1))
                 done += bs
+            if not np.all(np.isfinite(boot_se)):
+                raise ValueError("statistic returned NaN or inf during studentized bootstrap.")
             ci = studentized_interval(
                 arr,
                 statistic,
@@ -353,7 +371,9 @@ def bootstrap(
 
         boot_stats = np.array(boot_stats_list, dtype=np.float64)
 
-        _ci_method = (ci_method or "percentile").lower()
+        boot_stats = validate_bootstrap_distribution(boot_stats, n_resamples)
+
+        _ci_method = ci_method or "percentile"
         if _ci_method == "basic":
             ci = basic_interval(boot_stats, theta_hat, confidence_level)
         else:

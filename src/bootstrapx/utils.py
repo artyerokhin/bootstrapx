@@ -169,6 +169,31 @@ def validate_bootstrap_params(
             raise ValueError(f"{name} must contain at least two distinct groups.")
 
 
+def validate_random_state(random_state: Any) -> None:
+    """Validate the documented random-state inputs before NumPy is invoked."""
+    if random_state is None or isinstance(random_state, np.random.Generator):
+        return
+    if isinstance(random_state, bool) or not isinstance(random_state, (int, np.integer)):
+        raise TypeError("random_state must be an integer, numpy Generator, or None.")
+
+
+def validate_bootstrap_distribution(distribution: Any, n_resamples: int) -> np.ndarray:
+    """Return a finite, correctly shaped bootstrap distribution.
+
+    A custom vectorized statistic can otherwise silently return a different
+    number of values than resamples requested, producing an invalid interval.
+    """
+    values = np.asarray(distribution, dtype=np.float64)
+    if values.ndim != 1 or values.size != n_resamples:
+        raise ValueError(
+            "statistic must return exactly one scalar per resample "
+            f"(expected {n_resamples}, received shape {values.shape})."
+        )
+    if not np.all(np.isfinite(values)):
+        raise ValueError("statistic returned NaN or inf for at least one bootstrap resample.")
+    return values
+
+
 def auto_batch_size(n: int, n_resamples: int, itemsize: int = 8) -> int:
     """Heuristic batch sizing targeting ~64 KiB per batch to fit in L2 cache.
 

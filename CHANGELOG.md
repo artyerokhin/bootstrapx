@@ -16,6 +16,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   categorical string identifiers are supported.
 - Data and observed statistics must be finite, preventing undefined intervals
   from being returned for NaN or infinite input.
+- Every bootstrap distribution now must contain exactly one finite scalar per
+  requested resample; malformed vectorized statistics and non-finite sampled
+  statistics fail with an explicit error.
+- `random_state`, `method`, `ci_method`, and `vectorized` are validated against
+  their documented public API types.
 
 ### Changed
 - Minimum supported Python version is now 3.10. The package uses modern union

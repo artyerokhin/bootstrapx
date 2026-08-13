@@ -80,6 +80,31 @@ class TestBootstrapParameterValidation:
         with pytest.raises(ValueError, match="finite scalar"):
             bootstrap(data, lambda _: np.nan)
 
+    def test_rejects_non_finite_resample_statistic(self, data):
+        calls = 0
+
+        def statistic(sample):
+            nonlocal calls
+            calls += 1
+            return np.mean(sample) if calls == 1 else np.nan
+
+        with pytest.raises(ValueError, match="at least one bootstrap resample"):
+            bootstrap(data, statistic, method="percentile", n_resamples=20, random_state=0)
+
+    def test_rejects_invalid_vectorized_statistic_shape(self, data):
+        def statistic(sample, axis=None):
+            if axis is None:
+                return np.mean(sample)
+            return np.column_stack((np.mean(sample, axis=axis), np.max(sample, axis=axis)))
+
+        with pytest.raises(ValueError, match="exactly one scalar per resample"):
+            bootstrap(data, statistic, vectorized=True, n_resamples=20, random_state=0)
+
+    @pytest.mark.parametrize("random_state", [True, "seed", object()])
+    def test_rejects_invalid_random_state(self, data, random_state):
+        with pytest.raises(TypeError, match="random_state"):
+            bootstrap(data, np.mean, random_state=random_state)
+
     def test_rejects_bad_cluster_ids_before_resampling(self, data):
         with pytest.raises(ValueError, match="match data length"):
             bootstrap(data, np.mean, method="cluster", cluster_ids=[1, 2])
