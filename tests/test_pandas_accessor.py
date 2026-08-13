@@ -1,10 +1,13 @@
 """Tests for pandas .bootstrap accessor."""
+
 import numpy as np
 import pytest
 
 try:
     import pandas as pd
+
     import bootstrapx  # noqa: F401  — registers accessor
+
     _HAS_PANDAS = True
 except ImportError:
     _HAS_PANDAS = False
@@ -32,9 +35,7 @@ class TestSeriesAccessor:
     def test_reproducible(self, series):
         r1 = series.bootstrap.bca(np.mean, n_resamples=500, random_state=99)
         r2 = series.bootstrap.bca(np.mean, n_resamples=500, random_state=99)
-        np.testing.assert_array_equal(
-            r1.bootstrap_distribution, r2.bootstrap_distribution
-        )
+        np.testing.assert_array_equal(r1.bootstrap_distribution, r2.bootstrap_distribution)
 
 
 @pytest.mark.skipif(not _HAS_PANDAS, reason="pandas not installed")
@@ -42,10 +43,12 @@ class TestDataFrameAccessor:
     @pytest.fixture
     def df(self):
         rng = np.random.default_rng(0)
-        return pd.DataFrame({
-            "a": rng.normal(0, 1, 150),
-            "b": rng.normal(3, 2, 150),
-        })
+        return pd.DataFrame(
+            {
+                "a": rng.normal(0, 1, 150),
+                "b": rng.normal(3, 2, 150),
+            }
+        )
 
     def test_summary_shape(self, df):
         out = df.bootstrap.summary(np.mean, n_resamples=500, random_state=0)

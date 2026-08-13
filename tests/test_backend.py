@@ -1,5 +1,6 @@
-from bootstrapx.engine.backend import resolve_backend, BackendKind
 import pytest
+
+from bootstrapx.engine.backend import BackendKind, resolve_backend
 
 
 class TestResolveBackend:

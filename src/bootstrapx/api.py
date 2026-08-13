@@ -11,16 +11,18 @@ Changes vs 0.3.1:
 - studentized bootstrap: inner_idx is now generated per outer sample, not once
   per batch. Fixes correlated SE* estimates (issue #2).
 """
+
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Any
 
 import numpy as np
 
-from bootstrapx.engine.backend import resolve_backend, apply_statistic_batched
+from bootstrapx.engine.backend import apply_statistic_batched, resolve_backend
+from bootstrapx.generators.hierarchical import cluster_resample, strata_resample
 from bootstrapx.generators.iid import (
-    basic_resample,
     bayesian_resample,
     bernoulli_resample,
     poisson_resample,
@@ -34,7 +36,6 @@ from bootstrapx.generators.timeseries import (
     tapered_block_resample,
     wild_resample,
 )
-from bootstrapx.generators.hierarchical import cluster_resample, strata_resample
 from bootstrapx.stats.confidence import (
     ConfidenceInterval,
     basic_interval,
@@ -42,7 +43,13 @@ from bootstrapx.stats.confidence import (
     percentile_interval,
     studentized_interval,
 )
-from bootstrapx.utils import auto_batch_size, validate_data
+from bootstrapx.utils import (
+    auto_batch_size,
+    validate_bootstrap_distribution,
+    validate_bootstrap_params,
+    validate_data,
+    validate_random_state,
+)
 
 
 @dataclass
@@ -71,6 +78,7 @@ class BootstrapResult:
 # Internal helpers for generator-based methods
 # ---------------------------------------------------------------------------
 
+
 def _collect_weighted(
     gen: Any,
     statistic: Callable[..., float],
@@ -96,7 +104,7 @@ def _collect_weighted(
 def _collect_bayesian(
     gen: Any,
     statistic: Callable[..., float],
-    rng: np.random.Generator,            # ← now receives caller's rng
+    rng: np.random.Generator,  # ← now receives caller's rng
 ) -> list[float]:
     """Collect stats from Bayesian (Dirichlet) generators.
 
@@ -136,8 +144,14 @@ def _collect_arrays(
 # ---------------------------------------------------------------------------
 
 _IID_METHODS = {
-    "percentile", "basic", "bca", "studentized",
-    "poisson", "bernoulli", "subsampling", "bayesian",
+    "percentile",
+    "basic",
+    "bca",
+    "studentized",
+    "poisson",
+    "bernoulli",
+    "subsampling",
+    "bayesian",
 }
 _TS_METHODS = {"mbb", "cbb", "stationary", "tapered", "sieve", "wild"}
 _HIER_METHODS = {"cluster", "strata"}
@@ -148,6 +162,7 @@ _CI_CAPABLE = {"percentile", "basic", "bca", "studentized"}
 # ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
+
 
 def bootstrap(
     data: Any,
@@ -185,14 +200,33 @@ def bootstrap(
     n_jobs : int
         Parallelism for jackknife in BCa (effective only for n >= 2000).
     """
+    if not isinstance(method, str):
+        raise TypeError("method must be a string.")
+    if ci_method is not None and not isinstance(ci_method, str):
+        raise TypeError("ci_method must be a string or None.")
+    if not isinstance(vectorized, bool):
+        raise TypeError("vectorized must be a boolean.")
+    if not callable(statistic):
+        raise TypeError("statistic must be callable.")
+
     method = method.lower().strip()
+    ci_method = ci_method.lower().strip() if ci_method is not None else None
     if method not in _ALL_METHODS:
-        raise ValueError(
-            f"Unknown method {method!r}. Choose from {sorted(_ALL_METHODS)}."
-        )
+        raise ValueError(f"Unknown method {method!r}. Choose from {sorted(_ALL_METHODS)}.")
 
     arr = validate_data(data, allow_2d=(method in _HIER_METHODS))
     n = arr.shape[0]
+    validate_bootstrap_params(
+        method=method,
+        n_observations=n,
+        n_resamples=n_resamples,
+        batch_size=batch_size,
+        confidence_level=confidence_level,
+        ci_method=ci_method,
+        n_jobs=n_jobs,
+        kwargs=kwargs,
+    )
+    validate_random_state(random_state)
 
     rng: np.random.Generator = (
         random_state
@@ -205,12 +239,20 @@ def bootstrap(
 
     backend_kind = resolve_backend(backend)
     theta_hat = float(statistic(arr))
+    if not np.isfinite(theta_hat):
+        raise ValueError("statistic must return a finite scalar value for the observed data.")
 
     if method in _CI_CAPABLE:
         boot_stats = apply_statistic_batched(
-            arr, statistic, batch_size, n_resamples, backend_kind, rng,
+            arr,
+            statistic,
+            batch_size,
+            n_resamples,
+            backend_kind,
+            rng,
             vectorized=vectorized,
         )
+        boot_stats = validate_bootstrap_distribution(boot_stats, n_resamples)
 
         if method == "percentile":
             ci = percentile_interval(boot_stats, confidence_level)
@@ -220,7 +262,11 @@ def bootstrap(
 
         elif method == "bca":
             ci = bca_interval(
-                boot_stats, arr, statistic, theta_hat, confidence_level,
+                boot_stats,
+                arr,
+                statistic,
+                theta_hat,
+                confidence_level,
                 n_jobs=n_jobs,
             )
 
@@ -241,8 +287,15 @@ def bootstrap(
                     )
                     boot_se[done + b] = float(np.std(inner_vals, ddof=1))
                 done += bs
+            if not np.all(np.isfinite(boot_se)):
+                raise ValueError("statistic returned NaN or inf during studentized bootstrap.")
             ci = studentized_interval(
-                arr, statistic, theta_hat, boot_stats, boot_se, confidence_level,
+                arr,
+                statistic,
+                theta_hat,
+                boot_stats,
+                boot_se,
+                confidence_level,
             )
 
     else:
@@ -260,16 +313,12 @@ def bootstrap(
             boot_stats_list = _collect_weighted(gen, statistic, arr)
 
         elif method == "cluster":
-            cids = kwargs.get("cluster_ids")
-            if cids is None:
-                raise ValueError("cluster method requires `cluster_ids` kwarg.")
+            cids = kwargs["cluster_ids"]
             gen = cluster_resample(arr, np.asarray(cids), n_resamples, batch_size, rng)
             boot_stats_list = _collect_arrays(gen, statistic)
 
         elif method == "strata":
-            sids = kwargs.get("strata_ids")
-            if sids is None:
-                raise ValueError("strata method requires `strata_ids` kwarg.")
+            sids = kwargs["strata_ids"]
             gen = strata_resample(arr, np.asarray(sids), n_resamples, batch_size, rng)
             boot_stats_list = _collect_arrays(gen, statistic)
 
@@ -297,7 +346,12 @@ def bootstrap(
             bl = int(kwargs.get("block_length", 10))
             tp = str(kwargs.get("taper", "tukey"))
             gen = tapered_block_resample(
-                arr, n_resamples, batch_size, rng, block_length=bl, taper=tp,
+                arr,
+                n_resamples,
+                batch_size,
+                rng,
+                block_length=bl,
+                taper=tp,
             )
             boot_stats_list = _collect_arrays(gen, statistic)
 
@@ -317,7 +371,9 @@ def bootstrap(
 
         boot_stats = np.array(boot_stats_list, dtype=np.float64)
 
-        _ci_method = (ci_method or "percentile").lower()
+        boot_stats = validate_bootstrap_distribution(boot_stats, n_resamples)
+
+        _ci_method = ci_method or "percentile"
         if _ci_method == "basic":
             ci = basic_interval(boot_stats, theta_hat, confidence_level)
         else:

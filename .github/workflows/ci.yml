@@ -7,15 +7,56 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  lint:
+    name: Lint and formatting
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install lint tools
+        run: pip install ruff
+
+      - name: Check formatting
+        run: ruff format --check src tests
+
+      - name: Lint
+        run: ruff check src tests
+
+  test:
+    name: Python ${{ matrix.python }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.10", "3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python }}
+
+      - name: Install dependencies
+        run: pip install -e ".[dev,pandas,sklearn]"
+
+      - name: Run tests
+        run: pytest
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
 
       - name: Install dependencies
         run: pip install -e ".[dev,pandas,sklearn]"
@@ -29,3 +70,41 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           file: coverage.xml
           format: cobertura
+
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install documentation dependencies
+        run: pip install -e ".[docs,pandas,sklearn]"
+
+      - name: Build documentation strictly
+        run: mkdocs build --strict
+
+  package:
+    name: Build and install distribution
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Build distribution
+        run: |
+          pip install build twine
+          python -m build
+          twine check dist/*
+
+      - name: Install wheel and smoke test
+        run: |
+          pip install --force-reinstall dist/*.whl
+          python -c "import bootstrapx; print(bootstrapx.__version__)"

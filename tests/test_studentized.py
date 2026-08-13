@@ -6,8 +6,10 @@ Covers:
 - coverage rate: empirical 95% CI coverage >= 0.88 over 200 trials
 - reproducibility: same random_state => identical results
 """
+
 import numpy as np
 import pytest
+
 from bootstrapx import bootstrap
 
 RNG_SEED = 42
@@ -26,7 +28,8 @@ def normal_sample() -> np.ndarray:
 class TestStudentized:
     def test_basic_run(self, normal_sample: np.ndarray) -> None:
         r = bootstrap(
-            normal_sample, np.mean,
+            normal_sample,
+            np.mean,
             method="studentized",
             n_resamples=N_RESAMPLES,
             n_inner=N_INNER,
@@ -45,7 +48,8 @@ class TestStudentized:
         to nearly identical values => std of distribution drops sharply.
         """
         r = bootstrap(
-            normal_sample, np.mean,
+            normal_sample,
+            np.mean,
             method="studentized",
             n_resamples=N_RESAMPLES,
             n_inner=N_INNER,
@@ -74,7 +78,8 @@ class TestStudentized:
         for _ in range(n_trials):
             sample = rng.normal(loc=TRUE_MEAN, scale=1.0, size=N)
             r = bootstrap(
-                sample, np.mean,
+                sample,
+                np.mean,
                 method="studentized",
                 n_resamples=499,
                 n_inner=25,
@@ -92,8 +97,11 @@ class TestStudentized:
 
     def test_reproducibility(self, normal_sample: np.ndarray) -> None:
         kwargs = dict(
-            method="studentized", n_resamples=N_RESAMPLES,
-            n_inner=N_INNER, random_state=7, backend="vanilla",
+            method="studentized",
+            n_resamples=N_RESAMPLES,
+            n_inner=N_INNER,
+            random_state=7,
+            backend="vanilla",
         )
         r1 = bootstrap(normal_sample, np.mean, **kwargs)
         r2 = bootstrap(normal_sample, np.mean, **kwargs)

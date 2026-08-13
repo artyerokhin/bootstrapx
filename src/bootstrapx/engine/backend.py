@@ -13,22 +13,30 @@ v0.3.1 change:
   Allocates single (n_resamples, n) matrix, axis=1 reduction.
   Removes per-sample Python loop overhead (~5x faster at n=50).
 """
+
 from __future__ import annotations
 
 import enum
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
 
 _AXIS_BUILTINS: dict[object, str] = {
-    np.mean:    "mean",    np.nanmean:    "nanmean",
-    np.median:  "median",  np.nanmedian:  "nanmedian",
-    np.std:     "std",     np.nanstd:     "nanstd",
-    np.var:     "var",     np.nanvar:     "nanvar",
-    np.sum:     "sum",     np.nansum:     "nansum",
-    np.min:     "min",     np.nanmin:     "nanmin",
-    np.max:     "max",     np.nanmax:     "nanmax",
-    np.ptp:     "ptp",
+    np.mean: "mean",
+    np.nanmean: "nanmean",
+    np.median: "median",
+    np.nanmedian: "nanmedian",
+    np.std: "std",
+    np.nanstd: "nanstd",
+    np.var: "var",
+    np.nanvar: "nanvar",
+    np.sum: "sum",
+    np.nansum: "nansum",
+    np.min: "min",
+    np.nanmin: "nanmin",
+    np.max: "max",
+    np.nanmax: "nanmax",
+    np.ptp: "ptp",
 }
 _FAST_PATH_N = 1000  # raised from 500 in v0.3.2
 
@@ -47,20 +55,17 @@ def resolve_backend(requested: str = "auto") -> BackendKind:
         )
     if requested in ("auto", "vanilla"):
         return BackendKind.VANILLA
-    raise ValueError(
-        f"Unknown backend {requested!r}. "
-        "Choose from ['vanilla'] or 'auto'."
-    )
+    raise ValueError(f"Unknown backend {requested!r}. Choose from ['vanilla'] or 'auto'.")
 
 
-def _resample_batch(data: np.ndarray, batch_size: int,
-                    rng: np.random.Generator) -> np.ndarray:
+def _resample_batch(data: np.ndarray, batch_size: int, rng: np.random.Generator) -> np.ndarray:
     n = data.shape[0]
     return data[rng.integers(0, n, size=(batch_size, n))]
 
 
-def _fast_path(data: np.ndarray, func_name: str,
-               n_resamples: int, rng: np.random.Generator) -> np.ndarray:
+def _fast_path(
+    data: np.ndarray, func_name: str, n_resamples: int, rng: np.random.Generator
+) -> np.ndarray:
     """Single-matrix fast path: one (n_resamples, n) alloc + axis=1 ufunc."""
     n = data.shape[0]
     resampled = data[rng.integers(0, n, size=(n_resamples, n))]
@@ -88,8 +93,7 @@ def apply_statistic_batched(
         bs = min(batch_size, n_resamples - done)
         samples = _resample_batch(data, bs, rng)
         if vectorized:
-            results.extend(float(v) for v in np.asarray(
-                statistic(samples, axis=1)).ravel())
+            results.extend(float(v) for v in np.asarray(statistic(samples, axis=1)).ravel())
         else:
             for i in range(bs):
                 results.append(float(statistic(samples[i])))

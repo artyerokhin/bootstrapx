@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.0] — 2026-08-13
+
+### Breaking changes
+- Python 3.9 is no longer supported; upgrade to Python 3.10 or later.
+- Previously accepted invalid parameters now raise an explicit `TypeError` or
+  `ValueError`. This includes zero batch/block sizes, unsupported method
+  keyword arguments, and non-finite data or statistic results.
+
+### Fixed
+- Public parameter validation now rejects invalid resample counts, batch sizes,
+  confidence levels, block sizes and method-specific parameters before a
+  calculation begins. In particular, zero batch or block sizes can no longer
+  cause generator loops to hang.
+- Unsupported method keyword arguments and inappropriate `ci_method` values
+  now fail explicitly instead of being silently ignored or coerced.
+- Cluster and strata identifiers are validated for shape and cardinality, and
+  categorical string identifiers are supported.
+- Data and observed statistics must be finite, preventing undefined intervals
+  from being returned for NaN or infinite input.
+- Every bootstrap distribution now must contain exactly one finite scalar per
+  requested resample; malformed vectorized statistics and non-finite sampled
+  statistics fail with an explicit error.
+- `random_state`, `method`, `ci_method`, and `vectorized` are validated against
+  their documented public API types.
+
+### Changed
+- Minimum supported Python version is now 3.10. The package uses modern union
+  type syntax which cannot be parsed by Python 3.9.
+- CI now checks formatting and linting, tests Python 3.10–3.13 on Linux,
+  macOS and Windows, publishes coverage separately, and verifies that a built
+  wheel can be installed and imported.
+- Documentation now accurately lists 16 methods and supported integrations.
+
 ## [0.3.2] — 2026-05-27
 
 ### Fixed
