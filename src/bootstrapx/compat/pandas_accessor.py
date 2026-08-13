@@ -10,13 +10,13 @@ Usage
 >>>
 >>> # Fluent API on Series
 >>> result = s.bootstrap.bca(np.mean)
->>> print(result)
+>>> _ = repr(result)
 >>> result = s.bootstrap.ci(np.median, method="percentile", n_resamples=4999)
 >>>
 >>> # DataFrame: operates column-wise
 >>> df = pd.DataFrame({"a": s, "b": s * 1.2 + 1})
 >>> summary = df.bootstrap.summary(np.mean)
->>> print(summary)  # DataFrame with columns: theta_hat, ci_low, ci_high, se
+>>> _ = summary  # columns: theta_hat, ci_low, ci_high, se, method
 
 Notes
 -----

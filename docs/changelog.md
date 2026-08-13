@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.2
+
+### Correctness and release safety
+
+- Tapered block bootstrap now preserves constant series, location shifts, and
+  variance scale by tapering centered observations with energy normalization.
+- NumPy fast paths honor `batch_size` instead of allocating all resamples at
+  once.
+- `BootstrapCV` always produces the requested number of nonempty OOB splits
+  and validates small samples and constructor parameters.
+- Constant time series produce a degenerate sieve-bootstrap distribution
+  instead of failing with a singular matrix.
+- Release publication now runs tests, lint, documentation, and coverage gates
+  before uploading to PyPI and creates a GitHub Release.
+
 ## 0.4.1
 
 ### Statistical correctness

@@ -62,7 +62,7 @@ jobs:
         run: pip install -e ".[dev,pandas,sklearn]"
 
       - name: Run tests with coverage
-        run: pytest --cov=bootstrapx --cov-report=xml --cov-report=term-missing
+        run: pytest --cov=bootstrapx --cov-report=xml --cov-report=term-missing --cov-fail-under=70
 
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
@@ -82,10 +82,33 @@ jobs:
           python-version: "3.13"
 
       - name: Install documentation dependencies
-        run: pip install -e ".[docs,pandas,sklearn]"
+        run: pip install -e ".[docs,pandas,sklearn]" pytest
 
       - name: Build documentation strictly
         run: mkdocs build --strict
+
+      - name: Run documentation examples
+        run: pytest --doctest-modules src/bootstrapx
+
+  minimum-dependencies:
+    name: Minimum dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install minimum core dependencies
+        run: |
+          pip install "numpy==1.23.5" "scipy==1.10.0" "joblib==1.3.0" "pytest>=7,<8"
+          pip install --no-deps -e .
+
+      - name: Test core package without optional dependencies
+        run: |
+          pytest
+          python -c "from bootstrapx import *"
 
   package:
     name: Build and install distribution

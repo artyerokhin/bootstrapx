@@ -167,19 +167,25 @@ def tapered_block_resample(data, n_resamples, batch_size, rng, block_length=10, 
     n = data.shape[0]
     if block_length >= n:
         raise ValueError("block_length must be < len(data).")
-    win = sw.get_window(taper, block_length)
-    win = win / win.sum() * block_length
+    win = np.asarray(sw.get_window(taper, block_length, fftbins=False), dtype=np.float64)
+    rms = float(np.sqrt(np.mean(win**2)))
+    if not np.isfinite(rms) or rms == 0.0:
+        win = np.ones(block_length, dtype=np.float64)
+    else:
+        win /= rms
+    mean = float(data.mean())
+    centered = data.astype(np.float64) - mean
     child_seeds = _spawn_uint32_seeds(rng, n_resamples)
     done = 0
     while done < n_resamples:
         bs = min(batch_size, n_resamples - done)
         batch = np.empty((bs, n), dtype=np.float64)
         for i in range(bs):
-            raw = data[_mbb_idx(n, block_length, child_seeds[done + i])].astype(np.float64)
+            raw = centered[_mbb_idx(n, block_length, child_seeds[done + i])].copy()
             for s in range(0, n, block_length):
                 e = min(s + block_length, n)
                 raw[s:e] *= win[: e - s]
-            batch[i] = raw
+            batch[i] = raw + mean
         yield batch
         done += bs
 
@@ -192,12 +198,25 @@ def sieve_resample(data, n_resamples, batch_size, rng, ar_order=None):
         ar_order = 1
     mu = data.mean()
     c = data - mu
+    if np.all(c == 0.0):
+        done = 0
+        while done < n_resamples:
+            bs = min(batch_size, n_resamples - done)
+            yield np.broadcast_to(data, (bs, n)).copy()
+            done += bs
+        return
     ac = np.correlate(c, c, mode="full")[n - 1 :][: ar_order + 1]
     R = np.empty((ar_order, ar_order), dtype=np.float64)
     for i in range(ar_order):
         for j in range(ar_order):
             R[i, j] = ac[abs(i - j)]
-    phi = np.linalg.solve(R, ac[1 : ar_order + 1])
+    try:
+        phi = np.linalg.solve(R, ac[1 : ar_order + 1])
+    except np.linalg.LinAlgError as exc:
+        raise ValueError(
+            "Cannot fit the sieve autoregression because its covariance matrix is singular. "
+            "Try a smaller ar_order or another time-series bootstrap method."
+        ) from exc
     ft = np.zeros(n, dtype=np.float64)
     for t in range(ar_order, n):
         for k in range(ar_order):

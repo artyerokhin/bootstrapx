@@ -49,7 +49,9 @@ Like MBB, but wraps around the series to reduce edge effects.
 Uses random block lengths and is often a strong default for stationary dependent data.
 
 ### Tapered Block Bootstrap (`tapered`)
-Reduces block-boundary artifacts with tapering windows.
+Reduces block-boundary artifacts with tapering windows. The taper is applied
+to the centered series and normalized to preserve variance scale before the
+sample mean is restored.
 
 ### Sieve Bootstrap (`sieve`)
 Fits an AR approximation and resamples residual-driven trajectories. Use it when an AR representation is reasonable.

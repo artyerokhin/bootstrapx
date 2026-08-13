@@ -102,6 +102,17 @@ class TestBootstrapParameterValidation:
         with pytest.raises(ValueError, match="exactly one scalar per resample"):
             bootstrap(data, statistic, vectorized=True, n_resamples=20, random_state=0)
 
+    @pytest.mark.parametrize("method", ["studentized", "poisson", "mbb", "cluster"])
+    def test_rejects_vectorized_for_unsupported_methods(self, data, method):
+        kwargs = {"cluster_ids": np.repeat([0, 1], 10)} if method == "cluster" else {}
+        with pytest.raises(ValueError, match="vectorized=True"):
+            bootstrap(data, np.mean, method=method, vectorized=True, **kwargs)
+
+    @pytest.mark.parametrize("backend", [None, 1, object()])
+    def test_rejects_non_string_backend(self, data, backend):
+        with pytest.raises(TypeError, match="backend"):
+            bootstrap(data, np.mean, backend=backend)
+
     @pytest.mark.parametrize("random_state", [True, "seed", object()])
     def test_rejects_invalid_random_state(self, data, random_state):
         with pytest.raises(TypeError, match="random_state"):
@@ -110,6 +121,13 @@ class TestBootstrapParameterValidation:
     def test_rejects_bad_cluster_ids_before_resampling(self, data):
         with pytest.raises(ValueError, match="match data length"):
             bootstrap(data, np.mean, method="cluster", cluster_ids=[1, 2])
+
+    @pytest.mark.parametrize("missing", [None, np.nan])
+    def test_rejects_missing_cluster_ids(self, data, missing):
+        ids = np.repeat(np.arange(10, dtype=object), 2)
+        ids[-1] = missing
+        with pytest.raises(ValueError, match="missing"):
+            bootstrap(data, np.mean, method="cluster", cluster_ids=ids)
 
     def test_cluster_accepts_string_identifiers(self, data):
         result = bootstrap(

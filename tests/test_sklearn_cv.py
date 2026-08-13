@@ -51,3 +51,26 @@ class TestBootstrapCV:
         oob_fracs = [len(t) / len(X) for _, t in cv.split(X)]
         mean_oob = np.mean(oob_fracs)
         assert 0.30 < mean_oob < 0.42, f"OOB fraction {mean_oob:.3f} out of expected range"
+
+    def test_small_sample_still_yields_requested_splits(self):
+        X = np.arange(2).reshape(-1, 1)
+        cv = BootstrapCV(n_splits=50, random_state=0)
+        splits = list(cv.split(X))
+        assert len(splits) == cv.get_n_splits() == 50
+        assert all(len(test) > 0 for _, test in splits)
+
+    def test_rejects_single_observation(self):
+        cv = BootstrapCV(n_splits=2, random_state=0)
+        with pytest.raises(ValueError, match="at least 2"):
+            list(cv.split(np.ones((1, 2))))
+
+    @pytest.mark.parametrize("n_splits", [0, -1, 1.5, True])
+    def test_rejects_invalid_n_splits(self, n_splits):
+        error = TypeError if isinstance(n_splits, float | bool) else ValueError
+        with pytest.raises(error, match="n_splits"):
+            BootstrapCV(n_splits=n_splits)
+
+    @pytest.mark.parametrize("random_state", [True, "seed", object()])
+    def test_rejects_invalid_random_state(self, random_state):
+        with pytest.raises(TypeError, match="random_state"):
+            BootstrapCV(random_state=random_state)

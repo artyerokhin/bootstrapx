@@ -54,10 +54,10 @@ class TestStudentized:
         )
 
         rng = np.random.default_rng(seed)
-        outer_idx = rng.integers(0, len(data), size=(n_resamples, len(data)))
         expected_stats = np.empty(n_resamples)
         expected_se = np.empty(n_resamples)
-        for b, indices in enumerate(outer_idx):
+        for b in range(n_resamples):
+            indices = rng.integers(0, len(data), size=len(data))
             sample = data[indices]
             expected_stats[b] = np.mean(sample)
             inner_idx = rng.integers(0, len(data), size=(n_inner, len(data)))
@@ -66,6 +66,21 @@ class TestStudentized:
         np.testing.assert_array_equal(result.bootstrap_distribution, expected_stats)
         np.testing.assert_array_equal(captured["boot_stats"], expected_stats)
         np.testing.assert_allclose(captured["boot_se"], expected_se)
+
+    def test_batch_size_does_not_change_result(self, normal_sample: np.ndarray) -> None:
+        common = dict(
+            method="studentized",
+            n_resamples=40,
+            n_inner=10,
+            random_state=19,
+        )
+        small = bootstrap(normal_sample, np.mean, batch_size=1, **common)
+        large = bootstrap(normal_sample, np.mean, batch_size=40, **common)
+        np.testing.assert_array_equal(
+            small.bootstrap_distribution,
+            large.bootstrap_distribution,
+        )
+        assert small.confidence_interval == large.confidence_interval
 
     def test_basic_run(self, normal_sample: np.ndarray) -> None:
         r = bootstrap(

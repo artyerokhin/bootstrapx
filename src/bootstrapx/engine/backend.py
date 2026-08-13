@@ -64,12 +64,21 @@ def _resample_batch(data: np.ndarray, batch_size: int, rng: np.random.Generator)
 
 
 def _fast_path(
-    data: np.ndarray, func_name: str, n_resamples: int, rng: np.random.Generator
+    data: np.ndarray,
+    func_name: str,
+    batch_size: int,
+    n_resamples: int,
+    rng: np.random.Generator,
 ) -> np.ndarray:
-    """Single-matrix fast path: one (n_resamples, n) alloc + axis=1 ufunc."""
-    n = data.shape[0]
-    resampled = data[rng.integers(0, n, size=(n_resamples, n))]
-    return np.asarray(getattr(np, func_name)(resampled, axis=1), dtype=np.float64)
+    """Apply a NumPy reduction without allocating the full resample matrix."""
+    results = np.empty(n_resamples, dtype=np.float64)
+    done = 0
+    while done < n_resamples:
+        bs = min(batch_size, n_resamples - done)
+        samples = _resample_batch(data, bs, rng)
+        results[done : done + bs] = getattr(np, func_name)(samples, axis=1)
+        done += bs
+    return results
 
 
 def apply_statistic_batched(
@@ -84,8 +93,11 @@ def apply_statistic_batched(
 ) -> np.ndarray:
     n = data.shape[0]
     # fast path: small n + numpy built-in + not custom vectorized
-    if not vectorized and n < _FAST_PATH_N and statistic in _AXIS_BUILTINS:
-        return _fast_path(data, _AXIS_BUILTINS[statistic], n_resamples, rng)
+    func_name = next(
+        (name for built_in, name in _AXIS_BUILTINS.items() if statistic is built_in), None
+    )
+    if not vectorized and n < _FAST_PATH_N and func_name is not None:
+        return _fast_path(data, func_name, batch_size, n_resamples, rng)
     # batched path: memory-safe for large n
     results: list[float] = []
     done = 0
