@@ -71,22 +71,22 @@ def validate_bootstrap_params(
     values at the API boundary prevents invalid input from causing a hang or a
     late, implementation-specific exception.
     """
-    if isinstance(n_resamples, bool) or not isinstance(n_resamples, (int, np.integer)):
+    if isinstance(n_resamples, bool) or not isinstance(n_resamples, int | np.integer):
         raise TypeError("n_resamples must be an integer.")
     if n_resamples < 2:
         raise ValueError("n_resamples must be at least 2.")
     if batch_size is not None:
-        if isinstance(batch_size, bool) or not isinstance(batch_size, (int, np.integer)):
+        if isinstance(batch_size, bool) or not isinstance(batch_size, int | np.integer):
             raise TypeError("batch_size must be an integer or None.")
         if batch_size < 1:
             raise ValueError("batch_size must be at least 1.")
-    if not isinstance(confidence_level, (int, float, np.number)) or not np.isfinite(
+    if not isinstance(confidence_level, int | float | np.number) or not np.isfinite(
         confidence_level
     ):
         raise ValueError("confidence_level must be a finite number between 0 and 1.")
     if not 0.0 < float(confidence_level) < 1.0:
         raise ValueError("confidence_level must be strictly between 0 and 1.")
-    if isinstance(n_jobs, bool) or not isinstance(n_jobs, (int, np.integer)) or n_jobs == 0:
+    if isinstance(n_jobs, bool) or not isinstance(n_jobs, int | np.integer) or n_jobs == 0:
         raise ValueError("n_jobs must be a non-zero integer.")
 
     ci_capable = {"percentile", "basic", "bca", "studentized"}
@@ -115,7 +115,7 @@ def validate_bootstrap_params(
         )
 
     def positive_int(name: str, value: Any, *, maximum: int | None = None) -> None:
-        if isinstance(value, bool) or not isinstance(value, (int, np.integer)):
+        if isinstance(value, bool) or not isinstance(value, int | np.integer):
             raise TypeError(f"{name} must be an integer.")
         if value < 1 or (maximum is not None and value > maximum):
             upper = f" and at most {maximum}" if maximum is not None else ""
@@ -128,7 +128,7 @@ def validate_bootstrap_params(
     if method == "bernoulli":
         prob = kwargs.get("prob", 0.5)
         if (
-            not isinstance(prob, (int, float, np.number))
+            not isinstance(prob, int | float | np.number)
             or not np.isfinite(prob)
             or not 0 < prob <= 1
         ):
@@ -140,7 +140,7 @@ def validate_bootstrap_params(
     if method == "stationary":
         mean_block = kwargs.get("mean_block", 10.0)
         if (
-            not isinstance(mean_block, (int, float, np.number))
+            not isinstance(mean_block, int | float | np.number)
             or not np.isfinite(mean_block)
             or mean_block <= 1
         ):
@@ -173,7 +173,7 @@ def validate_random_state(random_state: Any) -> None:
     """Validate the documented random-state inputs before NumPy is invoked."""
     if random_state is None or isinstance(random_state, np.random.Generator):
         return
-    if isinstance(random_state, bool) or not isinstance(random_state, (int, np.integer)):
+    if isinstance(random_state, bool) or not isinstance(random_state, int | np.integer):
         raise TypeError("random_state must be an integer, numpy Generator, or None.")
 
 

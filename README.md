@@ -20,8 +20,8 @@
 
 ## Why bootstrapx?
 
-`scipy.stats.bootstrap` covers 3 CI types and only iid data.  
-The R `boot` package is comprehensive but not Pythonic.  
+`scipy.stats.bootstrap` covers 3 CI types and only iid data.
+The R `boot` package is comprehensive but not Pythonic.
 **bootstrapx** bridges this gap.
 
 | Feature | `scipy` | `arch` | **bootstrapx** |
@@ -156,7 +156,7 @@ print(result)
 
 ## Performance
 
-Measured on Apple M1, Python 3.12, `n_resamples=4 999`, median of 5 runs.  
+Measured on Apple M1, Python 3.12, `n_resamples=4 999`, median of 5 runs.
 Run yourself: `python benchmarks/bench_speed.py --quick`
 
 **BCa (bias-corrected and accelerated):**
