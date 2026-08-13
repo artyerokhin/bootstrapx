@@ -1,0 +1,18 @@
+{
+  "run_date": "2026-08-13",
+  "branch": "feat/v0.4.4-practical-ux",
+  "commit_before_documentation_audit": "0d94bbc",
+  "system": "macOS-15.7.4-arm64-arm-64bit",
+  "architecture": "arm64 (Apple Silicon)",
+  "python": "3.11.5",
+  "numpy": "1.26.4",
+  "scipy": "1.11.1",
+  "n_resamples": 4999,
+  "confidence_level": 0.95,
+  "statistic": "numpy.mean",
+  "random_state": 42,
+  "runtime_repeats": 5,
+  "runtime_summary": "median",
+  "memory_tool": "tracemalloc",
+  "command": "python benchmarks/bench_speed.py --quick"
+}

@@ -63,9 +63,10 @@ behavior are tested with and without the optional dependency.
 Use it for repeated block-bootstrap analysis or large series. Skip it when you
 want the smallest environment or only run IID methods. The first call has a JIT
 startup cost; warm calls can be much faster. On one Apple Silicon/Python 3.10
-check, the complete `np.mean` workflow with 500 resamples was 10–25x faster for
-`n=100…10 000`, while cold compilation/loading cost roughly 0.1–0.5 seconds.
-These are indicative numbers, not a cross-machine guarantee.
+check, warm block-bootstrap calls were substantially faster, but the factor
+varied by method and sample size. First-call compilation or cache-loading cost
+is also machine- and cache-dependent. Treat this as a reason to benchmark your
+own repeated workflow, not as a cross-machine speed guarantee.
 
 Reproduce the comparison on your machine:
 

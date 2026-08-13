@@ -5,8 +5,9 @@ Usage:
     python benchmarks/bench_speed.py           # full (~5 min M1)
     python benchmarks/bench_speed.py --quick   # quick (~1 min M1)
 """
-import sys, os, time, tracemalloc, csv, gc, warnings
+import sys, os, time, tracemalloc, csv, gc, warnings, json, platform
 import numpy as np
+import scipy
 from scipy import stats as sp_stats
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
@@ -142,4 +143,19 @@ with open("benchmarks/results_callable.csv", "w", newline="") as f:
     w.writeheader(); w.writerows(call_rows)
 
 print("\nDone.")
+metadata = {
+    "python": platform.python_version(),
+    "platform": platform.platform(),
+    "numpy": np.__version__,
+    "scipy": scipy.__version__,
+    "bootstrapx": bx.__version__,
+    "n_resamples": N_RESAMPLES,
+    "confidence_level": CI,
+    "runtime_repeats": 5,
+    "runtime_summary": "median",
+    "memory_tool": "tracemalloc",
+    "quick": QUICK,
+}
+with open("benchmarks/results_speed_metadata.json", "w") as f:
+    json.dump(metadata, f, indent=2)
 print("Run: python benchmarks/plot_results.py")

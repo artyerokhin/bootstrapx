@@ -14,6 +14,10 @@
   actual treatment-effect comparison.
 - The guide now starts from data shape and separates supported paired/grouped
   workflows from unsupported unpaired A/B effects.
+- Runtime and memory claims now match an audited 0.4.4 quick run; stale
+  pre-fix coverage artifacts are explicitly excluded from 0.4.4 evidence.
+- Coverage benchmark random streams, failure accounting, metadata, and CI smoke
+  validation have been corrected.
 - Optional-dependency errors, issue forms, and contribution guidance are more
   actionable for practitioners.
 

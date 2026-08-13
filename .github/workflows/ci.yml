@@ -83,6 +83,9 @@ jobs:
       - name: Run tests with coverage
         run: pytest --cov=bootstrapx --cov-report=xml --cov-report=term-missing --cov-fail-under=85
 
+      - name: Smoke-test coverage benchmark pipeline
+        run: python benchmarks/bench_coverage_accuracy.py --smoke
+
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2
         with:
@@ -148,6 +151,7 @@ jobs:
         run: |
           python -c "import numba; print(numba.__version__)"
           pytest tests/test_timeseries.py tests/test_timeseries_hotfix.py
+          python benchmarks/bench_numba.py --n-resamples 20 --repeats 1
 
   package:
     name: Build and install distribution

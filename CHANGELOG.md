@@ -27,6 +27,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The documentation is reorganized around data shape and practitioner
   decisions, with result interpretation, grouped-data, experiment,
   block-sensitivity, and optional-performance guidance.
+- Benchmark claims now distinguish runtime, `tracemalloc` working-memory
+  measurements, and statistical coverage. Stale coverage artifacts are no
+  longer presented as 0.4.4 evidence, and blanket speed/constant-memory claims
+  have been removed.
+- Coverage simulations now use independent deterministic streams for data and
+  resampling, report invalid/failed trials and Monte Carlo uncertainty, record
+  environment metadata, and have a small CI smoke test.
 - Missing optional-dependency errors point to the corresponding bootstrapx
   installation extra.
 
