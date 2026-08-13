@@ -82,7 +82,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install documentation dependencies
-        run: pip install -e ".[docs,pandas,sklearn]"
+        run: pip install -e ".[docs,pandas,sklearn]" pytest
 
       - name: Build documentation strictly
         run: mkdocs build --strict
