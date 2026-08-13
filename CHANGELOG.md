@@ -5,6 +5,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [0.4.0] — 2026-08-13
 
+### Breaking changes
+- Python 3.9 is no longer supported; upgrade to Python 3.10 or later.
+- Previously accepted invalid parameters now raise an explicit `TypeError` or
+  `ValueError`. This includes zero batch/block sizes, unsupported method
+  keyword arguments, and non-finite data or statistic results.
+
 ### Fixed
 - Public parameter validation now rejects invalid resample counts, batch sizes,
   confidence levels, block sizes and method-specific parameters before a
