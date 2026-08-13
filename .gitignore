@@ -45,6 +45,10 @@ coverage.xml
 venv/
 env/
 .env
+.venv*/
 
 # site
 site/
+
+# Local benchmark runs (versioned release baselines live in benchmarks/baselines/)
+benchmark_runs/

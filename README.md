@@ -201,6 +201,16 @@ evidence. They must be rerun from the release candidate with independent data
 and resampling random streams before release-specific coverage numbers are
 published.
 
+Run the safe local suite without overwriting previous results:
+
+```bash
+pip install -e ".[dev,numba]"
+python benchmarks/run_release.py --profile quick
+```
+
+For release-candidate coverage with checkpoints, use `--profile release`.
+Commands and resume instructions are in the benchmark documentation.
+
 ---
 
 ## Documentation

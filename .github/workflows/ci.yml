@@ -24,10 +24,20 @@ jobs:
         run: pip install ruff
 
       - name: Check formatting
-        run: ruff format --check src tests
+        run: |
+          ruff format --check src tests \
+            benchmarks/bench_speed.py \
+            benchmarks/bench_coverage_accuracy.py \
+            benchmarks/bench_numba.py \
+            benchmarks/run_release.py
 
       - name: Lint
-        run: ruff check src tests
+        run: |
+          ruff check src tests \
+            benchmarks/bench_speed.py \
+            benchmarks/bench_coverage_accuracy.py \
+            benchmarks/bench_numba.py \
+            benchmarks/run_release.py
 
   typing:
     name: Strict typing

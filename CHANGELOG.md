@@ -34,6 +34,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Coverage simulations now use independent deterministic streams for data and
   resampling, report invalid/failed trials and Monte Carlo uncertainty, record
   environment metadata, and have a small CI smoke test.
+- A sequential release-benchmark runner provides quick, release, and
+  statistical profiles. Long coverage studies checkpoint each configuration
+  and can resume only with a matching commit, environment, and configuration.
 - Missing optional-dependency errors point to the corresponding bootstrapx
   installation extra.
 

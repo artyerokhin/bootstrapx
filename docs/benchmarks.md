@@ -91,3 +91,65 @@ python benchmarks/bench_speed.py --quick
 When publishing a new result, record CPU, OS, Python, NumPy, SciPy and Numba
 versions, commit hash, `n`, `n_resamples`, statistic, method, block setting,
 warm-up policy, repeat count, and memory measurement tool.
+
+## Run the 0.4.4 release suite
+
+Create a clean environment from the release-candidate branch:
+
+```bash
+python3 -m venv .venv-bench
+source .venv-bench/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev,numba]"
+```
+
+Start with the quick profile. It verifies every benchmark pipeline and produces
+real speed/Numba measurements, but its two-simulation coverage result is only a
+smoke test:
+
+```bash
+python benchmarks/run_release.py \
+  --profile quick \
+  --output-dir benchmark_runs/v0.4.4-quick
+```
+
+Then run the release profile. It uses 300 datasets per coverage cell and can
+take tens of minutes or longer depending on the machine:
+
+```bash
+python benchmarks/run_release.py \
+  --profile release \
+  --output-dir benchmark_runs/v0.4.4-release
+```
+
+If the process is interrupted, run the identical command with `--resume`:
+
+```bash
+python benchmarks/run_release.py \
+  --profile release \
+  --output-dir benchmark_runs/v0.4.4-release \
+  --resume
+```
+
+For publishable statistical estimates, use 1,000 simulations per cell. This is
+an overnight-style run rather than a normal CI job:
+
+```bash
+python benchmarks/run_release.py \
+  --profile statistical \
+  --output-dir benchmark_runs/v0.4.4-statistical
+```
+
+An optional 2,000-simulation coverage run is available separately:
+
+```bash
+python benchmarks/bench_coverage_accuracy.py \
+  --full \
+  --output-dir benchmark_runs/v0.4.4-coverage-full
+```
+
+All profiles preserve previous runs, record the exact environment and commit,
+and checkpoint coverage after each configuration. Avoid other CPU-heavy work
+during runtime measurements and keep the Mac connected to power. After the run,
+share the chosen `benchmark_runs/v0.4.4-*` directory; README tables and plots
+should be generated only from that directory.
