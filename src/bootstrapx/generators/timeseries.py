@@ -5,9 +5,10 @@ Hotfix:
   using it as the actual seed made all MBB/CBB/stationary samples identical.
 - Use child.generate_state(1)[0] to obtain a unique 32-bit seed per child.
 """
+
 from __future__ import annotations
 
-from typing import Generator
+from collections.abc import Generator
 
 import numpy as np
 from scipy.signal import lfilter
@@ -57,6 +58,7 @@ try:
                 out[i] = np.random.randint(0, n)
         return out
 except ImportError:
+
     def _mbb_idx(n: int, bl: int, seed: int) -> np.ndarray:
         r = np.random.RandomState(seed)
         out = np.empty(n, dtype=np.int64)
@@ -128,7 +130,10 @@ def mbb_resample(data, n_resamples, batch_size, rng, block_length=10):
     if block_length >= n:
         raise ValueError("block_length must be < len(data).")
     return _batch_gen(
-        data, n_resamples, batch_size, rng,
+        data,
+        n_resamples,
+        batch_size,
+        rng,
         lambda n, seed, **k: _mbb_idx(n, block_length, seed),
     )
 
@@ -138,20 +143,27 @@ def cbb_resample(data, n_resamples, batch_size, rng, block_length=10):
     if block_length >= n:
         raise ValueError("block_length must be < len(data).")
     return _batch_gen(
-        data, n_resamples, batch_size, rng,
+        data,
+        n_resamples,
+        batch_size,
+        rng,
         lambda n, seed, **k: _cbb_idx(n, block_length, seed),
     )
 
 
 def stationary_resample(data, n_resamples, batch_size, rng, mean_block=10.0):
     return _batch_gen(
-        data, n_resamples, batch_size, rng,
+        data,
+        n_resamples,
+        batch_size,
+        rng,
         lambda n, seed, **k: _stat_idx(n, mean_block, seed),
     )
 
 
 def tapered_block_resample(data, n_resamples, batch_size, rng, block_length=10, taper="tukey"):
     from scipy.signal import windows as sw
+
     n = data.shape[0]
     if block_length >= n:
         raise ValueError("block_length must be < len(data).")
@@ -180,12 +192,12 @@ def sieve_resample(data, n_resamples, batch_size, rng, ar_order=None):
         ar_order = 1
     mu = data.mean()
     c = data - mu
-    ac = np.correlate(c, c, mode="full")[n - 1:][: ar_order + 1]
+    ac = np.correlate(c, c, mode="full")[n - 1 :][: ar_order + 1]
     R = np.empty((ar_order, ar_order), dtype=np.float64)
     for i in range(ar_order):
         for j in range(ar_order):
             R[i, j] = ac[abs(i - j)]
-    phi = np.linalg.solve(R, ac[1: ar_order + 1])
+    phi = np.linalg.solve(R, ac[1 : ar_order + 1])
     ft = np.zeros(n, dtype=np.float64)
     for t in range(ar_order, n):
         for k in range(ar_order):

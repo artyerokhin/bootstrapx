@@ -1,12 +1,15 @@
 """Tests for BootstrapCV sklearn compatibility."""
+
 import numpy as np
 import pytest
 
 try:
-    from bootstrapx.compat.sklearn_cv import BootstrapCV
     from sklearn.datasets import load_iris
     from sklearn.linear_model import LogisticRegression
     from sklearn.model_selection import cross_val_score
+
+    from bootstrapx.compat.sklearn_cv import BootstrapCV
+
     _HAS_SKLEARN = True
 except ImportError:
     _HAS_SKLEARN = False
@@ -31,15 +34,13 @@ class TestBootstrapCV:
         y = np.zeros(80)
         s1 = [t for _, t in BootstrapCV(30, random_state=7).split(X, y)]
         s2 = [t for _, t in BootstrapCV(30, random_state=7).split(X, y)]
-        for a, b in zip(s1, s2):
+        for a, b in zip(s1, s2, strict=True):
             np.testing.assert_array_equal(a, b)
 
     def test_cross_val_score(self):
         X, y = load_iris(return_X_y=True)
         cv = BootstrapCV(n_splits=100, random_state=0)
-        scores = cross_val_score(
-            LogisticRegression(max_iter=200), X, y, cv=cv, scoring="accuracy"
-        )
+        scores = cross_val_score(LogisticRegression(max_iter=200), X, y, cv=cv, scoring="accuracy")
         assert scores.mean() > 0.85
         assert len(scores) == 100
 

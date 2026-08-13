@@ -23,21 +23,20 @@ Notes
 The accessor is registered automatically when ``bootstrapx`` is imported.
 No extra import is needed beyond ``import bootstrapx``.
 """
+
 from __future__ import annotations
 
-from typing import Callable, Any
-
-import numpy as np
+from collections.abc import Callable
+from typing import Any
 
 try:
     import pandas as pd
 except ImportError as exc:
     raise ImportError(
-        "pandas is required for the bootstrap accessor. "
-        "Install with: pip install pandas"
+        "pandas is required for the bootstrap accessor. Install with: pip install pandas"
     ) from exc
 
-from bootstrapx.api import bootstrap, BootstrapResult
+from bootstrapx.api import BootstrapResult, bootstrap
 
 
 class _BootstrapSeriesAccessor:
@@ -138,14 +137,16 @@ class _BootstrapDataFrameAccessor:
                 random_state=random_state,
                 **kwargs,
             )
-            rows.append({
-                "column": col,
-                "theta_hat": r.theta_hat,
-                "ci_low": r.confidence_interval.low,
-                "ci_high": r.confidence_interval.high,
-                "se": r.standard_error,
-                "method": r.method,
-            })
+            rows.append(
+                {
+                    "column": col,
+                    "theta_hat": r.theta_hat,
+                    "ci_low": r.confidence_interval.low,
+                    "ci_high": r.confidence_interval.high,
+                    "se": r.standard_error,
+                    "method": r.method,
+                }
+            )
         return pd.DataFrame(rows).set_index("column")
 
     def ci(

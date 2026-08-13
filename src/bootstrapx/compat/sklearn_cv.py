@@ -26,18 +26,19 @@ Unlike k-fold, bootstrap splits allow an observation to appear multiple times
 in the training set and guarantees ~63.2% unique training samples per split
 (the "0.632 bootstrap estimator").
 """
+
 from __future__ import annotations
 
 import numpy as np
 
 try:
     from sklearn.model_selection._split import BaseCrossValidator
-    from sklearn.utils.validation import check_array, indexable
+    from sklearn.utils.validation import indexable
+
     _SKLEARN = True
 except ImportError as exc:
     raise ImportError(
-        "scikit-learn is required for BootstrapCV. "
-        "Install with: pip install scikit-learn"
+        "scikit-learn is required for BootstrapCV. Install with: pip install scikit-learn"
     ) from exc
 
 

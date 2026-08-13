@@ -9,6 +9,7 @@ Changes vs 0.2.0:
 - studentized_interval: t_low / t_high variable names were swapped in the
   original (low used (1-alpha/2) quantile, high used alpha/2).  Fixed.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -34,6 +35,7 @@ class ConfidenceInterval:
 # ---------------------------------------------------------------------------
 # Basic interval constructors
 # ---------------------------------------------------------------------------
+
 
 def percentile_interval(
     boot_stats: np.ndarray,
@@ -66,6 +68,7 @@ def basic_interval(
 # Jackknife — memory-efficient implementation
 # ---------------------------------------------------------------------------
 
+
 def _jackknife(
     data: np.ndarray,
     statistic: callable,
@@ -88,19 +91,17 @@ def _jackknife(
         def _loo(i: int) -> float:
             buf = np.empty(n - 1, dtype=data.dtype)
             buf[:i] = data[:i]
-            buf[i:] = data[i + 1:]
+            buf[i:] = data[i + 1 :]
             return float(statistic(buf))
 
-        return np.array(
-            Parallel(n_jobs=n_jobs)(delayed(_loo)(i) for i in range(n))
-        )
+        return np.array(Parallel(n_jobs=n_jobs)(delayed(_loo)(i) for i in range(n)))
 
     # Sequential with single preallocated buffer
     buf = np.empty(n - 1, dtype=data.dtype)
     out = np.empty(n, dtype=np.float64)
     for i in range(n):
         buf[:i] = data[:i]
-        buf[i:] = data[i + 1:]
+        buf[i:] = data[i + 1 :]
         out[i] = float(statistic(buf))
     return out
 
@@ -108,6 +109,7 @@ def _jackknife(
 # ---------------------------------------------------------------------------
 # BCa interval
 # ---------------------------------------------------------------------------
+
 
 def bca_interval(
     boot_stats: np.ndarray,
@@ -133,8 +135,8 @@ def bca_interval(
     diffs = mean_jack - jack_stats  # shape (n,)
 
     # Use einsum to avoid two temporary power arrays
-    num = float(np.einsum("i,i,i->", diffs, diffs, diffs))   # sum(diffs**3)
-    den = float(np.einsum("i,i->", diffs, diffs)) ** 1.5      # sum(diffs**2)**1.5
+    num = float(np.einsum("i,i,i->", diffs, diffs, diffs))  # sum(diffs**3)
+    den = float(np.einsum("i,i->", diffs, diffs)) ** 1.5  # sum(diffs**2)**1.5
     a_hat = num / (6.0 * den) if den != 0.0 else 0.0
 
     def _adj_quantile(z_alpha: float) -> float:
@@ -155,6 +157,7 @@ def bca_interval(
 # ---------------------------------------------------------------------------
 # Studentized (bootstrap-t) interval
 # ---------------------------------------------------------------------------
+
 
 def studentized_interval(
     data: np.ndarray,

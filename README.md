@@ -12,7 +12,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-mkdocs-blue)](https://artyerokhin.github.io/bootstrapx)
 
-*15 bootstrap methods · sklearn-compatible · pandas accessor · memory-safe batching*
+*16 bootstrap methods · sklearn-compatible · pandas accessor · memory-safe batching*
 
 </div>
 
@@ -46,8 +46,8 @@ The R `boot` package is comprehensive but not Pythonic.
 ```bash
 pip install bootstrapx-lib                  # core (numpy + scipy only)
 pip install "bootstrapx-lib[pandas]"        # + pandas accessor
-pip install "bootstrapx-lib[numba]"         # + Numba JIT acceleration
-pip install "bootstrapx-lib[pandas,numba]"  # everything
+pip install "bootstrapx-lib[sklearn]"       # + scikit-learn CV integration
+pip install "bootstrapx-lib[pandas,sklearn]"  # all integrations
 ```
 
 ---
@@ -242,7 +242,7 @@ If you use bootstrapx in academic work:
   author  = {Erokhin, Artem},
   title   = {bootstrapx: Production-grade bootstrap uncertainty estimation},
   url     = {https://github.com/artyerokhin/bootstrapx},
-  version = {0.3.1},
+  version = {0.4.0},
   year    = {2026},
 }
 ```
