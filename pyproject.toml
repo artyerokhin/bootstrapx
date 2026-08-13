@@ -49,6 +49,7 @@ dev = [
     "coverage",
     "mypy",
     "ruff",
+    "pre-commit>=3",
     "pandas>=1.5",
     "scikit-learn>=1.2",
 ]

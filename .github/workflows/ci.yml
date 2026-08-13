@@ -71,6 +71,22 @@ jobs:
           file: coverage.xml
           format: cobertura
 
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install documentation dependencies
+        run: pip install -e ".[docs,pandas,sklearn]"
+
+      - name: Build documentation strictly
+        run: mkdocs build --strict
+
   package:
     name: Build and install distribution
     needs: [lint, test]
