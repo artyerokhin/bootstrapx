@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.2] — 2026-08-13
+
+### Fixed
+- **Tapered block bootstrap** now applies an energy-normalized taper to the
+  centered series and restores the sample mean. This preserves constant
+  series, location shifts, and the variance scale instead of pulling tapered
+  observations toward zero.
+- NumPy built-in fast paths now honor `batch_size`. Large `n_resamples` no
+  longer allocate a full `(n_resamples, n)` matrix despite batching being
+  requested.
+- `BootstrapCV` now redraws empty OOB samples so `split()` yields exactly
+  `n_splits`, rejects invalid split counts and samples smaller than two, and
+  documents the 0.632 estimator weights in the correct order.
+- Sieve bootstrap returns the correct degenerate distribution for a constant
+  series and explains singular autoregressive fits with an actionable error.
+- Cluster and strata identifiers reject missing or incomparable values before
+  resampling instead of leaking internal `KeyError`/NumPy exceptions.
+- Unhashable callable statistics no longer fail during NumPy fast-path
+  detection, and non-string backends receive a public `TypeError`.
+- `from bootstrapx import *` works in core-only installations without
+  scikit-learn.
+- Studentized results no longer depend on the technical `batch_size` for a
+  fixed random seed.
+
+### Changed
+- `vectorized=True` is explicitly limited to percentile, basic, and BCa
+  methods; unsupported methods now fail instead of silently ignoring it.
+- Package metadata uses an SPDX license expression and current license-file
+  metadata.
+- Release publication verifies that the tagged commit is on `main`, runs the
+  complete release checks before PyPI upload, and creates a GitHub Release.
+- CI tests minimum supported core dependencies, executable documentation
+  examples, and enforces a 70% coverage floor.
+
+### Tests
+- Added regression tests for tapered-bootstrap invariants, fast-path batching,
+  constant-series sieve behavior, exact BootstrapCV split counts, missing
+  cluster identifiers, optional exports, and public argument validation.
+
 ## [0.4.1] — 2026-08-13
 
 ### Fixed

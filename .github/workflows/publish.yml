@@ -11,10 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
           id-token: write
-          contents: read
+          contents: write
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -31,6 +33,11 @@ jobs:
           exit 1
         }
         echo "PACKAGE_VERSION=$package_version" >> "$GITHUB_ENV"
+
+    - name: Verify tagged commit is on main
+      run: |
+        git fetch origin main
+        git merge-base --is-ancestor "$GITHUB_SHA" origin/main
 
     - name: Verify version is not already published
       run: |
@@ -53,10 +60,18 @@ jobs:
             raise SystemExit(f"bootstrapx-lib {version} is already published")
         PY
 
-    - name: Install build dependencies
+    - name: Install release dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build twine
+        pip install -e ".[dev,pandas,sklearn,docs]" build twine
+
+    - name: Verify release candidate
+      run: |
+        ruff format --check src tests
+        ruff check src tests
+        pytest --cov=bootstrapx --cov-fail-under=70
+        pytest --doctest-modules src/bootstrapx
+        mkdocs build --strict
 
     - name: Build package
       run: |
@@ -65,3 +80,8 @@ jobs:
 
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
+
+    - name: Create GitHub Release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --generate-notes

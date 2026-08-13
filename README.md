@@ -264,7 +264,7 @@ If you use bootstrapx in academic work:
   author  = {Erokhin, Artem},
   title   = {bootstrapx: Production-grade bootstrap uncertainty estimation},
   url     = {https://github.com/artyerokhin/bootstrapx},
-  version = {0.4.1},
+  version = {0.4.2},
   year    = {2026},
 }
 ```
