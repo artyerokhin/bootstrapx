@@ -1,3 +1,5 @@
+import builtins
+
 import numpy as np
 import pytest
 
@@ -80,3 +82,23 @@ class TestEdgeCases:
 
         np.testing.assert_array_equal(root_distribution, r.extra["root_distribution"])
         assert not np.shares_memory(root_distribution, r.extra["root_distribution"])
+
+    def test_result_to_frame_explains_missing_pandas(self, monkeypatch):
+        result = bootstrap(
+            np.arange(10.0),
+            np.mean,
+            method="percentile",
+            n_resamples=25,
+            random_state=0,
+        )
+        original_import = builtins.__import__
+
+        def import_without_pandas(name, *args, **kwargs):
+            if name == "pandas":
+                raise ImportError("pandas is intentionally unavailable")
+            return original_import(name, *args, **kwargs)
+
+        monkeypatch.setattr(builtins, "__import__", import_without_pandas)
+
+        with pytest.raises(ImportError, match=r"bootstrapx-lib\[pandas\]"):
+            result.to_frame()
