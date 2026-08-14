@@ -11,42 +11,44 @@ A speed benchmark cannot establish statistical correctness, and increasing
 `n_resamples` reduces Monte Carlo noise but does not repair systematic
 undercoverage caused by an unsuitable method.
 
-## Audited 0.4.4 quick runtime
+## Audited 0.4.4 release runtime
 
-Measured on 2026-08-13 from the 0.4.4 release branch on Apple Silicon/macOS
-15.7.4, Python 3.11.5, NumPy 1.26.4, and SciPy 1.11.1. Each cell uses
-`np.mean`, 4,999 resamples, a fixed seed, and the median of five calls.
+Measured from the versioned 0.4.4 release run on Apple Silicon/macOS 15.7.4,
+Python 3.11.5, NumPy 2.4.6, and SciPy 1.17.1. Each cell uses `np.mean`, 4,999
+resamples, a fixed seed, one unmeasured warm-up, and the median of five calls.
 
 | Method | n | bootstrapx (ms) | SciPy (ms) | SciPy / bootstrapx |
 |---|---:|---:|---:|---:|
-| BCa | 200 | 5.37 | 11.29 | 2.10× |
-| BCa | 500 | 14.19 | 15.56 | 1.10× |
-| BCa | 1,000 | 33.42 | 31.81 | 0.95× |
-| BCa | 2,000 | 61.12 | 69.43 | 1.14× |
-| Percentile | 1,000 | 34.17 | 27.77 | 0.81× |
-| Percentile | 5,000 | 141.85 | 342.48 | 2.41× |
-| Percentile | 10,000 | 230.71 | 703.66 | 3.05× |
+| BCa | 200 | 4.93 | 9.47 | 1.92× |
+| BCa | 500 | 11.43 | 15.09 | 1.32× |
+| BCa | 1,000 | 30.11 | 30.54 | 1.01× |
+| BCa | 2,000 | 51.18 | 66.12 | 1.29× |
+| Percentile | 1,000 | 29.06 | 27.27 | 0.94× |
+| Percentile | 5,000 | 116.00 | 337.72 | 2.91× |
+| Percentile | 10,000 | 200.18 | 676.19 | 3.38× |
 
 A ratio above 1 means bootstrapx was faster in that cell. The crossover is
 real: the benchmark does not support a blanket “bootstrapx is faster” claim.
 Runtime also depends on dependency versions, CPU, statistic, batch size, and
 sample shape.
 
-Auditable inputs: [speed CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmarks/baselines/v0.4.4-speed-quick.csv)
-and [environment metadata](https://github.com/artyerokhin/bootstrapx/blob/main/benchmarks/baselines/v0.4.4-environment.json).
+![Runtime comparison](assets/benchmarks/v0.4.4/speed-vs-scipy.png)
+
+Auditable inputs: [speed CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.4.4-release/speed/speed.csv)
+and [environment metadata](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.4.4-release/speed/metadata.json).
 
 Arbitrary-callable results were similarly mixed. For `n=1,000`, trimmed mean
-took 111.44 ms versus SciPy's 135.14 ms, while IQR took 574.64 ms versus
-600.13 ms. These numbers do not predict the cost of another callable.
+took 566.89 ms versus SciPy's 602.13 ms, while IQR took 1,138.10 ms versus
+1,170.37 ms. These numbers do not predict the cost of another callable.
 
 ## Memory measurement
 
-The quick benchmark's `tracemalloc` peak for BCa was 0.225 MB versus 38.147 MB
-at `n=500`, and 0.340 MB versus 152.565 MB at `n=2,000`. This supports the
+The release benchmark's `tracemalloc` peak for BCa was 0.224 MB versus 38.149
+MB at `n=500`, and 0.340 MB versus 152.567 MB at `n=2,000`. This supports the
 narrow claim that batching greatly reduced allocations visible to
 `tracemalloc` in this configuration.
 
-Auditable input: [memory CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmarks/baselines/v0.4.4-memory-quick.csv).
+Auditable input: [memory CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.4.4-release/speed/memory.csv).
 
 It is not a process-RSS or native-allocator guarantee. bootstrapx retains the
 bootstrap distribution and method-specific arrays, so total memory is not
@@ -65,22 +67,38 @@ fallback. It reports first-process-call latency separately from warm runtime.
 Only MBB, CBB, stationary, and the block-index portion of tapered bootstrap use
 Numba. See [When Numba helps](integrations.md#when-numba-helps).
 
-## Statistical coverage status
+In this release run, warm end-to-end `np.mean` calls with 500 resamples were
+11–34× faster with Numba for MBB, CBB, and stationary bootstrap across
+`n=100`–`10,000`. The first process call ranged from 0.007 to 0.121 seconds;
+it is a local startup measurement, not a latency guarantee.
 
-The existing broad coverage CSV and plots were generated before the 0.4.1–0.4.3
-correctness fixes. They are useful historical diagnostics but are not valid
-release-specific evidence for 0.4.4. They also reused the same integer seed for
-data generation and resampling, so the benchmark script must separate those
-random streams before the next published run.
+![Numba warm-runtime speedup](assets/benchmarks/v0.4.4/numba-speedup.png)
 
-Consequently, README and current documentation make no numeric 0.4.4 coverage
-claim. The full release-candidate study should report:
+## Statistical coverage
 
-- empirical coverage and a Monte Carlo uncertainty interval;
-- invalid or failed trials rather than silently hiding them;
-- package versions and commit hash;
-- independent data-generation and resampling streams;
-- all exclusions and finite-sample limitations.
+The release study completed all 160 planned matched cells: BCa and percentile
+intervals; mean, median, and standard deviation; `n=200`, 500, 1,000, and
+2,000; and the distributions defined by the benchmark. Every cell used 300
+independently generated datasets, 4,999 resamples, and independent deterministic
+streams for data generation and resampling. No trial failed or produced an
+invalid interval.
+
+Mean empirical coverage was 94.23% for bootstrapx BCa, 94.26% for bootstrapx
+percentile, 94.17% for SciPy BCa, and 94.26% for SciPy percentile. The largest
+matched bootstrapx/SciPy difference was 0.67 percentage points. This is useful
+agreement evidence, but not a universal accuracy certificate: with 300 trials,
+a single cell's 95% Wilson interval is roughly six percentage points wide. Both
+libraries, for example, covered the standard deviation of exponential data at
+`n=200` only 90.33% (BCa) and 90.67% (percentile) of the time.
+
+![Matched empirical coverage](assets/benchmarks/v0.4.4/coverage-vs-scipy.png)
+
+The [coverage CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.4.4-release/coverage/coverage.csv)
+includes coverage, Wilson bounds, failures, and invalid trials for every cell;
+the [metadata](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.4.4-release/coverage/metadata.json)
+records the exact commit and environment. It is more informative to inspect
+the cells matching your statistic and data distribution than to rely on the
+overall mean.
 
 ## Reproduce the speed subset
 
@@ -113,8 +131,8 @@ python benchmarks/run_release.py \
   --output-dir benchmark_runs/v0.4.4-quick
 ```
 
-Then run the release profile. It uses 300 datasets per coverage cell and can
-take tens of minutes or longer depending on the machine:
+Then run the release profile. It uses 300 datasets per coverage cell; this run
+took about 39 minutes on the M1 machine above, and may take longer elsewhere:
 
 ```bash
 python benchmarks/run_release.py \
@@ -131,8 +149,9 @@ python benchmarks/run_release.py \
   --resume
 ```
 
-For publishable statistical estimates, use 1,000 simulations per cell. This is
-an overnight-style run rather than a normal CI job:
+For tighter statistical estimates, use 1,000 simulations per cell. Expect it
+to take several times longer than the release profile rather than treating it
+as a normal CI job:
 
 ```bash
 python benchmarks/run_release.py \

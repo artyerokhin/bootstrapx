@@ -1,0 +1,8 @@
+n,method,bootstrapx_ms,scipy_ms,scipy_over_bootstrapx
+200,bca,4.93,9.47,1.92
+500,bca,11.43,15.09,1.32
+1000,bca,30.11,30.54,1.01
+2000,bca,51.18,66.12,1.29
+1000,percentile,29.06,27.27,0.94
+5000,percentile,116.0,337.72,2.91
+10000,percentile,200.18,676.19,3.38

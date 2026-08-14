@@ -12,8 +12,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `BootstrapResult.to_frame()` returns a one-row pandas DataFrame suitable for
   reports, concatenation, and experiment tracking.
 - The documented `numba` extra now exists and is tested independently in CI.
-- A reproducible benchmark documents Numba's narrow performance scope, cold
-  startup cost, Python fallback, and warm block-bootstrap speedup.
+- Versioned release-benchmark evidence: matched runtime, `tracemalloc`, Numba,
+  and 160-cell coverage results with exact environment metadata and plots.
 - A current-limitations guide documents scalar-output, two-sample, missing-data,
   dependent-data, Monte Carlo, and pre-1.0 compatibility boundaries.
 - Structured bug and practitioner-workflow issue forms, plus a contribution
@@ -27,10 +27,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The documentation is reorganized around data shape and practitioner
   decisions, with result interpretation, grouped-data, experiment,
   block-sensitivity, and optional-performance guidance.
-- Benchmark claims now distinguish runtime, `tracemalloc` working-memory
-  measurements, and statistical coverage. Stale coverage artifacts are no
-  longer presented as 0.4.4 evidence, and blanket speed/constant-memory claims
-  have been removed.
+- Benchmark claims distinguish runtime, `tracemalloc` working-memory
+  measurements, and statistical coverage; they now cite the completed 0.4.4
+  release run rather than stale pre-fix coverage artifacts.
 - Coverage simulations now use independent deterministic streams for data and
   resampling, report invalid/failed trials and Monte Carlo uncertainty, record
   environment metadata, and have a small CI smoke test.

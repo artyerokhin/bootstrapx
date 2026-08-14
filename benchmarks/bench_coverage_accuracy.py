@@ -115,7 +115,7 @@ def _wilson_interval(hits: int, trials: int) -> tuple[float, float]:
 def _write_rows(path: Path, rows: list[dict[str, Any]]) -> None:
     temporary = path.with_suffix(".tmp")
     with temporary.open("w", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=FIELDNAMES)
+        writer = csv.DictWriter(file, fieldnames=FIELDNAMES, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     temporary.replace(path)

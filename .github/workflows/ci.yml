@@ -29,7 +29,8 @@ jobs:
             benchmarks/bench_speed.py \
             benchmarks/bench_coverage_accuracy.py \
             benchmarks/bench_numba.py \
-            benchmarks/run_release.py
+            benchmarks/run_release.py \
+            benchmarks/plot_release_results.py
 
       - name: Lint
         run: |
@@ -37,7 +38,8 @@ jobs:
             benchmarks/bench_speed.py \
             benchmarks/bench_coverage_accuracy.py \
             benchmarks/bench_numba.py \
-            benchmarks/run_release.py
+            benchmarks/run_release.py \
+            benchmarks/plot_release_results.py
 
   typing:
     name: Strict typing

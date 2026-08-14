@@ -29,10 +29,10 @@ Run these before opening a pull request:
 ```bash
 ruff format --check src tests benchmarks/bench_speed.py \
   benchmarks/bench_coverage_accuracy.py benchmarks/bench_numba.py \
-  benchmarks/run_release.py
+  benchmarks/run_release.py benchmarks/plot_release_results.py
 ruff check src tests benchmarks/bench_speed.py \
   benchmarks/bench_coverage_accuracy.py benchmarks/bench_numba.py \
-  benchmarks/run_release.py
+  benchmarks/run_release.py benchmarks/plot_release_results.py
 mypy src
 pytest --cov=bootstrapx --cov-fail-under=85
 pytest --doctest-modules src/bootstrapx
@@ -43,9 +43,10 @@ New statistical behavior should include both focused regression tests and a
 simulation or invariant that demonstrates correctness. Avoid assertions that
 depend on unstable wording from third-party libraries.
 
-Release benchmark runs belong under ignored `benchmark_runs/` directories.
-Use `python benchmarks/run_release.py --profile quick` for a pipeline check;
-version only reviewed release baselines, together with their metadata.
+Release benchmark runs belong under ignored `benchmark_runs/` directories. Use
+`python benchmarks/run_release.py --profile quick` for a pipeline check;
+version only reviewed release evidence, together with its metadata and the
+figures generated from it.
 
 ## Pull requests
 

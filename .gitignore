@@ -50,5 +50,7 @@ env/
 # site
 site/
 
-# Local benchmark runs (versioned release baselines live in benchmarks/baselines/)
-benchmark_runs/
+# Local benchmark runs. The audited v0.4.4 release run is versioned evidence.
+benchmark_runs/*
+!benchmark_runs/v0.4.4-release/
+!benchmark_runs/v0.4.4-release/**

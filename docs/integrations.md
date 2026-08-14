@@ -61,12 +61,12 @@ scikit-learn, sieve bootstrap, or wild bootstrap. Results and random-state
 behavior are tested with and without the optional dependency.
 
 Use it for repeated block-bootstrap analysis or large series. Skip it when you
-want the smallest environment or only run IID methods. The first call has a JIT
-startup cost; warm calls can be much faster. On one Apple Silicon/Python 3.10
-check, warm block-bootstrap calls were substantially faster, but the factor
-varied by method and sample size. First-call compilation or cache-loading cost
-is also machine- and cache-dependent. Treat this as a reason to benchmark your
-own repeated workflow, not as a cross-machine speed guarantee.
+want the smallest environment or only run IID methods. In the audited 0.4.4
+Apple Silicon run, warm end-to-end `np.mean` calls with 500 resamples were
+11–34× faster for MBB, CBB, and stationary bootstrap across `n=100`–`10,000`.
+The first process call took 0.007–0.121 seconds. The factor and startup cost
+vary with CPU, cache state, series length, method, and statistic; benchmark your
+own repeated workflow rather than treating these as cross-machine guarantees.
 
 Reproduce the comparison on your machine:
 

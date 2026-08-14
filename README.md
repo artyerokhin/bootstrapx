@@ -179,27 +179,33 @@ result = bootstrap(
 
 ## Benchmarks
 
-bootstrapx is not faster than SciPy in every regime. A fresh 0.4.4 quick run on
-Apple Silicon, Python 3.11.5, NumPy 1.26.4 and SciPy 1.11.1 found:
+bootstrapx is not faster than SciPy in every regime. The audited 0.4.4 release
+run on Apple Silicon/macOS 15.7.4, Python 3.11.5, NumPy 2.4.6, and SciPy 1.17.1
+found:
 
 | Workflow (`np.mean`, 4,999 resamples) | n | scipy / bootstrapx |
 |---|---:|---:|
-| BCa | 200 | 2.10× |
-| BCa | 1,000 | 0.95× |
-| Percentile | 1,000 | 0.81× |
-| Percentile | 10,000 | 3.05× |
+| BCa | 200 | 1.92× |
+| BCa | 1,000 | 1.01× |
+| Percentile | 1,000 | 0.94× |
+| Percentile | 10,000 | 3.38× |
 
 Values above 1 mean bootstrapx was faster; below 1 mean SciPy was faster. They
 are local measurements, not cross-machine guarantees. The complete table,
 memory-method caveats, arbitrary-callable results, and optional Numba scope are
 in the [benchmark documentation](https://artyerokhin.github.io/bootstrapx/benchmarks/).
-The versioned raw baseline and environment metadata live under
-[`benchmarks/baselines`](benchmarks/baselines/).
+The versioned raw results and environment metadata live in
+[`benchmark_runs/v0.4.4-release`](benchmark_runs/v0.4.4-release/).
 
-Broad coverage simulations from older releases are not presented as 0.4.4
-evidence. They must be rerun from the release candidate with independent data
-and resampling random streams before release-specific coverage numbers are
-published.
+A matched coverage study completed 160 cells: BCa and percentile intervals for
+mean, median, and standard deviation over four sample sizes and the documented
+distributions. Each cell used 300 independently generated datasets and 4,999
+resamples; no trial failed or produced an invalid interval. Mean empirical
+coverage was 94.2% for both libraries, and their largest cell-level difference
+was 0.67 percentage points. This compares implementations rather than proving
+nominal coverage in every finite-sample setting: the 95% Wilson interval for a
+single 300-dataset cell is still about six percentage points wide, and both
+libraries under-covered the standard deviation of exponential data at n=200.
 
 Run the safe local suite without overwriting previous results:
 
