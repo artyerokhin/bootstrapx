@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.4
+## 0.4.4 — 2026-08-14
 
 ### Practical workflow polish
 

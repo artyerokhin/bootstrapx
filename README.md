@@ -24,6 +24,18 @@ Use **bootstrapx** when ordinary IID resampling is not enough or when you want
 one API for IID intervals, block bootstrap, clustered/stratified resampling,
 Bayesian bootstrap, pandas summaries, and bootstrap cross-validation.
 
+| If you need… | Start with bootstrapx because… |
+|---|---|
+| A confidence interval for a custom metric | Pass any scalar statistic, such as a quantile, trimmed mean, or model score. |
+| A time-series interval | MBB, CBB, stationary, tapered, and sieve methods preserve different forms of dependence. |
+| Repeated observations by user, store, or account | Cluster bootstrap resamples whole groups instead of treating their rows as independent. |
+| Known sampling strata | Stratified resampling preserves the stratum composition. |
+| A reproducible analysis workflow | `random_state`, batched execution, result exports, pandas, and scikit-learn integrations are built in. |
+
+For a simple IID interval for a standard statistic, SciPy may be all you need.
+bootstrapx is most useful when the resampling design or the surrounding analysis
+workflow needs to be explicit.
+
 The library keeps resample matrices in bounded batches. The returned bootstrap
 distribution and some method-specific state still grow with `n_resamples` or
 sample size, so this is not a claim of constant total memory.

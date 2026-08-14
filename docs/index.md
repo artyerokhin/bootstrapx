@@ -4,6 +4,20 @@
 ordinary IID resampling is not enough. Its strongest practical use cases today
 are custom confidence intervals, dependent time series, and grouped data.
 
+## Why use it?
+
+| Practical need | What bootstrapx provides |
+|---|---|
+| Interval for a custom metric | Any scalar callable: quantiles, robust summaries, or a model score. |
+| Dependent time series | Block and sieve bootstrap methods with explicit dependence assumptions. |
+| Repeated observations per entity | Cluster resampling that keeps each user, account, or store together. |
+| Stratified sample | Resampling that preserves the observed strata. |
+| Reproducible reporting | Seeded runs plus `BootstrapResult.to_dict()` and `.to_frame()`. |
+
+For a standard IID interval, SciPy can be sufficient. Choose bootstrapx when
+the resampling design itself is part of the analysis and should be visible,
+controlled, and reproducible.
+
 ## Start with the shape of your data
 
 | Your observations | Start with | Required argument |

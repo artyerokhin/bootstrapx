@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [0.4.4] — 2026-08-13
+## [0.4.4] — 2026-08-14
 
 ### Added
 - `BootstrapResult.to_dict()` returns a compact, mutation-safe result record;
