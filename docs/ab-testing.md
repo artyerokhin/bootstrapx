@@ -1,19 +1,12 @@
-# A/B Testing
+# Grouped and Experiment Data
 
-## Why plain iid bootstrap is often wrong
+## Repeated rows require the right resampling unit
 
-In product experiments, rows are often not independent.
-Common examples:
+Sessions from the same user are usually correlated. Resampling session rows as
+IID observations treats them as more independent information than they are and
+can make an interval too narrow.
 
-- multiple sessions per user
-- multiple events per order
-- repeated exposures per account
-
-If you resample rows independently, uncertainty is often underestimated.
-
-## Cluster bootstrap pattern
-
-Use `method="cluster"` and pass a cluster id per observation.
+This example estimates the event-level mean while resampling complete users:
 
 ```python
 import numpy as np
@@ -21,32 +14,69 @@ from bootstrapx import bootstrap
 
 rng = np.random.default_rng(42)
 n_users = 200
-n_sessions = 5
-cluster_ids = np.repeat(np.arange(n_users), n_sessions)
+sessions_per_user = 5
+user_ids = np.repeat(np.arange(n_users), sessions_per_user)
 
-user_effects = rng.normal(0, 2.0, n_users)
-session_noise = rng.normal(0, 0.5, size=n_users * n_sessions)
+user_effect = rng.normal(0.0, 1.5, size=n_users)
+session_noise = rng.normal(0.0, 0.5, size=len(user_ids))
+metric = 10.0 + np.repeat(user_effect, sessions_per_user) + session_noise
 
-diff = np.repeat(user_effects, n_sessions) * 0 + 0.1 + session_noise
-
-result = bootstrap(
-    diff,
+clustered = bootstrap(
+    metric,
     np.mean,
     method="cluster",
-    cluster_ids=cluster_ids,
+    cluster_ids=user_ids,
     n_resamples=4999,
     random_state=42,
 )
-print(result)
+
+print(clustered.confidence_interval)
 ```
 
-## Recommended workflow
+The cluster method resamples one grouping level and keeps all rows belonging to
+a selected group. Here the estimand remains the mean over event rows. If the
+business estimand is an equally weighted mean over users, aggregate to one
+value per user first and bootstrap those user-level values as IID observations.
 
-1. Define the unit of randomization.
-2. Bootstrap at that unit, not at the event row.
-3. Keep `random_state` fixed for repeatable analyses.
-4. Compare CI width between iid and cluster methods to sanity-check dependence.
+## Paired effects are supported through transformation
 
-## Future extensions
+When treatment and control measurements form genuine pairs, bootstrap the
+within-pair effect:
 
-Natural next additions for `bootstrapx` are explicit two-sample APIs, lift estimation, and bootstrap-based p-values for experimentation workflows.
+```python
+import numpy as np
+from bootstrapx import bootstrap
+
+rng = np.random.default_rng(42)
+control = rng.normal(100, 15, size=300)
+treatment = control + rng.normal(3, 8, size=300)
+paired_difference = treatment - control
+
+effect = bootstrap(
+    paired_difference,
+    np.mean,
+    method="bca",
+    n_resamples=4999,
+    random_state=42,
+)
+print(effect.theta_hat, effect.confidence_interval)
+```
+
+This is valid only when row `i` in treatment is meaningfully paired with row
+`i` in control.
+
+## Unpaired A/B effects are not a native 0.4 workflow
+
+A usual randomized experiment has separate treatment and control users. Its
+difference, ratio, or relative lift must resample both groups according to the
+randomization and analysis unit. bootstrapx 0.4 does not yet expose that
+two-sample API.
+
+Do not replace the missing workflow with either of these:
+
+- separate confidence intervals for the two groups;
+- concatenating both groups into one array without preserving assignment.
+
+Those procedures do not produce the bootstrap distribution of the treatment
+effect. Explicit two-sample and clustered experiment estimators are planned for
+a later release.

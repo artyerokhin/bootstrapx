@@ -1,0 +1,59 @@
+name: Bug report
+description: Report incorrect behavior or a reproducible failure
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve bootstrapx. Please remove sensitive data.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the observed and expected behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproducer
+    attributes:
+      label: Minimal reproducible example
+      description: Include data-generation code, the bootstrapx call, and the full error.
+      render: python
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: bootstrapx version
+      placeholder: "0.4.4"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Python, OS, NumPy, and SciPy versions
+      placeholder: "Python 3.13, macOS 15, NumPy 2.4, SciPy 1.17"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - IID confidence intervals
+        - Time-series bootstrap
+        - Cluster or stratified bootstrap
+        - pandas integration
+        - scikit-learn integration
+        - Installation or packaging
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I have checked the current limitations and existing issues.
+          required: true

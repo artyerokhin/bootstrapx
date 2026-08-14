@@ -1,5 +1,5 @@
 site_name: bootstrapx
-site_description: Production-grade bootstrap uncertainty estimation for Python
+site_description: Practical bootstrap uncertainty estimation for Python
 site_url: https://artyerokhin.github.io/bootstrapx
 repo_url: https://github.com/artyerokhin/bootstrapx
 repo_name: artyerokhin/bootstrapx
@@ -33,11 +33,12 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Getting Started: getting-started.md
-  - Methods: methods.md
-  - Integrations: integrations.md
-  - A/B Testing: ab-testing.md
+  - First Analysis: getting-started.md
+  - Choose a Method: methods.md
+  - Grouped and Experiment Data: ab-testing.md
   - Time Series: time-series.md
+  - Integrations and Performance: integrations.md
+  - Current Limitations: limitations.md
   - API Reference: reference.md
   - Benchmarks: benchmarks.md
   - Changelog: changelog.md

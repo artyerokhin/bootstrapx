@@ -18,6 +18,7 @@ Changes vs 0.4.1:
 from __future__ import annotations
 
 from collections.abc import Callable
+from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Any, cast
 
@@ -79,6 +80,44 @@ class BootstrapResult:
             f"se={self.standard_error:.6g}, "
             f"CI=[{ci.low:.6g}, {ci.high:.6g}])"
         )
+
+    def to_dict(self, *, include_distribution: bool = False) -> dict[str, Any]:
+        """Return a compact summary mapping of the bootstrap result.
+
+        The potentially large bootstrap distribution is excluded by default.
+        Set ``include_distribution=True`` when it is needed for serialization
+        or downstream analysis. Arrays and ``extra`` metadata are copied so
+        callers cannot mutate the result through the returned dictionary.
+        """
+        summary: dict[str, Any] = {
+            "theta_hat": self.theta_hat,
+            "standard_error": self.standard_error,
+            "ci_low": self.confidence_interval.low,
+            "ci_high": self.confidence_interval.high,
+            "ci_method": self.confidence_interval.method,
+            "method": self.method,
+            "n_resamples": self.n_resamples,
+            "extra": deepcopy(self.extra),
+        }
+        if include_distribution:
+            summary["bootstrap_distribution"] = self.bootstrap_distribution.copy()
+        return summary
+
+    def to_frame(self) -> Any:
+        """Return a one-row pandas DataFrame with the result summary.
+
+        The bootstrap distribution is intentionally omitted to keep the frame
+        compact. Use :meth:`to_dict` with ``include_distribution=True`` when
+        the complete distribution is required.
+        """
+        try:
+            import pandas as pd
+        except ImportError as exc:
+            raise ImportError(
+                "pandas is required for BootstrapResult.to_frame(). "
+                "Install with: pip install 'bootstrapx-lib[pandas]'"
+            ) from exc
+        return pd.DataFrame([self.to_dict()])
 
 
 # ---------------------------------------------------------------------------

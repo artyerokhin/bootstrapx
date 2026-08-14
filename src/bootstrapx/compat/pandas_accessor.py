@@ -33,7 +33,8 @@ try:
     import pandas as pd
 except ImportError as exc:
     raise ImportError(
-        "pandas is required for the bootstrap accessor. Install with: pip install pandas"
+        "pandas is required for the bootstrap accessor. "
+        "Install with: pip install 'bootstrapx-lib[pandas]'"
     ) from exc
 
 from bootstrapx.api import BootstrapResult, bootstrap

@@ -1,0 +1,16 @@
+{
+  "benchmark": "optional-numba",
+  "bootstrapx": "0.4.4",
+  "git_commit": "2062ff4d517b604994d0234a487900ff723b6f76",
+  "platform": "macOS-15.7.4-arm64-arm-64bit",
+  "machine": "arm64",
+  "python": "3.11.5",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "numba": "0.67.0",
+  "n_resamples": 500,
+  "warm_repeats": 5,
+  "statistic": "numpy.mean",
+  "elapsed_seconds": 16.29,
+  "scope": "mbb, cbb, and stationary index generation only"
+}

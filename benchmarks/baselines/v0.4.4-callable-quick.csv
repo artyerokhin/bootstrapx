@@ -1,0 +1,5 @@
+n,statistic,bootstrapx_ms,scipy_ms
+500,trimmed_mean,64.30,80.00
+500,iqr,463.89,483.27
+1000,trimmed_mean,111.44,135.14
+1000,iqr,574.64,600.13

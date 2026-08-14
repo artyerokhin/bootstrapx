@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.4] — 2026-08-14
+
+### Added
+- `BootstrapResult.to_dict()` returns a compact, mutation-safe result record;
+  the full bootstrap distribution is available through the explicit
+  `include_distribution=True` option.
+- `BootstrapResult.to_frame()` returns a one-row pandas DataFrame suitable for
+  reports, concatenation, and experiment tracking.
+- The documented `numba` extra now exists and is tested independently in CI.
+- Versioned release-benchmark evidence: matched runtime, `tracemalloc`, Numba,
+  and 160-cell coverage results with exact environment metadata and plots.
+- A current-limitations guide documents scalar-output, two-sample, missing-data,
+  dependent-data, Monte Carlo, and pre-1.0 compatibility boundaries.
+- Structured bug and practitioner-workflow issue forms, plus a contribution
+  guide with the complete local verification sequence.
+
+### Changed
+- Project wording now describes bootstrapx as practical rather than claiming
+  blanket production readiness while the public API remains pre-1.0.
+- DataFrame examples explicitly state that column-wise intervals do not
+  estimate a difference, ratio, lift, paired effect, or p-value between groups.
+- The documentation is reorganized around data shape and practitioner
+  decisions, with result interpretation, grouped-data, experiment,
+  block-sensitivity, and optional-performance guidance.
+- Benchmark claims distinguish runtime, `tracemalloc` working-memory
+  measurements, and statistical coverage; they now cite the completed 0.4.4
+  release run rather than stale pre-fix coverage artifacts.
+- Coverage simulations now use independent deterministic streams for data and
+  resampling, report invalid/failed trials and Monte Carlo uncertainty, record
+  environment metadata, and have a small CI smoke test.
+- A sequential release-benchmark runner provides quick, release, and
+  statistical profiles. Long coverage studies checkpoint each configuration
+  and can resume only with a matching commit, environment, and configuration.
+- Missing optional-dependency errors point to the corresponding bootstrapx
+  installation extra.
+
 ## [0.4.3] — 2026-08-13
 
 ### Changed

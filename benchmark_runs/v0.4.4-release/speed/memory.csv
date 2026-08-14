@@ -1,0 +1,4 @@
+n,bootstrapx_tracemalloc_mb,scipy_tracemalloc_mb,scipy_over_bootstrapx
+500,0.224,38.149,170.02
+1000,0.34,76.288,224.31
+2000,0.34,152.567,448.34

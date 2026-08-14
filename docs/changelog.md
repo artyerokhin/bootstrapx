@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.4.4 — 2026-08-14
+
+### Practical workflow polish
+
+- Results export to compact dictionaries and one-row pandas DataFrames.
+- The documented `numba` install extra now exists and has its own CI check.
+- Numba guidance now states exactly which methods it accelerates, its JIT
+  startup tradeoff, and how to reproduce the fallback comparison.
+- A limitations guide makes one-sample, scalar-output, dependent-data, and
+  pre-1.0 boundaries explicit.
+- DataFrame documentation distinguishes separate column intervals from an
+  actual treatment-effect comparison.
+- The guide now starts from data shape and separates supported paired/grouped
+  workflows from unsupported unpaired A/B effects.
+- Versioned 0.4.4 runtime, memory, Numba, and 160-cell coverage evidence is
+  published with exact metadata and generated plots.
+- Coverage benchmark random streams, failure accounting, metadata, and CI smoke
+  validation have been corrected.
+- Release benchmark profiles now preserve separate outputs and support safe
+  checkpoint/resume for long coverage studies.
+- Optional-dependency errors, issue forms, and contribution guidance are more
+  actionable for practitioners.
+
 ## 0.4.3
 
 ### Engineering reliability

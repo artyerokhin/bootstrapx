@@ -45,6 +45,16 @@ coverage.xml
 venv/
 env/
 .env
+.venv*/
 
 # site
 site/
+
+# Local benchmark runs. The audited v0.4.4 release run is versioned evidence.
+benchmark_runs/*
+!benchmark_runs/v0.4.4-release/
+!benchmark_runs/v0.4.4-release/**
+
+# Legacy benchmark plots and CSVs generated in-place by manual scripts.
+benchmarks/fig_*.png
+benchmarks/results_*.csv

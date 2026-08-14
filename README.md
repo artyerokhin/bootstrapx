@@ -2,7 +2,7 @@
 
 # bootstrapx
 
-**Production-grade bootstrap uncertainty estimation for Python.**
+**Practical bootstrap uncertainty estimation for Python.**
 
 [![CI](https://github.com/artyerokhin/bootstrapx/actions/workflows/ci.yml/badge.svg)](https://github.com/artyerokhin/bootstrapx/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/bootstrapx-lib)](https://pypi.org/project/bootstrapx-lib/)
@@ -12,7 +12,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-mkdocs-blue)](https://artyerokhin.github.io/bootstrapx)
 
-*16 bootstrap methods · sklearn-compatible · pandas accessor · memory-safe batching*
+*16 bootstrap methods · sklearn-compatible · pandas accessor · bounded batched working memory*
 
 </div>
 
@@ -20,24 +20,25 @@
 
 ## Why bootstrapx?
 
-`scipy.stats.bootstrap` covers 3 CI types and only iid data.
-The R `boot` package is comprehensive but not Pythonic.
-**bootstrapx** bridges this gap.
+Use **bootstrapx** when ordinary IID resampling is not enough or when you want
+one API for IID intervals, block bootstrap, clustered/stratified resampling,
+Bayesian bootstrap, pandas summaries, and bootstrap cross-validation.
 
-| Feature | `scipy` | `arch` | **bootstrapx** |
-|---|:---:|:---:|:---:|
-| BCa interval | ✅ | ❌ | ✅ |
-| Studentized (bootstrap-t) | ❌ | ❌ | ✅ |
-| Bayesian bootstrap | ❌ | ❌ | ✅ |
-| Poisson weights / Bernoulli subsets | ❌ | ❌ | ✅ |
-| MBB / CBB / Stationary block | ❌ | ✅ | ✅ |
-| Sieve (AR-based) | ❌ | ❌ | ✅ |
-| Wild bootstrap | ❌ | ✅ | ✅ |
-| Cluster / Stratified | ❌ | ❌ | ✅ |
-| **scikit-learn CV API** | ❌ | ❌ | ✅ |
-| **pandas `.bootstrap` accessor** | ❌ | ❌ | ✅ |
-| Reproducible (seeded RNG) | ✅ | partial | ✅ |
-| Constant memory (batched) | ❌ | ❌ | ✅ |
+| If you need… | Start with bootstrapx because… |
+|---|---|
+| A confidence interval for a custom metric | Pass any scalar statistic, such as a quantile, trimmed mean, or model score. |
+| A time-series interval | MBB, CBB, stationary, tapered, and sieve methods preserve different forms of dependence. |
+| Repeated observations by user, store, or account | Cluster bootstrap resamples whole groups instead of treating their rows as independent. |
+| Known sampling strata | Stratified resampling preserves the stratum composition. |
+| A reproducible analysis workflow | `random_state`, batched execution, result exports, pandas, and scikit-learn integrations are built in. |
+
+For a simple IID interval for a standard statistic, SciPy may be all you need.
+bootstrapx is most useful when the resampling design or the surrounding analysis
+workflow needs to be explicit.
+
+The library keeps resample matrices in bounded batches. The returned bootstrap
+distribution and some method-specific state still grow with `n_resamples` or
+sample size, so this is not a claim of constant total memory.
 
 ---
 
@@ -47,7 +48,9 @@ The R `boot` package is comprehensive but not Pythonic.
 pip install bootstrapx-lib                  # core (numpy + scipy only)
 pip install "bootstrapx-lib[pandas]"        # + pandas accessor
 pip install "bootstrapx-lib[sklearn]"       # + scikit-learn CV integration
-pip install "bootstrapx-lib[pandas,sklearn]"  # all integrations
+pip install "bootstrapx-lib[numba]"         # + faster MBB/CBB/stationary indexing
+pip install "bootstrapx-lib[pandas,sklearn]"  # pandas + scikit-learn integrations
+pip install "bootstrapx-lib[pandas,sklearn,numba]"  # all optional features
 ```
 
 ---
@@ -62,12 +65,15 @@ from bootstrapx import bootstrap
 
 data = np.random.default_rng(42).normal(5, 2, size=300)
 
-result = bootstrap(data, np.mean)
+result = bootstrap(data, np.mean, random_state=42)
 print(result)
-# BootstrapResult(method='bca', theta_hat=4.97, se=0.11, CI=[4.75, 5.19])
 
 print(result.confidence_interval.low, result.confidence_interval.high)
 print(5.0 in result.confidence_interval)  # True
+
+# Compact exports for reports and experiment tracking
+print(result.to_dict())
+print(result.to_frame())  # requires bootstrapx-lib[pandas]
 ```
 
 ### pandas accessor
@@ -80,17 +86,18 @@ import bootstrapx  # registers .bootstrap accessor
 s = pd.Series(np.random.default_rng(0).exponential(scale=2, size=500))
 
 # On a Series
-r = s.bootstrap.bca(np.mean)
+r = s.bootstrap.bca(np.mean, random_state=42)
 print(r)
 
 # On a DataFrame — column-wise summary
 df = pd.DataFrame({"control": s, "treatment": s * 1.1 + 0.3})
-print(df.bootstrap.summary(np.mean))
-#              theta_hat    ci_low   ci_high        se method
-# column
-# control       1.9973    1.8215    2.1862    0.0941    bca
-# treatment     2.4970    2.3036    2.7048    0.1035    bca
+print(df.bootstrap.summary(np.mean, random_state=42))
 ```
+
+This DataFrame helper estimates each column separately. It does **not** test
+the treatment effect or account for pairing between columns. For paired rows,
+bootstrap the row-wise effect; unpaired two-sample effects are not yet a native
+workflow. Use the cluster pattern below for repeated observations per unit.
 
 ### scikit-learn cross-validation
 
@@ -108,7 +115,6 @@ scores = cross_val_score(
     X, y, cv=cv, scoring="roc_auc"
 )
 print(f"AUC: {scores.mean():.4f} ± {scores.std():.4f}")
-# AUC: 0.9921 ± 0.0071
 ```
 
 ### Time-series bootstrap
@@ -123,11 +129,18 @@ for t in range(1, 500):
     y[t] = 0.7 * y[t-1] + rng.normal()
 
 # Moving Block Bootstrap — preserves serial correlation
-result = bootstrap(y, np.mean, method="mbb", block_length=15, n_resamples=4999)
+result = bootstrap(
+    y,
+    np.mean,
+    method="mbb",
+    block_length=15,
+    n_resamples=4999,
+    random_state=42,
+)
 print(result)
 
 # Sieve Bootstrap — fits AR(p) model to residuals
-result = bootstrap(y, np.mean, method="sieve", n_resamples=9999)
+result = bootstrap(y, np.mean, method="sieve", n_resamples=9999, random_state=42)
 print(result)
 ```
 
@@ -147,9 +160,9 @@ result = bootstrap(
     method="cluster",
     cluster_ids=cluster_ids,
     n_resamples=4999,
+    random_state=42,
 )
 print(result)
-# Correctly wider CI that accounts for within-cluster correlation
 ```
 
 ### Bayesian bootstrap with a custom statistic
@@ -176,37 +189,45 @@ result = bootstrap(
 
 ---
 
-## Performance
+## Benchmarks
 
-Measured on Apple M1, Python 3.12, `n_resamples=4 999`, median of 5 runs.
-Run yourself: `python benchmarks/bench_speed.py --quick`
+bootstrapx is not faster than SciPy in every regime. The audited 0.4.4 release
+run on Apple Silicon/macOS 15.7.4, Python 3.11.5, NumPy 2.4.6, and SciPy 1.17.1
+found:
 
-**BCa (bias-corrected and accelerated):**
+| Workflow (`np.mean`, 4,999 resamples) | n | scipy / bootstrapx |
+|---|---:|---:|
+| BCa | 200 | 1.92× |
+| BCa | 1,000 | 1.01× |
+| Percentile | 1,000 | 0.94× |
+| Percentile | 10,000 | 3.38× |
 
-| n | scipy (ms) | bootstrapx (ms) | Speedup |
-|---|---|---|---|
-| 200 | 9.6 | 5.8 | **1.7×** |
-| 2 000 | 69 | 58 | 1.2× |
-| 5 000 | 433 | 156 | **2.8×** |
-| 10 000 | 1 015 | 289 | **3.5×** |
+Values above 1 mean bootstrapx was faster; below 1 mean SciPy was faster. They
+are local measurements, not cross-machine guarantees. The complete table,
+memory-method caveats, arbitrary-callable results, and optional Numba scope are
+in the [benchmark documentation](https://artyerokhin.github.io/bootstrapx/benchmarks/).
+The versioned raw results and environment metadata live in
+[`benchmark_runs/v0.4.4-release`](benchmark_runs/v0.4.4-release/).
 
-At n < 1 000, scipy and bootstrapx are comparable; bootstrapx applies a
-vectorised fast path for numpy built-ins (mean, median, std, etc.) at n < 1000.
-Speedup grows with sample size due to O(n) vectorised jackknife vs O(n²) in scipy.
+A matched coverage study completed 160 cells: BCa and percentile intervals for
+mean, median, and standard deviation over four sample sizes and the documented
+distributions. Each cell used 300 independently generated datasets and 4,999
+resamples; no trial failed or produced an invalid interval. Mean empirical
+coverage was 94.2% for both libraries, and their largest cell-level difference
+was 0.67 percentage points. This compares implementations rather than proving
+nominal coverage in every finite-sample setting: the 95% Wilson interval for a
+single 300-dataset cell is still about six percentage points wide, and both
+libraries under-covered the standard deviation of exponential data at n=200.
 
-### Coverage accuracy
+Run the safe local suite without overwriting previous results:
 
-BCa empirical coverage at nominal 95%, 1 000 Monte Carlo simulations
-across normal, log-normal, exponential and t(3) distributions:
-bootstrapx matches scipy to within simulation noise (< 0.01) for mean and median.
+```bash
+pip install -e ".[dev,numba]"
+python benchmarks/run_release.py --profile quick
+```
 
-> **Note:** BCa coverage for `np.std` on heavy-tailed distributions (exponential)
-> is ~91–93% at n = 200 — identical behaviour in both bootstrapx and scipy.
-> This reflects known instability of jackknife acceleration for scale statistics,
-> not a library-specific issue. Use `n_resamples ≥ 9 999` or
-> `method="studentized"` for better coverage when estimating variance.
-
-Run yourself: `python benchmarks/bench_coverage_accuracy.py --fast`
+For release-candidate coverage with checkpoints, use `--profile release`.
+Commands and resume instructions are in the benchmark documentation.
 
 ---
 
@@ -225,21 +246,21 @@ Run yourself: `python benchmarks/bench_coverage_accuracy.py --fast`
 
 | Method | `method=` | Use case |
 |---|---|---|
-| BCa | `"bca"` | General purpose, best coverage accuracy |
+| BCa | `"bca"` | General-purpose starting point for scalar statistics |
 | Percentile | `"percentile"` | Simple, fast |
-| Basic (Hall) | `"basic"` | Symmetric distributions |
-| Studentized | `"studentized"` | Known variance structure |
+| Basic (Hall) | `"basic"` | Reflected bootstrap interval |
+| Studentized | `"studentized"` | Bootstrap-t; expensive nested resampling |
 | Bayesian | `"bayesian"` | Bayesian UQ, non-parametric posterior |
-| Poisson weights | `"poisson"` | Weighted bootstrap, survey data |
+| Poisson weights | `"poisson"` | Poisson multiplier resampling |
 | Bernoulli subsets | `"bernoulli"` | Calibrated random-subset inference |
 | Subsampling | `"subsampling"` | Root-scaled inference from smaller samples |
 | Moving Block (MBB) | `"mbb"` | Stationary time series |
-| Circular Block (CBB) | `"cbb"` | Stationary TS, edge-effect free |
+| Circular Block (CBB) | `"cbb"` | Stationary series with circular blocks |
 | Stationary | `"stationary"` | Politis & Romano (1994) |
 | Tapered Block | `"tapered"` | Paparoditis & Politis (2001) |
 | Sieve | `"sieve"` | AR(p) time series (Bühlmann 1997) |
 | Wild | `"wild"` | Heteroscedastic residuals (Wu 1986) |
-| Cluster | `"cluster"` | Multi-level / panel data |
+| Cluster | `"cluster"` | One-level grouped / panel data |
 | Stratified | `"strata"` | Stratified sampling designs |
 
 ---
@@ -262,9 +283,9 @@ If you use bootstrapx in academic work:
 ```bibtex
 @software{bootstrapx,
   author  = {Erokhin, Artem},
-  title   = {bootstrapx: Production-grade bootstrap uncertainty estimation},
+  title   = {bootstrapx: Practical bootstrap uncertainty estimation},
   url     = {https://github.com/artyerokhin/bootstrapx},
-  version = {0.4.3},
+  version = {0.4.4},
   year    = {2026},
 }
 ```

@@ -24,10 +24,22 @@ jobs:
         run: pip install ruff
 
       - name: Check formatting
-        run: ruff format --check src tests
+        run: |
+          ruff format --check src tests \
+            benchmarks/bench_speed.py \
+            benchmarks/bench_coverage_accuracy.py \
+            benchmarks/bench_numba.py \
+            benchmarks/run_release.py \
+            benchmarks/plot_release_results.py
 
       - name: Lint
-        run: ruff check src tests
+        run: |
+          ruff check src tests \
+            benchmarks/bench_speed.py \
+            benchmarks/bench_coverage_accuracy.py \
+            benchmarks/bench_numba.py \
+            benchmarks/run_release.py \
+            benchmarks/plot_release_results.py
 
   typing:
     name: Strict typing
@@ -83,6 +95,9 @@ jobs:
       - name: Run tests with coverage
         run: pytest --cov=bootstrapx --cov-report=xml --cov-report=term-missing --cov-fail-under=85
 
+      - name: Smoke-test coverage benchmark pipeline
+        run: python benchmarks/bench_coverage_accuracy.py --smoke
+
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2
         with:
@@ -131,9 +146,28 @@ jobs:
           python -m compileall -q src/bootstrapx
           python -c "from bootstrapx import *; assert callable(bootstrap); assert __version__"
 
+  optional-numba:
+    name: Optional Numba acceleration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+
+      - name: Install Numba extra
+        run: pip install -e ".[numba]" pytest
+
+      - name: Test accelerated time-series generators
+        run: |
+          python -c "import numba; print(numba.__version__)"
+          pytest tests/test_timeseries.py tests/test_timeseries_hotfix.py
+          python benchmarks/bench_numba.py --n-resamples 20 --repeats 1
+
   package:
     name: Build and install distribution
-    needs: [lint, typing, test]
+    needs: [lint, typing, test, optional-numba]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
