@@ -54,3 +54,7 @@ site/
 benchmark_runs/*
 !benchmark_runs/v0.4.4-release/
 !benchmark_runs/v0.4.4-release/**
+
+# Legacy benchmark plots and CSVs generated in-place by manual scripts.
+benchmarks/fig_*.png
+benchmarks/results_*.csv
