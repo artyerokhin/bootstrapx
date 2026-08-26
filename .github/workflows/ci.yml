@@ -30,7 +30,10 @@ jobs:
             benchmarks/bench_coverage_accuracy.py \
             benchmarks/bench_numba.py \
             benchmarks/run_release.py \
-            benchmarks/plot_release_results.py
+            benchmarks/plot_release_results.py \
+            benchmarks/bench_two_sample.py \
+            benchmarks/bench_two_sample_coverage.py \
+            benchmarks/run_comparison_release.py
 
       - name: Lint
         run: |
@@ -39,7 +42,10 @@ jobs:
             benchmarks/bench_coverage_accuracy.py \
             benchmarks/bench_numba.py \
             benchmarks/run_release.py \
-            benchmarks/plot_release_results.py
+            benchmarks/plot_release_results.py \
+            benchmarks/bench_two_sample.py \
+            benchmarks/bench_two_sample_coverage.py \
+            benchmarks/run_comparison_release.py
 
   typing:
     name: Strict typing
@@ -96,7 +102,9 @@ jobs:
         run: pytest --cov=bootstrapx --cov-report=xml --cov-report=term-missing --cov-fail-under=85
 
       - name: Smoke-test coverage benchmark pipeline
-        run: python benchmarks/bench_coverage_accuracy.py --smoke
+        run: |
+          python benchmarks/bench_coverage_accuracy.py --smoke
+          python benchmarks/bench_two_sample_coverage.py --smoke
 
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2

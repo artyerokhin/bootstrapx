@@ -306,11 +306,17 @@ def _loo_effects(
 ) -> list[FloatArray]:
     if paired:
         effects = np.empty(len(control), dtype=np.float64)
+        control_buffer = np.empty(len(control) - 1, dtype=control.dtype)
+        treatment_buffer = np.empty(len(treatment) - 1, dtype=treatment.dtype)
         for index in range(len(control)):
+            control_buffer[:index] = control[:index]
+            control_buffer[index:] = control[index + 1 :]
+            treatment_buffer[:index] = treatment[:index]
+            treatment_buffer[index:] = treatment[index + 1 :]
             effects[index] = _evaluate_effect(
                 effect,
-                _evaluate_statistic(statistic, np.delete(control, index, axis=0)),
-                _evaluate_statistic(statistic, np.delete(treatment, index, axis=0)),
+                _evaluate_statistic(statistic, control_buffer),
+                _evaluate_statistic(statistic, treatment_buffer),
             )
         return [effects]
 
@@ -320,17 +326,23 @@ def _loo_effects(
     if control_cluster_ids is None or treatment_cluster_ids is None:
         control_effects = np.empty(len(control), dtype=np.float64)
         treatment_effects = np.empty(len(treatment), dtype=np.float64)
+        control_buffer = np.empty(len(control) - 1, dtype=control.dtype)
+        treatment_buffer = np.empty(len(treatment) - 1, dtype=treatment.dtype)
         for index in range(len(control)):
+            control_buffer[:index] = control[:index]
+            control_buffer[index:] = control[index + 1 :]
             control_effects[index] = _evaluate_effect(
                 effect,
-                _evaluate_statistic(statistic, np.delete(control, index, axis=0)),
+                _evaluate_statistic(statistic, control_buffer),
                 treatment_full,
             )
         for index in range(len(treatment)):
+            treatment_buffer[:index] = treatment[:index]
+            treatment_buffer[index:] = treatment[index + 1 :]
             treatment_effects[index] = _evaluate_effect(
                 effect,
                 control_full,
-                _evaluate_statistic(statistic, np.delete(treatment, index, axis=0)),
+                _evaluate_statistic(statistic, treatment_buffer),
             )
         return [control_effects, treatment_effects]
 
