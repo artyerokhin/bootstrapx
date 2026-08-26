@@ -4,17 +4,27 @@ bootstrapx is intended to make common resampling workflows reliable and
 reproducible. It does not remove the assumptions behind the selected bootstrap
 method.
 
-## Scalar, one-sample statistics
+## Scalar statistics and effects
 
-The top-level API expects exactly one finite scalar per resample. Vector-valued
-statistics, simultaneous intervals, and covariance estimates are not yet
-supported. Paired effects can be represented as a per-pair transformation.
-Unpaired two-sample effects such as differences, ratios, and relative lift are
-not yet a native workflow and require caller-owned resampling.
+The public APIs expect exactly one finite scalar statistic per arm and one
+finite scalar effect per resample. Vector-valued statistics, simultaneous
+intervals, and covariance estimates are not yet supported.
 
 `DataFrame.bootstrap.summary()` evaluates columns independently. Separate
 column intervals are not an interval or hypothesis test for the difference
-between columns.
+between columns. Extract the two samples and call `bootstrap_two_sample()` for
+an effect interval.
+
+## Experiment comparisons
+
+Independent, paired, and separately clustered control/treatment comparisons
+are supported. The library does not provide p-values, sequential-testing
+guarantees, CUPED/regression adjustment, multiple-testing correction, or
+two-sample stratified resampling.
+
+Ratio and relative-lift effects are undefined when a control estimate is zero
+and can be unstable when it is merely close to zero. bootstrapx rejects
+non-finite resampled effects instead of silently discarding them.
 
 ## Missing data
 
@@ -32,6 +42,10 @@ autoregressive approximation is reasonable.
 Cluster bootstrap resamples one grouping level. Multiway clustering,
 hierarchical random effects, survey calibration weights, and finite-population
 survey designs require additional methodology not currently implemented.
+
+For clustered experiments, applying `np.mean` to raw events estimates an
+event-weighted metric while clusters are the resampling unit. Aggregate to one
+value per user first when the estimand is an equally weighted user-level mean.
 
 ## Monte Carlo and finite-sample uncertainty
 

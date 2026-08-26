@@ -12,7 +12,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-mkdocs-blue)](https://artyerokhin.github.io/bootstrapx)
 
-*16 bootstrap methods · sklearn-compatible · pandas accessor · bounded batched working memory*
+*Two-sample experiments · 16 bootstrap methods · sklearn/pandas · bounded batches*
 
 </div>
 
@@ -26,6 +26,7 @@ Bayesian bootstrap, pandas summaries, and bootstrap cross-validation.
 
 | If you need… | Start with bootstrapx because… |
 |---|---|
+| An interval for an A/B effect | Compare control and treatment directly as a difference, ratio, or relative lift. |
 | A confidence interval for a custom metric | Pass any scalar statistic, such as a quantile, trimmed mean, or model score. |
 | A time-series interval | MBB, CBB, stationary, tapered, and sieve methods preserve different forms of dependence. |
 | Repeated observations by user, store, or account | Cluster bootstrap resamples whole groups instead of treating their rows as independent. |
@@ -76,6 +77,34 @@ print(result.to_dict())
 print(result.to_frame())  # requires bootstrapx-lib[pandas]
 ```
 
+### Independent A/B experiment
+
+```python
+import numpy as np
+from bootstrapx import bootstrap_two_sample
+
+rng = np.random.default_rng(42)
+control = rng.binomial(1, 0.10, size=2_000)
+treatment = rng.binomial(1, 0.12, size=2_200)
+
+effect = bootstrap_two_sample(
+    control,
+    treatment,
+    np.mean,
+    effect="difference",
+    method="bca",
+    n_resamples=4_999,
+    random_state=42,
+)
+
+print(effect.control_estimate, effect.treatment_estimate)
+print(effect.estimate, effect.confidence_interval)
+```
+
+This estimates the treatment-minus-control conversion difference directly.
+Use `effect="relative_lift"` only when a ratio to the control estimate is
+scientifically meaningful and the control baseline is safely away from zero.
+
 ### pandas accessor
 
 ```python
@@ -94,10 +123,9 @@ df = pd.DataFrame({"control": s, "treatment": s * 1.1 + 0.3})
 print(df.bootstrap.summary(np.mean, random_state=42))
 ```
 
-This DataFrame helper estimates each column separately. It does **not** test
-the treatment effect or account for pairing between columns. For paired rows,
-bootstrap the row-wise effect; unpaired two-sample effects are not yet a native
-workflow. Use the cluster pattern below for repeated observations per unit.
+This DataFrame helper estimates each column separately. It does **not** estimate
+the difference or lift between columns. Extract the control and treatment
+columns and pass them to `bootstrap_two_sample()` for an experiment effect.
 
 ### scikit-learn cross-validation
 
@@ -144,26 +172,34 @@ result = bootstrap(y, np.mean, method="sieve", n_resamples=9999, random_state=42
 print(result)
 ```
 
-### A/B test with clustered data
+### A/B test with repeated events per user
 
 ```python
 import numpy as np
-from bootstrapx import bootstrap
+from bootstrapx import bootstrap_two_sample
 
-n_clusters = 50
-cluster_ids = np.repeat(np.arange(n_clusters), 20)
 rng = np.random.default_rng(1)
-data = rng.normal(loc=cluster_ids * 0.1, scale=1.0)
+control_user_ids = np.repeat(np.arange(50), 5)
+treatment_user_ids = np.repeat(np.arange(60), 5)
+control_events = rng.normal(10.0, 2.0, len(control_user_ids))
+treatment_events = rng.normal(10.5, 2.0, len(treatment_user_ids))
 
-result = bootstrap(
-    data, np.mean,
-    method="cluster",
-    cluster_ids=cluster_ids,
-    n_resamples=4999,
+result = bootstrap_two_sample(
+    control_events,
+    treatment_events,
+    np.mean,
+    effect="difference",
+    control_cluster_ids=control_user_ids,
+    treatment_cluster_ids=treatment_user_ids,
+    method="percentile",
+    n_resamples=4_999,
     random_state=42,
 )
 print(result)
 ```
+
+This resamples complete users within each experiment arm. If the estimand is
+an equally weighted mean per user, aggregate to one row per user first instead.
 
 ### Bayesian bootstrap with a custom statistic
 
@@ -224,6 +260,7 @@ Run the safe local suite without overwriting previous results:
 ```bash
 pip install -e ".[dev,numba]"
 python benchmarks/run_release.py --profile quick
+python benchmarks/run_comparison_release.py --profile quick
 ```
 
 For release-candidate coverage with checkpoints, use `--profile release`.
@@ -285,7 +322,7 @@ If you use bootstrapx in academic work:
   author  = {Erokhin, Artem},
   title   = {bootstrapx: Practical bootstrap uncertainty estimation},
   url     = {https://github.com/artyerokhin/bootstrapx},
-  version = {0.4.4},
+  version = {0.5.0},
   year    = {2026},
 }
 ```

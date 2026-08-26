@@ -3,6 +3,20 @@
 Choose the resampling design first and the interval construction second. A
 more sophisticated interval cannot repair the wrong independence assumption.
 
+## Experiment design
+
+| Experiment observations | API configuration | Main caution |
+|---|---|---|
+| Different units in control and treatment | `bootstrap_two_sample(...)` | arms must be independent |
+| Matched or before/after rows | `paired=True` | row alignment must represent real pairs |
+| Repeated events per randomized unit | cluster IDs for both arms | define event- versus unit-weighted estimand |
+
+For experiment comparisons, percentile, basic, and BCa intervals are
+available. BCa uses leave-one-observation-out acceleration for independent
+samples, paired deletion for paired data, and leave-one-cluster-out
+acceleration for clustered data. Start with an absolute difference; ratio and
+relative lift require a stable nonzero control denominator.
+
 ## Decision table
 
 | Situation | Method | Main setting | Main caution |

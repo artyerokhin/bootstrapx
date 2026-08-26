@@ -152,7 +152,7 @@ jobs:
           pytest
           pip check
           python -m compileall -q src/bootstrapx
-          python -c "from bootstrapx import *; assert callable(bootstrap); assert __version__"
+          python -c "from bootstrapx import *; assert callable(bootstrap); assert callable(bootstrap_two_sample); assert __version__"
 
   optional-numba:
     name: Optional Numba acceleration
@@ -194,4 +194,4 @@ jobs:
         run: |
           pip install --force-reinstall dist/*.whl
           pip check
-          python -c "import bootstrapx, compileall; assert compileall.compile_dir(bootstrapx.__path__[0], quiet=1); print(bootstrapx.__version__)"
+          python -c "import bootstrapx, compileall; assert compileall.compile_dir(bootstrapx.__path__[0], quiet=1); assert callable(bootstrapx.bootstrap_two_sample); print(bootstrapx.__version__)"

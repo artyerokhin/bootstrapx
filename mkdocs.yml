@@ -35,7 +35,7 @@ nav:
   - Home: index.md
   - First Analysis: getting-started.md
   - Choose a Method: methods.md
-  - Grouped and Experiment Data: ab-testing.md
+  - Experiment Comparisons: ab-testing.md
   - Time Series: time-series.md
   - Integrations and Performance: integrations.md
   - Current Limitations: limitations.md

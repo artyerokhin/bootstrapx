@@ -85,7 +85,7 @@ jobs:
         mkdocs build --strict
         pip check
         python -m compileall -q src/bootstrapx
-        python -c "from bootstrapx import bootstrap; import bootstrapx; assert callable(bootstrap); assert bootstrapx.__version__"
+        python -c "from bootstrapx import bootstrap, bootstrap_two_sample; import bootstrapx; assert callable(bootstrap); assert callable(bootstrap_two_sample); assert bootstrapx.__version__"
 
     - name: Build package
       run: |

@@ -387,6 +387,50 @@ def bootstrap_two_sample(
     are resampled separately. With ``paired=True``, both samples use the same
     resampled indices. Supplying cluster IDs resamples complete clusters within
     each arm and is mutually exclusive with paired analysis.
+
+    Parameters
+    ----------
+    control, treatment : array-like
+        Finite one-dimensional samples. Their order defines the direction of
+        every built-in effect.
+    statistic : callable
+        Scalar function applied separately to each arm, ``array -> float``.
+    effect : {"difference", "ratio", "relative_lift"} or callable
+        Transformation of the two arm statistics. A callable receives
+        ``(control_statistic, treatment_statistic)`` and returns one scalar.
+        Difference is ``treatment - control``; ratio is
+        ``treatment / control``; relative lift is
+        ``(treatment - control) / control``.
+    method : {"percentile", "basic", "bca"}
+        Confidence-interval construction.
+    paired : bool
+        Resample corresponding rows together. The samples must have equal
+        length and cluster IDs cannot be supplied.
+    control_cluster_ids, treatment_cluster_ids : array-like or None
+        One cluster identifier per row. Both arrays are required for clustered
+        analysis; complete clusters are resampled independently within each
+        experiment arm.
+    n_resamples : int
+        Number of bootstrap effects.
+    batch_size : int or None
+        Number of resamples processed per technical batch. Changing it does
+        not change a seeded bootstrap distribution.
+    confidence_level : float
+        Requested interval level strictly between zero and one.
+    random_state : int, numpy.random.Generator, or None
+        Reproducible random-state source.
+
+    Returns
+    -------
+    TwoSampleBootstrapResult
+        Arm estimates, observed effect, interval, standard error, bootstrap
+        distribution, and experiment-design metadata.
+
+    Notes
+    -----
+    Ratio and relative-lift effects are rejected if the observed or any
+    resampled control statistic is zero or numerically indistinguishable from
+    zero. No invalid replicates are silently discarded.
     """
     if not callable(statistic):
         raise TypeError("statistic must be callable.")

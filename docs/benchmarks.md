@@ -11,6 +11,55 @@ A speed benchmark cannot establish statistical correctness, and increasing
 `n_resamples` reduces Monte Carlo noise but does not repair systematic
 undercoverage caused by an unsuitable method.
 
+## 0.5.0 experiment-comparison evidence
+
+The 0.5.0 suite is separate from the audited 0.4.4 one-sample results. It
+checks independent, paired, and clustered comparisons; difference and
+relative-lift effects; normal, lognormal, exponential, and Bernoulli data; and
+percentile, basic, and BCa intervals. Applicable independent/paired cells are
+matched with SciPy. Cluster cells have no SciPy row because SciPy does not
+provide a cluster-ID experiment interface.
+
+Run the pipeline smoke test:
+
+```bash
+python benchmarks/run_comparison_release.py \
+  --profile quick \
+  --output-dir benchmark_runs/v0.5.0-quick
+```
+
+The quick profile uses only two datasets per selected coverage cell and is not
+statistical evidence. Before publishing 0.5.0, run the checkpointed release
+profile from a clean commit:
+
+```bash
+python benchmarks/run_comparison_release.py \
+  --profile release \
+  --output-dir benchmark_runs/v0.5.0-release
+```
+
+Resume the identical commit, environment, and configuration after an
+interruption:
+
+```bash
+python benchmarks/run_comparison_release.py \
+  --profile release \
+  --output-dir benchmark_runs/v0.5.0-release \
+  --resume
+```
+
+The release profile uses 300 datasets and 4,999 resamples per cell. The
+optional `--profile statistical` uses 1,000 datasets per cell and can take
+several times longer. Both profiles record empirical coverage, Wilson bounds,
+invalid/failing trials, random-stream policy, versions, commit, platform, and
+elapsed time.
+
+Runtime and `tracemalloc` results are produced by
+`benchmarks/bench_two_sample.py`. They compare mean-difference workflows with
+SciPy and track clustered runtime separately. No numeric 0.5.0 performance or
+coverage claim should be published until the release directory has been
+reviewed and versioned.
+
 ## Audited 0.4.4 release runtime
 
 Measured from the versioned 0.4.4 release run on Apple Silicon/macOS 15.7.4,

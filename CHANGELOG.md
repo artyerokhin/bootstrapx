@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.0] — Unreleased
+
+### Added
+- `bootstrap_two_sample()` estimates an explicit treatment-versus-control
+  effect for independent, paired, or separately clustered samples.
+- Built-in difference, ratio, and relative-lift effects, plus custom scalar
+  effect callables.
+- `TwoSampleBootstrapResult` reports both arm estimates, the effect interval,
+  bootstrap standard error and distribution, experiment design metadata, and
+  compact dictionary/DataFrame exports.
+- Percentile, basic, and multi-sample BCa intervals. Clustered BCa uses
+  leave-one-cluster-out acceleration rather than deleting individual rows.
+- A resumable comparison coverage study and separate runtime/`tracemalloc`
+  benchmark with exact version, commit, dependency, and environment metadata.
+
+### Changed
+- Experiment guidance now starts from the randomization and analysis unit and
+  distinguishes independent, paired, and repeated-event workflows.
+- CI runs a two-sample statistical smoke benchmark in addition to the existing
+  one-sample coverage pipeline.
+
+### Tests
+- Deterministic resampling, batch-size invariance, SciPy reference comparisons,
+  cluster deletion, exports, guardrails, and focused coverage simulations for
+  independent, paired, and clustered designs.
+
 ## [0.4.4] — 2026-08-14
 
 ### Added

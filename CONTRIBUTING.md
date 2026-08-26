@@ -29,10 +29,14 @@ Run these before opening a pull request:
 ```bash
 ruff format --check src tests benchmarks/bench_speed.py \
   benchmarks/bench_coverage_accuracy.py benchmarks/bench_numba.py \
-  benchmarks/run_release.py benchmarks/plot_release_results.py
+  benchmarks/run_release.py benchmarks/plot_release_results.py \
+  benchmarks/bench_two_sample.py benchmarks/bench_two_sample_coverage.py \
+  benchmarks/run_comparison_release.py
 ruff check src tests benchmarks/bench_speed.py \
   benchmarks/bench_coverage_accuracy.py benchmarks/bench_numba.py \
-  benchmarks/run_release.py benchmarks/plot_release_results.py
+  benchmarks/run_release.py benchmarks/plot_release_results.py \
+  benchmarks/bench_two_sample.py benchmarks/bench_two_sample_coverage.py \
+  benchmarks/run_comparison_release.py
 mypy src
 pytest --cov=bootstrapx --cov-fail-under=85
 pytest --doctest-modules src/bootstrapx
@@ -47,6 +51,9 @@ Release benchmark runs belong under ignored `benchmark_runs/` directories. Use
 `python benchmarks/run_release.py --profile quick` for a pipeline check;
 version only reviewed release evidence, together with its metadata and the
 figures generated from it.
+
+Changes to experiment comparisons must also run
+`python benchmarks/run_comparison_release.py --profile quick`.
 
 ## Pull requests
 

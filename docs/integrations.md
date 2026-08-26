@@ -17,7 +17,21 @@ print(result.to_frame())
 
 `DataFrame.bootstrap.summary()` evaluates columns independently. It is useful
 for a table of separate column estimates, but it does not estimate a
-difference, ratio, lift, paired effect, or p-value between columns.
+difference, ratio, lift, paired effect, or p-value between columns. Use the
+underlying arrays with `bootstrap_two_sample()` instead:
+
+```python
+from bootstrapx import bootstrap_two_sample
+
+comparison = bootstrap_two_sample(
+    frame.loc[frame["variant"] == "control", "metric"],
+    frame.loc[frame["variant"] == "treatment", "metric"],
+    np.mean,
+    effect="difference",
+    random_state=42,
+)
+print(comparison.to_frame())
+```
 
 ## scikit-learn
 

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.0 — Unreleased
+
+### Experiment comparisons
+
+- A native two-sample API estimates treatment-minus-control differences,
+  ratios, relative lift, and custom scalar effects.
+- Independent, paired, and separately clustered experiment designs have
+  explicit resampling behavior and result metadata.
+- Percentile, basic, and BCa intervals are supported; clustered BCa deletes
+  complete clusters in its jackknife step.
+- New coverage and runtime suites compare applicable workflows with SciPy,
+  record invalid/failing trials, checkpoint long runs, and preserve metadata.
+- Experiment documentation now explains analysis units, user aggregation,
+  ratio instability, paired data, and repeated events.
+
 ## 0.4.4 — 2026-08-14
 
 ### Practical workflow polish
