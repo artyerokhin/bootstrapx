@@ -38,6 +38,18 @@ def _git_commit() -> str:
         return "unknown"
 
 
+def _git_dirty() -> bool:
+    try:
+        output = subprocess.check_output(
+            ["git", "status", "--porcelain", "--untracked-files=no"],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        )
+        return bool(output.strip())
+    except (OSError, subprocess.CalledProcessError):
+        return True
+
+
 def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     with path.open("w", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=list(rows[0]), lineterminator="\n")
@@ -192,6 +204,7 @@ def main() -> None:
         "benchmark": "two-sample-runtime-memory",
         "bootstrapx": bx.__version__,
         "git_commit": _git_commit(),
+        "git_worktree_dirty": _git_dirty(),
         "platform": platform.platform(),
         "machine": platform.machine(),
         "python": platform.python_version(),

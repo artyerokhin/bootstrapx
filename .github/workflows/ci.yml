@@ -33,7 +33,8 @@ jobs:
             benchmarks/plot_release_results.py \
             benchmarks/bench_two_sample.py \
             benchmarks/bench_two_sample_coverage.py \
-            benchmarks/run_comparison_release.py
+            benchmarks/run_comparison_release.py \
+            benchmarks/plot_comparison_results.py
 
       - name: Lint
         run: |
@@ -45,7 +46,8 @@ jobs:
             benchmarks/plot_release_results.py \
             benchmarks/bench_two_sample.py \
             benchmarks/bench_two_sample_coverage.py \
-            benchmarks/run_comparison_release.py
+            benchmarks/run_comparison_release.py \
+            benchmarks/plot_comparison_results.py
 
   typing:
     name: Strict typing

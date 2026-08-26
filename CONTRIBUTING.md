@@ -31,12 +31,12 @@ ruff format --check src tests benchmarks/bench_speed.py \
   benchmarks/bench_coverage_accuracy.py benchmarks/bench_numba.py \
   benchmarks/run_release.py benchmarks/plot_release_results.py \
   benchmarks/bench_two_sample.py benchmarks/bench_two_sample_coverage.py \
-  benchmarks/run_comparison_release.py
+  benchmarks/run_comparison_release.py benchmarks/plot_comparison_results.py
 ruff check src tests benchmarks/bench_speed.py \
   benchmarks/bench_coverage_accuracy.py benchmarks/bench_numba.py \
   benchmarks/run_release.py benchmarks/plot_release_results.py \
   benchmarks/bench_two_sample.py benchmarks/bench_two_sample_coverage.py \
-  benchmarks/run_comparison_release.py
+  benchmarks/run_comparison_release.py benchmarks/plot_comparison_results.py
 mypy src
 pytest --cov=bootstrapx --cov-fail-under=85
 pytest --doctest-modules src/bootstrapx

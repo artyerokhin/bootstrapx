@@ -60,6 +60,15 @@ SciPy and track clustered runtime separately. No numeric 0.5.0 performance or
 coverage claim should be published until the release directory has been
 reviewed and versioned.
 
+After that review, generate the documentation figures from the recorded CSV
+files rather than copying numbers by hand:
+
+```bash
+python benchmarks/plot_comparison_results.py \
+  --input-dir benchmark_runs/v0.5.0-release \
+  --output-dir docs/assets/benchmarks/v0.5.0
+```
+
 ## Audited 0.4.4 release runtime
 
 Measured from the versioned 0.4.4 release run on Apple Silicon/macOS 15.7.4,
