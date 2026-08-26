@@ -14,6 +14,7 @@ from __future__ import annotations
 from importlib.metadata import PackageNotFoundError, version
 
 from .api import BootstrapResult, bootstrap
+from .comparison import TwoSampleBootstrapResult, bootstrap_two_sample
 from .stats.confidence import ConfidenceInterval
 
 # Optional integrations — only register if their deps are present
@@ -39,6 +40,8 @@ except PackageNotFoundError:
 __all__ = [
     "bootstrap",
     "BootstrapResult",
+    "bootstrap_two_sample",
+    "TwoSampleBootstrapResult",
     "ConfidenceInterval",
     "__version__",
 ]
