@@ -56,9 +56,7 @@ elapsed time.
 
 Runtime and `tracemalloc` results are produced by
 `benchmarks/bench_two_sample.py`. They compare mean-difference workflows with
-SciPy and track clustered runtime separately. No numeric 0.5.0 performance or
-coverage claim should be published until the release directory has been
-reviewed and versioned.
+SciPy and track clustered runtime separately.
 
 After that review, generate the documentation figures from the recorded CSV
 files rather than copying numbers by hand:
@@ -68,6 +66,68 @@ python benchmarks/plot_comparison_results.py \
   --input-dir benchmark_runs/v0.5.0-release \
   --output-dir docs/assets/benchmarks/v0.5.0
 ```
+
+### Audited 0.5.0 statistical behavior
+
+The versioned release run measured commit `19d037e` on Apple Silicon/macOS
+15.7.4 with Python 3.11.5, NumPy 1.26.4, and SciPy 1.11.1. It completed all 33
+planned cells: 300 independently generated datasets and 4,999 resamples per
+cell, for 9,900 valid intervals in total. No trial failed or produced an
+invalid interval.
+
+For the 15 independent and paired cells with a direct SciPy counterpart:
+
+| Method | bootstrapx mean coverage | SciPy mean coverage |
+|---|---:|---:|
+| Percentile | 93.87% | 93.67% |
+| Basic | 93.07% | 93.13% |
+| BCa | 93.60% | 93.40% |
+
+The mean absolute matched difference was 0.42 percentage points and the
+largest difference was 1.67 points. Cluster coverage, measured only for
+bootstrapx, was 93.67% for percentile, 93.00% for basic, and 93.33% for BCa.
+This supports implementation agreement, not a universal 95% guarantee.
+
+The difficult cells are important context: basic intervals for the
+exponential median covered 91.67%, while Bernoulli conversion and paired
+normal cells were near 92–93%. SciPy showed similar undercoverage in the
+matched cells. Bootstrap coverage depends on the statistic, distribution,
+sample size, and interval method; inspect the Wilson bounds in the CSV instead
+of treating the nominal level as a promise.
+
+![Two-sample empirical coverage](assets/benchmarks/v0.5.0/coverage.png)
+
+Auditable inputs: [coverage CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/coverage/coverage.csv)
+and [environment metadata](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/coverage/metadata.json).
+
+### Audited 0.5.0 runtime and allocation evidence
+
+Each timing cell used 4,999 resamples, one unmeasured warm-up, and the median
+of five measured calls. The statistic was `np.mean` and the effect was a
+treatment-minus-control difference.
+
+| Method | Control / treatment rows | bootstrapx (ms) | SciPy (ms) | SciPy / bootstrapx |
+|---|---:|---:|---:|---:|
+| Percentile | 200 / 250 | 39.27 | 50.32 | 1.28× |
+| BCa | 200 / 250 | 41.69 | 53.67 | 1.29× |
+| Percentile | 1,000 / 1,250 | 80.49 | 155.87 | 1.94× |
+| BCa | 1,000 / 1,250 | 89.02 | 186.84 | 2.10× |
+| Percentile | 10,000 / 12,500 | 536.50 | 1,551.99 | 2.89× |
+
+![Two-sample runtime](assets/benchmarks/v0.5.0/runtime.png)
+
+The `tracemalloc` peaks were 0.137 MB versus 85.867 MB at 500 control rows,
+and 0.097 MB versus 343.308 MB at 2,000 rows. This narrowly demonstrates the
+allocation benefit of bounded batches in this configuration. `tracemalloc`
+is not process RSS and does not cover every native allocation, so the result
+must not be presented as total-memory usage. Cluster-only bootstrapx calls
+took 120.01 ms for 40 control clusters and 452.13 ms for 200 clusters, with
+five rows per cluster.
+
+Auditable inputs: [runtime CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/runtime/runtime.csv),
+[memory CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/runtime/memory.csv),
+[cluster runtime CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/runtime/cluster_runtime.csv),
+and [environment metadata](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/runtime/metadata.json).
 
 ## Audited 0.4.4 release runtime
 

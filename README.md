@@ -41,6 +41,15 @@ The library keeps resample matrices in bounded batches. The returned bootstrap
 distribution and some method-specific state still grow with `n_resamples` or
 sample size, so this is not a claim of constant total memory.
 
+The audited 0.5.0 experiment suite completed 9,900 interval trials without a
+failure or invalid result. Across the 15 cells directly matched with SciPy,
+the mean absolute coverage difference was 0.42 percentage points and the
+largest was 1.67 points. On the recorded Apple Silicon runtime grid,
+bootstrapx was 1.28–2.89× faster, but these machine- and workload-specific
+measurements are not a blanket performance guarantee. See the
+[benchmark evidence](https://artyerokhin.github.io/bootstrapx/benchmarks/)
+for methods, uncertainty, difficult cases, and reproducible inputs.
+
 ---
 
 ## Installation

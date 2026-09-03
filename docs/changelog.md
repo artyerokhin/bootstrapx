@@ -12,6 +12,8 @@
   complete clusters in its jackknife step.
 - New coverage and runtime suites compare applicable workflows with SciPy,
   record invalid/failing trials, checkpoint long runs, and preserve metadata.
+- The audited release evidence includes 9,900 valid interval trials, matched
+  runtime/allocation measurements, exact environment metadata, and plots.
 - Experiment documentation now explains analysis units, user aggregation,
   ratio instability, paired data, and repeated events.
 

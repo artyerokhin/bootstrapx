@@ -17,6 +17,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   leave-one-cluster-out acceleration rather than deleting individual rows.
 - A resumable comparison coverage study and separate runtime/`tracemalloc`
   benchmark with exact version, commit, dependency, and environment metadata.
+- Versioned 0.5.0 evidence covering 9,900 interval trials plus matched runtime
+  and allocation measurements against SciPy.
 
 ### Changed
 - Experiment guidance now starts from the randomization and analysis unit and
