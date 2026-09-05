@@ -114,6 +114,14 @@ This estimates the treatment-minus-control conversion difference directly.
 Use `effect="relative_lift"` only when a ratio to the control estimate is
 scientifically meaningful and the control baseline is safely away from zero.
 
+### Real-world A/B walkthrough
+
+The [Hillstrom email case study](https://artyerokhin.github.io/bootstrapx/real-world-ab/)
+analyzes 64,000 customers from a public randomized marketing experiment. Its
+[executable notebook](notebooks/06_real_world_ab_hillstrom.ipynb) downloads and
+verifies the original source, then estimates visit, conversion, relative-lift,
+and spend effects without committing the raw customer-level CSV.
+
 ### pandas accessor
 
 ```python

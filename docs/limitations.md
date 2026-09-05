@@ -26,6 +26,12 @@ Ratio and relative-lift effects are undefined when a control estimate is zero
 and can be unstable when it is merely close to zero. bootstrapx rejects
 non-finite resampled effects instead of silently discarding them.
 
+A real-world experiment can demonstrate correct analysis-unit selection and
+effect interpretation, but its population effect is unknown. It therefore
+cannot establish confidence-interval coverage. The
+[Hillstrom case study](real-world-ab.md) is workflow evidence; the synthetic
+known-truth studies in [Benchmarks](benchmarks.md) remain the coverage check.
+
 ## Missing data
 
 Input data must be finite. NaN and infinite values are rejected instead of

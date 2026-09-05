@@ -80,5 +80,7 @@ decision-critical analysis.
 2. [Choose a method](methods.md) — decision table and assumptions.
 3. [Grouped and experiment data](ab-testing.md) or
    [time series](time-series.md) — complete workflow examples.
-4. [Integrations and performance](integrations.md) — pandas, sklearn, and when
+4. [Real-world A/B case study](real-world-ab.md) — a reproducible public email
+   experiment with conversion and spend effects.
+5. [Integrations and performance](integrations.md) — pandas, sklearn, and when
    the optional Numba extra is useful.

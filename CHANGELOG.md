@@ -19,10 +19,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   benchmark with exact version, commit, dependency, and environment metadata.
 - Versioned 0.5.0 evidence covering 9,900 interval trials plus matched runtime
   and allocation measurements against SciPy.
+- A reproducible Hillstrom email-experiment notebook downloads and verifies
+  the public source, then estimates visit, conversion, lift, and spend effects.
 
 ### Changed
 - Experiment guidance now starts from the randomization and analysis unit and
   distinguishes independent, paired, and repeated-event workflows.
+- The clustered A/B notebook now uses the native two-sample API and separate
+  experiment arms instead of reasoning from a precomputed row-wise difference.
 - CI runs a two-sample statistical smoke benchmark in addition to the existing
   one-sample coverage pipeline.
 

@@ -14,8 +14,12 @@
   record invalid/failing trials, checkpoint long runs, and preserve metadata.
 - The audited release evidence includes 9,900 valid interval trials, matched
   runtime/allocation measurements, exact environment metadata, and plots.
+- A real-world Hillstrom notebook retrieves a checksum-verified public
+  experiment and reports visit, conversion, relative-lift, and spend effects.
 - Experiment documentation now explains analysis units, user aggregation,
   ratio instability, paired data, and repeated events.
+- The clustered A/B notebook now demonstrates the native two-sample cluster
+  interface with independent experiment arms.
 
 ## 0.4.4 — 2026-08-14
 

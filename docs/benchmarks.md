@@ -11,6 +11,10 @@ A speed benchmark cannot establish statistical correctness, and increasing
 `n_resamples` reduces Monte Carlo noise but does not repair systematic
 undercoverage caused by an unsuitable method.
 
+The [real-world A/B case study](real-world-ab.md) serves a fourth purpose:
+showing an end-to-end practitioner workflow on public randomized data. Its
+true population effect is unknown, so it is not included in coverage claims.
+
 ## 0.5.0 experiment-comparison evidence
 
 The 0.5.0 suite is separate from the audited 0.4.4 one-sample results. It

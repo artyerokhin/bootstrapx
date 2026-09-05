@@ -23,6 +23,7 @@ wheels/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+/data/
 
 # Unit test / coverage reports
 htmlcov/
