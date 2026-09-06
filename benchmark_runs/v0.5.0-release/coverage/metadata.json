@@ -3,7 +3,7 @@
   "n_simulations": 300,
   "n_resamples": 4999,
   "confidence_level": 0.95,
-  "git_commit": "19d037e51cf1974ea2d19466510256d62c021e4c",
+  "git_commit": "c14fe6396f0b8fb35b186bc660453a4dd2f2c798",
   "bootstrapx": "0.5.0",
   "python": "3.11.5",
   "numpy": "1.26.4",
@@ -16,5 +16,5 @@
   "status": "complete",
   "total_cells": 33,
   "completed_cells": 33,
-  "elapsed_seconds": 649.35
+  "elapsed_seconds": 635.23
 }

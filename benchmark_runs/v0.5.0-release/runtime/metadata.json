@@ -1,7 +1,7 @@
 {
   "benchmark": "two-sample-runtime-memory",
   "bootstrapx": "0.5.0",
-  "git_commit": "19d037e51cf1974ea2d19466510256d62c021e4c",
+  "git_commit": "c14fe6396f0b8fb35b186bc660453a4dd2f2c798",
   "git_worktree_dirty": false,
   "platform": "macOS-15.7.4-arm64-arm-64bit",
   "machine": "arm64",
@@ -13,7 +13,8 @@
   "runtime_repeats": 5,
   "runtime_summary": "median after one unmeasured warm-up",
   "memory_tool": "tracemalloc (not process RSS)",
-  "scipy_configuration": "vectorized=False; SciPy default batch",
+  "scipy_scalar_configuration": "vectorized=False; SciPy default batch",
+  "scipy_vectorized_configuration": "vectorized=True; batch matched to bootstrapx auto_batch_size",
   "quick": false,
-  "elapsed_seconds": 23.79
+  "elapsed_seconds": 32.8
 }

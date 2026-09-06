@@ -45,9 +45,10 @@ The audited 0.5.0 experiment suite completed 9,900 interval trials without a
 failure or invalid result. Across the 15 cells directly matched with SciPy,
 the mean absolute coverage difference was 0.42 percentage points and the
 largest was 1.67 points. On the recorded Apple Silicon runtime grid,
-bootstrapx was 1.28–2.89× faster than SciPy's scalar (`vectorized=False`)
-configuration. This does not establish an advantage over vectorized SciPy;
-these machine- and workload-specific measurements are not a blanket
+bootstrapx was 1.26–2.60× faster than SciPy's scalar (`vectorized=False`)
+configuration. Against bounded-vectorized SciPy, it was slower for the two
+small-sample cells and 1.56–2.24× faster for the three larger-sample cells.
+These machine- and workload-specific measurements are not a blanket
 performance guarantee. See the
 [benchmark evidence](https://artyerokhin.github.io/bootstrapx/benchmarks/)
 for methods, uncertainty, difficult cases, and reproducible inputs.

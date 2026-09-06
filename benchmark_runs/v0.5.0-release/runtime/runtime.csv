@@ -1,6 +1,6 @@
-n_control,n_treatment,method,bootstrapx_ms,scipy_ms,scipy_over_bootstrapx
-200,250,percentile,39.27,50.32,1.28
-200,250,bca,41.69,53.67,1.29
-1000,1250,percentile,80.49,155.87,1.94
-1000,1250,bca,89.02,186.84,2.1
-10000,12500,percentile,536.5,1551.99,2.89
+n_control,n_treatment,method,bootstrapx_ms,scipy_scalar_ms,scipy_vectorized_bounded_ms,scipy_scalar_over_bootstrapx,scipy_vectorized_bounded_over_bootstrapx
+200,250,percentile,37.74,48.34,17.93,1.28,0.48
+200,250,bca,40.48,51.0,19.14,1.26,0.47
+1000,1250,percentile,77.94,152.21,121.74,1.95,1.56
+1000,1250,bca,86.74,179.34,159.84,2.07,1.84
+10000,12500,percentile,535.89,1392.56,1201.87,2.6,2.24

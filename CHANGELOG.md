@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [0.5.0] — Unreleased
+## [0.5.0] — 2026-09-06
 
 ### Added
 - `bootstrap_two_sample()` estimates an explicit treatment-versus-control
@@ -44,8 +44,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   scale and no longer depends on the magnitude of the treatment estimate.
 - Source distributions include the release-facing notebooks required by their
   bundled tests, and CI verifies those archive contents before publication.
-- Two-sample performance evidence now labels the recorded SciPy comparison as
-  scalar; future runs also report vectorized SciPy with a matched bounded batch.
+- Two-sample performance evidence reports both scalar SciPy and vectorized
+  SciPy with a matched bounded batch, avoiding a misleading blanket speed claim.
 
 ### Tests
 - Deterministic resampling, batch-size invariance, SciPy reference comparisons,
