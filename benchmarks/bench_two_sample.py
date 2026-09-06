@@ -108,7 +108,7 @@ def main() -> None:
                 random_state=42,
             )
 
-    def scipy_call(
+    def scipy_scalar_call(
         control: np.ndarray[Any, Any], treatment: np.ndarray[Any, Any], method: str
     ) -> Any:
         with warnings.catch_warnings():
@@ -125,6 +125,34 @@ def main() -> None:
                 random_state=42,
             )
 
+    def scipy_vectorized_bounded_call(
+        control: np.ndarray[Any, Any], treatment: np.ndarray[Any, Any], method: str
+    ) -> Any:
+        def difference_of_means(
+            control_sample: np.ndarray[Any, Any],
+            treatment_sample: np.ndarray[Any, Any],
+            *,
+            axis: int = -1,
+        ) -> np.ndarray[Any, Any]:
+            return np.mean(treatment_sample, axis=axis) - np.mean(control_sample, axis=axis)
+
+        matched_batch = bx.utils.auto_batch_size(
+            len(control) + len(treatment),
+            n_resamples,
+        )
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            return sp_stats.bootstrap(
+                (control, treatment),
+                difference_of_means,
+                vectorized=True,
+                batch=matched_batch,
+                method="BCa" if method == "bca" else method,
+                n_resamples=n_resamples,
+                confidence_level=CI,
+                random_state=42,
+            )
+
     runtime_grid = [("percentile", 200), ("bca", 200), ("percentile", 1_000)]
     if not args.quick:
         runtime_grid.extend([("bca", 1_000), ("percentile", 10_000)])
@@ -132,20 +160,30 @@ def main() -> None:
     for method, n in runtime_grid:
         control, treatment = data(n)
         bx_ms = _timeit(partial(bx_call, control, treatment, method), args.repeats)
-        scipy_ms = _timeit(partial(scipy_call, control, treatment, method), args.repeats)
+        scipy_scalar_ms = _timeit(
+            partial(scipy_scalar_call, control, treatment, method), args.repeats
+        )
+        scipy_vectorized_bounded_ms = _timeit(
+            partial(scipy_vectorized_bounded_call, control, treatment, method), args.repeats
+        )
         row = {
             "n_control": len(control),
             "n_treatment": len(treatment),
             "method": method,
             "bootstrapx_ms": round(bx_ms, 2),
-            "scipy_ms": round(scipy_ms, 2),
-            "scipy_over_bootstrapx": round(scipy_ms / bx_ms, 2),
+            "scipy_scalar_ms": round(scipy_scalar_ms, 2),
+            "scipy_vectorized_bounded_ms": round(scipy_vectorized_bounded_ms, 2),
+            "scipy_scalar_over_bootstrapx": round(scipy_scalar_ms / bx_ms, 2),
+            "scipy_vectorized_bounded_over_bootstrapx": round(
+                scipy_vectorized_bounded_ms / bx_ms, 2
+            ),
         }
         runtime_rows.append(row)
         _write_csv(output_dir / "runtime.csv", runtime_rows)
         print(
             f"{method:>10} n={n:>6} bootstrapx={bx_ms:8.2f} ms "
-            f"scipy={scipy_ms:8.2f} ms ratio={scipy_ms / bx_ms:5.2f}x",
+            f"scipy-scalar={scipy_scalar_ms:8.2f} ms "
+            f"scipy-vectorized-bounded={scipy_vectorized_bounded_ms:8.2f} ms",
             flush=True,
         )
 
@@ -153,19 +191,28 @@ def main() -> None:
     for n in [500] if args.quick else [500, 2_000]:
         control, treatment = data(n)
         bx_mb = _peak_mb(partial(bx_call, control, treatment, "percentile"))
-        scipy_mb = _peak_mb(partial(scipy_call, control, treatment, "percentile"))
+        scipy_scalar_mb = _peak_mb(partial(scipy_scalar_call, control, treatment, "percentile"))
+        scipy_vectorized_bounded_mb = _peak_mb(
+            partial(scipy_vectorized_bounded_call, control, treatment, "percentile")
+        )
         row = {
             "n_control": len(control),
             "n_treatment": len(treatment),
             "method": "percentile",
             "bootstrapx_tracemalloc_mb": round(bx_mb, 3),
-            "scipy_tracemalloc_mb": round(scipy_mb, 3),
-            "scipy_over_bootstrapx": round(scipy_mb / bx_mb, 2),
+            "scipy_scalar_tracemalloc_mb": round(scipy_scalar_mb, 3),
+            "scipy_vectorized_bounded_tracemalloc_mb": round(scipy_vectorized_bounded_mb, 3),
+            "scipy_scalar_over_bootstrapx": round(scipy_scalar_mb / bx_mb, 2),
+            "scipy_vectorized_bounded_over_bootstrapx": round(
+                scipy_vectorized_bounded_mb / bx_mb, 2
+            ),
         }
         memory_rows.append(row)
         _write_csv(output_dir / "memory.csv", memory_rows)
         print(
-            f"memory n={n:>6} bootstrapx={bx_mb:8.3f} MB scipy={scipy_mb:8.3f} MB",
+            f"memory n={n:>6} bootstrapx={bx_mb:8.3f} MB "
+            f"scipy-scalar={scipy_scalar_mb:8.3f} MB "
+            f"scipy-vectorized-bounded={scipy_vectorized_bounded_mb:8.3f} MB",
             flush=True,
         )
 
@@ -215,6 +262,10 @@ def main() -> None:
         "runtime_repeats": args.repeats,
         "runtime_summary": "median after one unmeasured warm-up",
         "memory_tool": "tracemalloc (not process RSS)",
+        "scipy_scalar_configuration": "vectorized=False; SciPy default batch",
+        "scipy_vectorized_configuration": (
+            "vectorized=True; batch matched to bootstrapx auto_batch_size"
+        ),
         "quick": args.quick,
         "elapsed_seconds": round(time.perf_counter() - started_all, 2),
     }

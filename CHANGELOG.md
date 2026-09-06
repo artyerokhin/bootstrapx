@@ -21,6 +21,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   and allocation measurements against SciPy.
 - A reproducible Hillstrom email-experiment notebook downloads and verifies
   the public source, then estimates visit, conversion, lift, and spend effects.
+- A reproducible product A/B reference notebook defines its user-level
+  estimand and decision threshold before generating an experiment with known
+  truth, then separates a single-run decision from a coverage smoke check.
 
 ### Changed
 - Experiment guidance now starts from the randomization and analysis unit and
@@ -29,6 +32,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   experiment arms instead of reasoning from a precomputed row-wise difference.
 - CI runs a two-sample statistical smoke benchmark in addition to the existing
   one-sample coverage pipeline.
+- The Hillstrom case study now distinguishes an explicit example contrast from
+  preregistration, states the assumptions behind its assignment-effect
+  interpretation, and reports spend sparsity and concentration.
+- Documentation now presents the controlled product example as the primary
+  A/B walkthrough and Hillstrom as its deliberately messier real-data
+  companion.
+
+### Fixed
+- Ratio and relative-lift denominator validation is invariant to measurement
+  scale and no longer depends on the magnitude of the treatment estimate.
+- Source distributions include the release-facing notebooks required by their
+  bundled tests, and CI verifies those archive contents before publication.
+- Two-sample performance evidence now labels the recorded SciPy comparison as
+  scalar; future runs also report vectorized SciPy with a matched bounded batch.
 
 ### Tests
 - Deterministic resampling, batch-size invariance, SciPy reference comparisons,

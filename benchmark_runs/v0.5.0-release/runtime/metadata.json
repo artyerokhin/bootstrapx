@@ -13,6 +13,7 @@
   "runtime_repeats": 5,
   "runtime_summary": "median after one unmeasured warm-up",
   "memory_tool": "tracemalloc (not process RSS)",
+  "scipy_configuration": "vectorized=False; SciPy default batch",
   "quick": false,
   "elapsed_seconds": 23.79
 }

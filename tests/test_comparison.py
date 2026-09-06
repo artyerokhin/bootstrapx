@@ -328,7 +328,7 @@ def test_rejects_invalid_designs(kwargs: dict[str, object], message: str) -> Non
 
 @pytest.mark.parametrize("effect", ["ratio", "relative_lift"])
 def test_rejects_zero_control_for_relative_effects(effect: str) -> None:
-    with pytest.raises(ValueError, match="zero or nearly zero"):
+    with pytest.raises(ValueError, match="control estimate is zero"):
         bootstrap_two_sample(
             np.array([-1.0, 0.0, 1.0]),
             np.array([1.0, 2.0, 3.0]),
@@ -338,6 +338,66 @@ def test_rejects_zero_control_for_relative_effects(effect: str) -> None:
             n_resamples=20,
             random_state=0,
         )
+
+
+def test_rejects_zero_control_created_by_a_resample() -> None:
+    with pytest.raises(ValueError, match="control estimate is zero"):
+        bootstrap_two_sample(
+            np.array([0.0, 0.0, 1.0]),
+            np.ones(3),
+            np.mean,
+            effect="ratio",
+            method="percentile",
+            n_resamples=20,
+            random_state=0,
+        )
+
+
+@pytest.mark.parametrize("effect", ["ratio", "relative_lift"])
+@pytest.mark.parametrize("scale", [1e-100, 1.0, 1e100])
+def test_relative_effects_are_invariant_to_common_scale(effect: str, scale: float) -> None:
+    control = scale * np.array([1.0, 2.0, 4.0, 8.0])
+    treatment = scale * np.array([2.0, 5.0, 7.0, 11.0])
+    baseline = bootstrap_two_sample(
+        control / scale,
+        treatment / scale,
+        np.mean,
+        effect=effect,
+        method="percentile",
+        n_resamples=100,
+        random_state=13,
+    )
+    scaled = bootstrap_two_sample(
+        control,
+        treatment,
+        np.mean,
+        effect=effect,
+        method="percentile",
+        n_resamples=100,
+        random_state=13,
+    )
+
+    assert scaled.estimate == pytest.approx(baseline.estimate)
+    np.testing.assert_allclose(
+        scaled.bootstrap_distribution,
+        baseline.bootstrap_distribution,
+        rtol=1e-14,
+        atol=0.0,
+    )
+
+
+def test_ratio_guard_does_not_depend_on_treatment_scale() -> None:
+    result = bootstrap_two_sample(
+        np.ones(10),
+        np.full(10, 1e20),
+        np.mean,
+        effect="ratio",
+        method="percentile",
+        n_resamples=20,
+        random_state=2,
+    )
+
+    assert result.estimate == pytest.approx(1e20)
 
 
 def test_rejects_invalid_custom_outputs() -> None:

@@ -29,8 +29,10 @@ non-finite resampled effects instead of silently discarding them.
 A real-world experiment can demonstrate correct analysis-unit selection and
 effect interpretation, but its population effect is unknown. It therefore
 cannot establish confidence-interval coverage. The
-[Hillstrom case study](real-world-ab.md) is workflow evidence; the synthetic
-known-truth studies in [Benchmarks](benchmarks.md) remain the coverage check.
+[Hillstrom case study](real-world-ab.md) is workflow evidence. The controlled
+[product A/B reference](product-ab.md) exposes its generating effect and a
+small smoke check, but the larger known-truth studies in
+[Benchmarks](benchmarks.md) remain the release coverage evidence.
 
 ## Missing data
 

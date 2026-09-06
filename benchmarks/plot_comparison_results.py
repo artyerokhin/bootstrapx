@@ -104,10 +104,15 @@ def _save_runtime(rows: list[dict[str, str]], output_dir: Path) -> None:
 
     figure, axes = plt.subplots(1, 2, figsize=(12, 4.6))
     figure.patch.set_facecolor("#f8fafc")
-    colors = {"bootstrapx": "#0f766e", "scipy": "#475569"}
+    colors = {
+        "bootstrapx": "#0f766e",
+        "scipy_scalar": "#475569",
+        "scipy_vectorized": "#7c3aed",
+    }
     for axis, method in zip(axes, ("percentile", "bca"), strict=True):
         ordered = sorted(by_method[method], key=lambda row: int(row["n_control"]))
         n = [int(row["n_control"]) for row in ordered]
+        scalar_key = "scipy_scalar_ms" if "scipy_scalar_ms" in ordered[0] else "scipy_ms"
         axis.plot(
             n,
             [float(row["bootstrapx_ms"]) for row in ordered],
@@ -118,12 +123,21 @@ def _save_runtime(rows: list[dict[str, str]], output_dir: Path) -> None:
         )
         axis.plot(
             n,
-            [float(row["scipy_ms"]) for row in ordered],
+            [float(row[scalar_key]) for row in ordered],
             "s-",
-            label="SciPy",
-            color=colors["scipy"],
+            label="SciPy scalar",
+            color=colors["scipy_scalar"],
             linewidth=2,
         )
+        if "scipy_vectorized_bounded_ms" in ordered[0]:
+            axis.plot(
+                n,
+                [float(row["scipy_vectorized_bounded_ms"]) for row in ordered],
+                "^-",
+                label="SciPy vectorized, bounded",
+                color=colors["scipy_vectorized"],
+                linewidth=2,
+            )
         axis.set_xscale("log")
         axis.set_yscale("log")
         axis.set_title(method.upper())

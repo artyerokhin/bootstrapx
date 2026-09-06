@@ -1,5 +1,10 @@
 # Real-world A/B Case Study
 
+This is the deliberately messier companion to the controlled
+[product A/B reference](product-ab.md). Use the product example for the main
+workflow and this case study to see how interpretation changes when the true
+effect, preregistration status, and parts of experiment delivery are unknown.
+
 This walkthrough applies `bootstrap_two_sample()` to Kevin Hillstrom's public
 email experiment. The source contains 64,000 customers randomly assigned to a
 men's email, a women's email, or no email, followed by visit, conversion, and
@@ -15,17 +20,21 @@ formal redistribution license.
 Original source: [MineThatData E-Mail Analytics and Data Mining
 Challenge](https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html).
 
-## Predefined analysis
+## Explicit worked-example contrast
 
 The notebook compares `Womens E-Mail` with `No E-Mail`. Choosing one contrast
-before looking at outcomes keeps the walkthrough focused and avoids presenting
-two selected campaign comparisons as though no multiple-testing choice had
-been made.
+keeps the walkthrough focused, but this choice was not preregistered. The
+analysis is therefore an exploratory demonstration, not a confirmatory test,
+and it makes no multiplicity adjustment across the two campaigns or the
+several outcomes.
 
-Each row is one randomized customer, so the samples are independent and no
-cluster IDs are needed. Every assigned customer remains in the analysis,
-including non-buyers with zero spend. Filtering to purchasers would condition
-on a post-treatment outcome and change the estimand.
+The source describes random assignment, and the notebook treats each row's
+`segment` value as its assignment. On that basis, customers are independent
+analysis units and no cluster IDs are needed. The released file has no
+separate delivery or compliance field, so that assumption cannot be checked
+from the CSV. Every assigned customer remains in the analysis, including
+non-buyers with zero spend. Filtering to purchasers would condition on a
+post-treatment outcome and change the estimand.
 
 ```python
 result = bootstrap_two_sample(
@@ -52,9 +61,25 @@ The control contains 21,306 customers and the treatment contains 21,387.
 | Relative conversion lift | — | — | +54.3% | [+23.6%, +94.5%] |
 | Spend per assigned customer | $0.653 | $1.077 | +$0.424 | [+$0.176, +$0.683] |
 
-For this predefined contrast, all three absolute-effect intervals are above
-zero. Relative lift is less stable because the control conversion rate is
-small; the absolute percentage-point effect is the safer primary result.
+For this explicit contrast, all three absolute-effect intervals exclude zero.
+Relative lift is less stable because the control conversion rate is small;
+the absolute percentage-point effect is the safer primary result.
+
+## Spend sparsity and concentration
+
+Mean spend per assigned customer is the relevant assignment-based estimand,
+but the observed revenue is sparse and concentrated:
+
+| Arm | Customers | Purchasers | Purchase rate | Maximum spend | Share from top 50 spenders |
+|---|---:|---:|---:|---:|---:|
+| No E-Mail | 21,306 | 122 | 0.573% | $499 | 72.3% |
+| Womens E-Mail | 21,387 | 189 | 0.884% | $499 | 57.1% |
+
+This makes the average-spend estimate sensitive to a small number of large
+orders. The top-50 threshold is a descriptive, non-prespecified concentration
+check rather than another inferential result. It does not justify analyzing
+purchasers only: purchase is itself a post-assignment outcome, and that filter
+would answer a different question.
 
 ## What this example establishes
 
@@ -67,11 +92,18 @@ The case study demonstrates a realistic workflow:
 5. report absolute effects and intervals before relative lift;
 6. separate statistical uncertainty from business interpretation.
 
-It does not prove 95% coverage because the population treatment effect is not
-known for a real dataset. Coverage is assessed with known-truth simulations in
-[Benchmarks](benchmarks.md). The result is also not a p-value, a
-multiple-testing correction, or evidence that the campaign will generalize to
-another customer population.
+The assignment-effect interpretation relies on the source's stated
+randomization, `segment` representing assignment, no interference between
+customers, and valid outcome recording. Those conditions cannot be audited
+from the released CSV alone. The reported bootstrap intervals express
+superpopulation-style sampling uncertainty; they are not exact
+randomization-inference intervals or p-values.
+
+The example does not prove 95% coverage because the population treatment
+effect is not known for a real dataset. Coverage is assessed with known-truth
+simulations in [Benchmarks](benchmarks.md). The analysis has no
+multiple-testing correction and is not evidence that the campaign will
+generalize to another customer population.
 
 ## Run it
 

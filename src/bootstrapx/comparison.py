@@ -117,9 +117,16 @@ def _as_scalar(value: Any, *, source: str) -> float:
     return result
 
 
-def _ratio_denominator_is_zero(control_estimate: float, treatment_estimate: float) -> bool:
-    scale = max(1.0, abs(control_estimate), abs(treatment_estimate))
-    return bool(abs(control_estimate) <= np.finfo(np.float64).eps * scale)
+def _ratio_denominator_is_zero(control_estimate: float) -> bool:
+    """Return whether a finite floating-point denominator is exactly zero.
+
+    Near-zero values can make a ratio statistically unstable, but rejecting
+    them using an absolute tolerance would make the API depend on the units in
+    which the same data is expressed. Non-zero denominators are therefore
+    evaluated normally; overflow or another non-finite result is rejected by
+    ``_evaluate_effect``.
+    """
+    return bool(control_estimate == 0.0)
 
 
 def _resolve_effect(effect: str | Effect) -> tuple[Effect, str]:
@@ -134,9 +141,9 @@ def _resolve_effect(effect: str | Effect) -> tuple[Effect, str]:
         if name == "ratio":
 
             def ratio(control: float, treatment: float) -> float:
-                if _ratio_denominator_is_zero(control, treatment):
+                if _ratio_denominator_is_zero(control):
                     raise ValueError(
-                        "ratio is undefined because a control estimate is zero or nearly zero. "
+                        "ratio is undefined because a control estimate is zero. "
                         "Use effect='difference' or a custom stabilized effect."
                     )
                 return treatment / control
@@ -144,10 +151,10 @@ def _resolve_effect(effect: str | Effect) -> tuple[Effect, str]:
             return ratio, name
 
         def relative_lift(control: float, treatment: float) -> float:
-            if _ratio_denominator_is_zero(control, treatment):
+            if _ratio_denominator_is_zero(control):
                 raise ValueError(
-                    "relative_lift is undefined because a control estimate is zero or nearly "
-                    "zero. Use effect='difference' or a custom stabilized effect."
+                    "relative_lift is undefined because a control estimate is zero. "
+                    "Use effect='difference' or a custom stabilized effect."
                 )
             return (treatment - control) / control
 
@@ -429,8 +436,10 @@ def bootstrap_two_sample(
     Notes
     -----
     Ratio and relative-lift effects are rejected if the observed or any
-    resampled control statistic is zero or numerically indistinguishable from
-    zero. No invalid replicates are silently discarded.
+    resampled control statistic is zero. Near-zero denominators are allowed
+    because any fixed tolerance would depend on measurement units, but they
+    can produce unstable intervals. No invalid replicates are silently
+    discarded.
     """
     if not callable(statistic):
         raise TypeError("statistic must be callable.")

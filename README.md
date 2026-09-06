@@ -45,8 +45,10 @@ The audited 0.5.0 experiment suite completed 9,900 interval trials without a
 failure or invalid result. Across the 15 cells directly matched with SciPy,
 the mean absolute coverage difference was 0.42 percentage points and the
 largest was 1.67 points. On the recorded Apple Silicon runtime grid,
-bootstrapx was 1.28–2.89× faster, but these machine- and workload-specific
-measurements are not a blanket performance guarantee. See the
+bootstrapx was 1.28–2.89× faster than SciPy's scalar (`vectorized=False`)
+configuration. This does not establish an advantage over vectorized SciPy;
+these machine- and workload-specific measurements are not a blanket
+performance guarantee. See the
 [benchmark evidence](https://artyerokhin.github.io/bootstrapx/benchmarks/)
 for methods, uncertainty, difficult cases, and reproducible inputs.
 
@@ -114,13 +116,17 @@ This estimates the treatment-minus-control conversion difference directly.
 Use `effect="relative_lift"` only when a ratio to the control estimate is
 scientifically meaningful and the control baseline is safely away from zero.
 
-### Real-world A/B walkthrough
+### Complete A/B walkthroughs
 
-The [Hillstrom email case study](https://artyerokhin.github.io/bootstrapx/real-world-ab/)
-analyzes 64,000 customers from a public randomized marketing experiment. Its
-[executable notebook](notebooks/06_real_world_ab_hillstrom.ipynb) downloads and
-verifies the original source, then estimates visit, conversion, relative-lift,
-and spend effects without committing the raw customer-level CSV.
+Start with the [product A/B reference](https://artyerokhin.github.io/bootstrapx/product-ab/).
+Its [executable notebook](notebooks/07_product_ab_reference.ipynb) defines one
+primary metric and decision threshold before generating a reproducible
+user-randomized experiment whose true effect is known.
+
+Then use the [Hillstrom real-data case study](https://artyerokhin.github.io/bootstrapx/real-world-ab/)
+to see what changes when the truth is unknown and conversion and revenue are
+sparse. Its [notebook](notebooks/06_real_world_ab_hillstrom.ipynb) verifies the
+public source and keeps the raw customer-level CSV out of the repository.
 
 ### pandas accessor
 

@@ -11,9 +11,11 @@ A speed benchmark cannot establish statistical correctness, and increasing
 `n_resamples` reduces Monte Carlo noise but does not repair systematic
 undercoverage caused by an unsuitable method.
 
-The [real-world A/B case study](real-world-ab.md) serves a fourth purpose:
-showing an end-to-end practitioner workflow on public randomized data. Its
-true population effect is unknown, so it is not included in coverage claims.
+The [product A/B reference](product-ab.md) and
+[real-world A/B case study](real-world-ab.md) serve a fourth purpose: showing
+end-to-end practitioner workflows. The first has a known synthetic effect; the
+second has an unknown real population effect. Neither replaces the larger,
+versioned coverage study below.
 
 ## 0.5.0 experiment-comparison evidence
 
@@ -59,8 +61,9 @@ invalid/failing trials, random-stream policy, versions, commit, platform, and
 elapsed time.
 
 Runtime and `tracemalloc` results are produced by
-`benchmarks/bench_two_sample.py`. They compare mean-difference workflows with
-SciPy and track clustered runtime separately.
+`benchmarks/bench_two_sample.py`. New runs report scalar SciPy with its
+default batch plus a vectorized SciPy variant using the same bounded batch
+heuristic as bootstrapx, and track clustered runtime separately.
 
 After that review, generate the documentation figures from the recorded CSV
 files rather than copying numbers by hand:
@@ -108,9 +111,12 @@ and [environment metadata](https://github.com/artyerokhin/bootstrapx/blob/main/b
 
 Each timing cell used 4,999 resamples, one unmeasured warm-up, and the median
 of five measured calls. The statistic was `np.mean` and the effect was a
-treatment-minus-control difference.
+treatment-minus-control difference. This recorded run compared bootstrapx
+with SciPy's scalar `vectorized=False` configuration. It did not benchmark
+SciPy's vectorized path, so the table must not be read as a general speed
+comparison with SciPy.
 
-| Method | Control / treatment rows | bootstrapx (ms) | SciPy (ms) | SciPy / bootstrapx |
+| Method | Control / treatment rows | bootstrapx (ms) | SciPy scalar (ms) | SciPy scalar / bootstrapx |
 |---|---:|---:|---:|---:|
 | Percentile | 200 / 250 | 39.27 | 50.32 | 1.28× |
 | BCa | 200 / 250 | 41.69 | 53.67 | 1.29× |
@@ -121,12 +127,13 @@ treatment-minus-control difference.
 ![Two-sample runtime](assets/benchmarks/v0.5.0/runtime.png)
 
 The `tracemalloc` peaks were 0.137 MB versus 85.867 MB at 500 control rows,
-and 0.097 MB versus 343.308 MB at 2,000 rows. This narrowly demonstrates the
-allocation benefit of bounded batches in this configuration. `tracemalloc`
-is not process RSS and does not cover every native allocation, so the result
-must not be presented as total-memory usage. Cluster-only bootstrapx calls
-took 120.01 ms for 40 control clusters and 452.13 ms for 200 clusters, with
-five rows per cluster.
+and 0.097 MB versus 343.308 MB at 2,000 rows. The SciPy side again used the
+scalar path with its default batch. Because SciPy also exposes `batch`, these
+numbers demonstrate only this recorded configuration, not a unique or
+universal bootstrapx memory advantage. `tracemalloc` is not process RSS and
+does not cover every native allocation, so the result must not be presented
+as total-memory usage. Cluster-only bootstrapx calls took 120.01 ms for 40
+control clusters and 452.13 ms for 200 clusters, with five rows per cluster.
 
 Auditable inputs: [runtime CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/runtime/runtime.csv),
 [memory CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/runtime/memory.csv),

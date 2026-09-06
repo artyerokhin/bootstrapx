@@ -1,0 +1,5 @@
+include notebooks/04_ab_test_cluster_bootstrap.ipynb
+include notebooks/06_real_world_ab_hillstrom.ipynb
+include notebooks/07_product_ab_reference.ipynb
+include pytest.ini
+include tests/conftest.py

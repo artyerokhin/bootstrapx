@@ -36,7 +36,8 @@ nav:
   - First Analysis: getting-started.md
   - Choose a Method: methods.md
   - Experiment Comparisons: ab-testing.md
-  - Real-world A/B Case Study: real-world-ab.md
+  - Product A/B Reference: product-ab.md
+  - Real-data A/B Case Study: real-world-ab.md
   - Time Series: time-series.md
   - Integrations and Performance: integrations.md
   - Current Limitations: limitations.md

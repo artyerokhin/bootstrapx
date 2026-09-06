@@ -197,13 +197,18 @@ Compact exports contain arm estimates, the effect estimate and interval,
 standard error, sample sizes, method, design, and cluster counts. The full
 bootstrap distribution is copied only when explicitly requested.
 
-## Complete real-data walkthrough
+## Complete walkthroughs
 
-The [Hillstrom email case study](real-world-ab.md) applies this workflow to
+Start with the [product A/B reference](product-ab.md). It fixes the analysis
+unit, primary metric, estimand, interval, and minimum practical effect before
+generating data. Because the experiment is synthetic, its true effect is known
+and the interpretation can be checked directly.
+
+The [Hillstrom email case study](real-world-ab.md) then applies the same API to
 64,000 customers from a public randomized marketing experiment. It covers
-source verification, a predefined contrast, conversion difference, relative
-lift, spend per assigned customer, and the distinction between real-data
-interpretation and known-truth coverage validation.
+source verification, an explicit exploratory contrast, conversion difference,
+relative lift, spend concentration, and the additional uncertainty present in
+real archived data.
 
 ## Current experiment boundaries
 

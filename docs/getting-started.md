@@ -86,8 +86,9 @@ print(comparison.confidence_interval)
 The default resamples both arms independently. Set `paired=True` only for
 genuine matched rows; provide both cluster-ID arrays when repeated events from
 the same randomized unit must stay together. Continue with
-[Experiment comparisons](ab-testing.md), then reproduce the
-[real-world Hillstrom case study](real-world-ab.md).
+[Experiment comparisons](ab-testing.md), reproduce the controlled
+[product A/B reference](product-ab.md), and then inspect the limitations in
+the [Hillstrom real-data case study](real-world-ab.md).
 
 ## Checks before trusting the result
 
