@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [0.5.0] — 2026-09-06
+## [0.5.0] — 2026-09-07
 
 ### Added
 - `bootstrap_two_sample()` estimates an explicit treatment-versus-control
