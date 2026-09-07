@@ -11,6 +11,138 @@ A speed benchmark cannot establish statistical correctness, and increasing
 `n_resamples` reduces Monte Carlo noise but does not repair systematic
 undercoverage caused by an unsuitable method.
 
+The [product A/B reference](product-ab.md) and
+[real-world A/B case study](real-world-ab.md) serve a fourth purpose: showing
+end-to-end practitioner workflows. The first has a known synthetic effect; the
+second has an unknown real population effect. Neither replaces the larger,
+versioned coverage study below.
+
+## 0.5.0 experiment-comparison evidence
+
+The 0.5.0 suite is separate from the audited 0.4.4 one-sample results. It
+checks independent, paired, and clustered comparisons; difference and
+relative-lift effects; normal, lognormal, exponential, and Bernoulli data; and
+percentile, basic, and BCa intervals. Applicable independent/paired cells are
+matched with SciPy. Cluster cells have no SciPy row because SciPy does not
+provide a cluster-ID experiment interface.
+
+Run the pipeline smoke test:
+
+```bash
+python benchmarks/run_comparison_release.py \
+  --profile quick \
+  --output-dir benchmark_runs/v0.5.0-quick
+```
+
+The quick profile uses only two datasets per selected coverage cell and is not
+statistical evidence. Before publishing 0.5.0, run the checkpointed release
+profile from a clean commit:
+
+```bash
+python benchmarks/run_comparison_release.py \
+  --profile release \
+  --output-dir benchmark_runs/v0.5.0-release
+```
+
+Resume the identical commit, environment, and configuration after an
+interruption:
+
+```bash
+python benchmarks/run_comparison_release.py \
+  --profile release \
+  --output-dir benchmark_runs/v0.5.0-release \
+  --resume
+```
+
+The release profile uses 300 datasets and 4,999 resamples per cell. The
+optional `--profile statistical` uses 1,000 datasets per cell and can take
+several times longer. Both profiles record empirical coverage, Wilson bounds,
+invalid/failing trials, random-stream policy, versions, commit, platform, and
+elapsed time.
+
+Runtime and `tracemalloc` results are produced by
+`benchmarks/bench_two_sample.py`. New runs report scalar SciPy with its
+default batch plus a vectorized SciPy variant using the same bounded batch
+heuristic as bootstrapx, and track clustered runtime separately.
+
+After that review, generate the documentation figures from the recorded CSV
+files rather than copying numbers by hand:
+
+```bash
+python benchmarks/plot_comparison_results.py \
+  --input-dir benchmark_runs/v0.5.0-release \
+  --output-dir docs/assets/benchmarks/v0.5.0
+```
+
+### Audited 0.5.0 statistical behavior
+
+The versioned release run measured commit `c14fe63` on Apple Silicon/macOS
+15.7.4 with Python 3.11.5, NumPy 1.26.4, and SciPy 1.11.1. It completed all 33
+planned cells: 300 independently generated datasets and 4,999 resamples per
+cell, for 9,900 valid intervals in total. No trial failed or produced an
+invalid interval.
+
+For the 15 independent and paired cells with a direct SciPy counterpart:
+
+| Method | bootstrapx mean coverage | SciPy mean coverage |
+|---|---:|---:|
+| Percentile | 93.87% | 93.67% |
+| Basic | 93.07% | 93.13% |
+| BCa | 93.60% | 93.40% |
+
+The mean absolute matched difference was 0.42 percentage points and the
+largest difference was 1.67 points. Cluster coverage, measured only for
+bootstrapx, was 93.67% for percentile, 93.00% for basic, and 93.33% for BCa.
+This supports implementation agreement, not a universal 95% guarantee.
+
+The difficult cells are important context: basic intervals for the
+exponential median covered 91.67%, while Bernoulli conversion and paired
+normal cells were near 92–93%. SciPy showed similar undercoverage in the
+matched cells. Bootstrap coverage depends on the statistic, distribution,
+sample size, and interval method; inspect the Wilson bounds in the CSV instead
+of treating the nominal level as a promise.
+
+![Two-sample empirical coverage](assets/benchmarks/v0.5.0/coverage.png)
+
+Auditable inputs: [coverage CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/coverage/coverage.csv)
+and [environment metadata](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/coverage/metadata.json).
+
+### Audited 0.5.0 runtime and allocation evidence
+
+Each timing cell used 4,999 resamples, one unmeasured warm-up, and the median
+of five measured calls. The statistic was `np.mean` and the effect was a
+treatment-minus-control difference. This recorded run compared bootstrapx
+with both SciPy's scalar `vectorized=False` configuration and SciPy's
+vectorized path using the same bounded-batch heuristic as bootstrapx. Values
+above 1 in either ratio column mean bootstrapx was faster; values below 1 mean
+the corresponding SciPy configuration was faster.
+
+| Method | Control / treatment rows | bootstrapx (ms) | SciPy scalar (ms) | SciPy bounded-vectorized (ms) | Scalar / bootstrapx | Vectorized / bootstrapx |
+|---|---:|---:|---:|---:|---:|---:|
+| Percentile | 200 / 250 | 37.74 | 48.34 | 17.93 | 1.28× | 0.48× |
+| BCa | 200 / 250 | 40.48 | 51.00 | 19.14 | 1.26× | 0.47× |
+| Percentile | 1,000 / 1,250 | 77.94 | 152.21 | 121.74 | 1.95× | 1.56× |
+| BCa | 1,000 / 1,250 | 86.74 | 179.34 | 159.84 | 2.07× | 1.84× |
+| Percentile | 10,000 / 12,500 | 535.89 | 1,392.56 | 1,201.87 | 2.60× | 2.24× |
+
+![Two-sample runtime](assets/benchmarks/v0.5.0/runtime.png)
+
+The `tracemalloc` peaks for bootstrapx, scalar SciPy, and bounded-vectorized
+SciPy were respectively 0.137 MB, 85.867 MB, and 0.222 MB at 500 control rows;
+at 2,000 rows they were 0.097 MB, 343.308 MB, and 0.805 MB. The scalar SciPy
+path used its default batch, while the vectorized path used the matched bounded
+batch. These figures demonstrate only the recorded configurations, not a
+unique or universal bootstrapx memory advantage. `tracemalloc` is not process
+RSS and does not cover every native allocation, so the result must not be
+presented as total-memory usage. Cluster-only bootstrapx calls took 120.38 ms
+for 40 control clusters and 439.09 ms for 200 clusters, with five rows per
+cluster.
+
+Auditable inputs: [runtime CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/runtime/runtime.csv),
+[memory CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/runtime/memory.csv),
+[cluster runtime CSV](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/runtime/cluster_runtime.csv),
+and [environment metadata](https://github.com/artyerokhin/bootstrapx/blob/main/benchmark_runs/v0.5.0-release/runtime/metadata.json).
+
 ## Audited 0.4.4 release runtime
 
 Measured from the versioned 0.4.4 release run on Apple Silicon/macOS 15.7.4,

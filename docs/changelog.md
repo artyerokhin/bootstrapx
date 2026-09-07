@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.5.0 — 2026-09-07
+
+### Experiment comparisons
+
+- A native two-sample API estimates treatment-minus-control differences,
+  ratios, relative lift, and custom scalar effects.
+- Independent, paired, and separately clustered experiment designs have
+  explicit resampling behavior and result metadata.
+- Percentile, basic, and BCa intervals are supported; clustered BCa deletes
+  complete clusters in its jackknife step.
+- New coverage and runtime suites compare applicable workflows with SciPy,
+  record invalid/failing trials, checkpoint long runs, and preserve metadata.
+- The audited release evidence includes 9,900 valid interval trials, matched
+  runtime/allocation measurements, exact environment metadata, and plots.
+- A controlled product A/B reference fixes one primary metric, effect,
+  interval, and decision threshold before generating data with known truth.
+- A real-world Hillstrom notebook retrieves a checksum-verified public
+  experiment and demonstrates the extra boundaries required for archived
+  data, sparse conversion, and concentrated spend.
+- Experiment documentation now explains analysis units, user aggregation,
+  ratio instability, paired data, and repeated events.
+- The clustered A/B notebook now demonstrates the native two-sample cluster
+  interface with independent experiment arms.
+
 ## 0.4.4 — 2026-08-14
 
 ### Practical workflow polish

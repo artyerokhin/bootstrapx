@@ -186,6 +186,54 @@ def bca_interval(
     )
 
 
+def bca_interval_from_jackknife(
+    boot_stats: FloatArray,
+    theta_hat: float,
+    jackknife_groups: list[FloatArray],
+    confidence_level: float = 0.95,
+) -> ConfidenceInterval:
+    """Construct a BCa interval from one or more jackknife groups.
+
+    Independent samples contribute separate leave-one-out groups using the
+    multi-sample acceleration formula from Efron & Tibshirani (1993), Eq.
+    15.36. A paired comparison contributes one group of paired deletions.
+    """
+    alpha = 1.0 - confidence_level
+    less = float(np.sum(boot_stats < theta_hat))
+    equal = float(np.sum(boot_stats == theta_hat))
+    proportion = np.clip((less + 0.5 * equal) / len(boot_stats), 1e-10, 1 - 1e-10)
+    z0 = float(sp_stats.norm.ppf(proportion))
+
+    numerator = 0.0
+    denominator = 0.0
+    for values in jackknife_groups:
+        n = len(values)
+        influences = (n - 1) * (values.mean() - values)
+        numerator += float(np.sum(influences**3)) / n**3
+        denominator += float(np.sum(influences**2)) / n**2
+    acceleration = numerator / (6.0 * denominator**1.5) if denominator > 0.0 else 0.0
+
+    def adjusted_probability(z_alpha: float) -> float:
+        shifted = z0 + z_alpha
+        divisor = 1.0 - acceleration * shifted
+        if divisor == 0.0:
+            raise ValueError("BCa interval is undefined for this jackknife distribution.")
+        probability = float(sp_stats.norm.cdf(z0 + shifted / divisor))
+        if not np.isfinite(probability):
+            raise ValueError("BCa interval is undefined for this jackknife distribution.")
+        return probability
+
+    low_probability = adjusted_probability(float(sp_stats.norm.ppf(alpha / 2)))
+    high_probability = adjusted_probability(float(sp_stats.norm.ppf(1.0 - alpha / 2)))
+    if low_probability > high_probability:
+        raise ValueError("BCa adjusted quantiles are reversed for this dataset.")
+    return ConfidenceInterval(
+        low=float(np.percentile(boot_stats, 100 * low_probability)),
+        high=float(np.percentile(boot_stats, 100 * high_probability)),
+        method="bca",
+    )
+
+
 # ---------------------------------------------------------------------------
 # Studentized (bootstrap-t) interval
 # ---------------------------------------------------------------------------

@@ -30,7 +30,11 @@ jobs:
             benchmarks/bench_coverage_accuracy.py \
             benchmarks/bench_numba.py \
             benchmarks/run_release.py \
-            benchmarks/plot_release_results.py
+            benchmarks/plot_release_results.py \
+            benchmarks/bench_two_sample.py \
+            benchmarks/bench_two_sample_coverage.py \
+            benchmarks/run_comparison_release.py \
+            benchmarks/plot_comparison_results.py
 
       - name: Lint
         run: |
@@ -39,7 +43,11 @@ jobs:
             benchmarks/bench_coverage_accuracy.py \
             benchmarks/bench_numba.py \
             benchmarks/run_release.py \
-            benchmarks/plot_release_results.py
+            benchmarks/plot_release_results.py \
+            benchmarks/bench_two_sample.py \
+            benchmarks/bench_two_sample_coverage.py \
+            benchmarks/run_comparison_release.py \
+            benchmarks/plot_comparison_results.py
 
   typing:
     name: Strict typing
@@ -96,7 +104,9 @@ jobs:
         run: pytest --cov=bootstrapx --cov-report=xml --cov-report=term-missing --cov-fail-under=85
 
       - name: Smoke-test coverage benchmark pipeline
-        run: python benchmarks/bench_coverage_accuracy.py --smoke
+        run: |
+          python benchmarks/bench_coverage_accuracy.py --smoke
+          python benchmarks/bench_two_sample_coverage.py --smoke
 
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2
@@ -144,7 +154,7 @@ jobs:
           pytest
           pip check
           python -m compileall -q src/bootstrapx
-          python -c "from bootstrapx import *; assert callable(bootstrap); assert __version__"
+          python -c "from bootstrapx import *; assert callable(bootstrap); assert callable(bootstrap_two_sample); assert __version__"
 
   optional-numba:
     name: Optional Numba acceleration
@@ -182,8 +192,29 @@ jobs:
           python -m build
           twine check dist/*
 
+      - name: Verify source archive contents
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import tarfile
+
+          archives = list(Path("dist").glob("*.tar.gz"))
+          assert len(archives) == 1, f"Expected one sdist, found: {archives}"
+          required = {
+              "notebooks/04_ab_test_cluster_bootstrap.ipynb",
+              "notebooks/06_real_world_ab_hillstrom.ipynb",
+              "notebooks/07_product_ab_reference.ipynb",
+              "pytest.ini",
+              "tests/conftest.py",
+          }
+          with tarfile.open(archives[0]) as archive:
+              names = archive.getnames()
+          missing = {path for path in required if not any(name.endswith(path) for name in names)}
+          assert not missing, f"Source archive is missing: {sorted(missing)}"
+          PY
+
       - name: Install wheel and smoke test
         run: |
           pip install --force-reinstall dist/*.whl
           pip check
-          python -c "import bootstrapx, compileall; assert compileall.compile_dir(bootstrapx.__path__[0], quiet=1); print(bootstrapx.__version__)"
+          python -c "import bootstrapx, compileall; assert compileall.compile_dir(bootstrapx.__path__[0], quiet=1); assert callable(bootstrapx.bootstrap_two_sample); print(bootstrapx.__version__)"

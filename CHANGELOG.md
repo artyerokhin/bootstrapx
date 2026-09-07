@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.0] — 2026-09-07
+
+### Added
+- `bootstrap_two_sample()` estimates an explicit treatment-versus-control
+  effect for independent, paired, or separately clustered samples.
+- Built-in difference, ratio, and relative-lift effects, plus custom scalar
+  effect callables.
+- `TwoSampleBootstrapResult` reports both arm estimates, the effect interval,
+  bootstrap standard error and distribution, experiment design metadata, and
+  compact dictionary/DataFrame exports.
+- Percentile, basic, and multi-sample BCa intervals. Clustered BCa uses
+  leave-one-cluster-out acceleration rather than deleting individual rows.
+- A resumable comparison coverage study and separate runtime/`tracemalloc`
+  benchmark with exact version, commit, dependency, and environment metadata.
+- Versioned 0.5.0 evidence covering 9,900 interval trials plus matched runtime
+  and allocation measurements against SciPy.
+- A reproducible Hillstrom email-experiment notebook downloads and verifies
+  the public source, then estimates visit, conversion, lift, and spend effects.
+- A reproducible product A/B reference notebook defines its user-level
+  estimand and decision threshold before generating an experiment with known
+  truth, then separates a single-run decision from a coverage smoke check.
+
+### Changed
+- Experiment guidance now starts from the randomization and analysis unit and
+  distinguishes independent, paired, and repeated-event workflows.
+- The clustered A/B notebook now uses the native two-sample API and separate
+  experiment arms instead of reasoning from a precomputed row-wise difference.
+- CI runs a two-sample statistical smoke benchmark in addition to the existing
+  one-sample coverage pipeline.
+- The Hillstrom case study now distinguishes an explicit example contrast from
+  preregistration, states the assumptions behind its assignment-effect
+  interpretation, and reports spend sparsity and concentration.
+- Documentation now presents the controlled product example as the primary
+  A/B walkthrough and Hillstrom as its deliberately messier real-data
+  companion.
+
+### Fixed
+- Ratio and relative-lift denominator validation is invariant to measurement
+  scale and no longer depends on the magnitude of the treatment estimate.
+- Source distributions include the release-facing notebooks required by their
+  bundled tests, and CI verifies those archive contents before publication.
+- Two-sample performance evidence reports both scalar SciPy and vectorized
+  SciPy with a matched bounded batch, avoiding a misleading blanket speed claim.
+
+### Tests
+- Deterministic resampling, batch-size invariance, SciPy reference comparisons,
+  cluster deletion, exports, guardrails, and focused coverage simulations for
+  independent, paired, and clustered designs.
+
 ## [0.4.4] — 2026-08-14
 
 ### Added

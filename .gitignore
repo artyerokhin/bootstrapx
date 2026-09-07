@@ -23,6 +23,7 @@ wheels/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+/data/
 
 # Unit test / coverage reports
 htmlcov/
@@ -50,10 +51,12 @@ env/
 # site
 site/
 
-# Local benchmark runs. The audited v0.4.4 release run is versioned evidence.
+# Local benchmark runs. Audited release directories are versioned evidence.
 benchmark_runs/*
 !benchmark_runs/v0.4.4-release/
 !benchmark_runs/v0.4.4-release/**
+!benchmark_runs/v0.5.0-release/
+!benchmark_runs/v0.5.0-release/**
 
 # Legacy benchmark plots and CSVs generated in-place by manual scripts.
 benchmarks/fig_*.png

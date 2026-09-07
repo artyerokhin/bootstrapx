@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bootstrapx-lib"
-version = "0.4.4"
-description = "Practical bootstrap uncertainty estimation: 16 methods, sklearn CV, pandas accessor."
+version = "0.5.0"
+description = "Practical bootstrap uncertainty estimation for experiments, time series, and grouped data."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -55,7 +55,7 @@ dev = [
     "scikit-learn>=1.2",
 ]
 docs  = ["mkdocs-material>=9", "mkdocstrings[python]>=0.24"]
-bench = ["asv", "virtualenv"]
+bench = ["asv", "virtualenv", "matplotlib>=3.7"]
 
 [project.urls]
 Homepage      = "https://github.com/artyerokhin/bootstrapx"

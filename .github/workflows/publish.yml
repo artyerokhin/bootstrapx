@@ -85,12 +85,33 @@ jobs:
         mkdocs build --strict
         pip check
         python -m compileall -q src/bootstrapx
-        python -c "from bootstrapx import bootstrap; import bootstrapx; assert callable(bootstrap); assert bootstrapx.__version__"
+        python -c "from bootstrapx import bootstrap, bootstrap_two_sample; import bootstrapx; assert callable(bootstrap); assert callable(bootstrap_two_sample); assert bootstrapx.__version__"
 
     - name: Build package
       run: |
         python -m build
         twine check dist/*
+
+    - name: Verify source archive contents
+      run: |
+        python - <<'PY'
+        from pathlib import Path
+        import tarfile
+
+        archives = list(Path("dist").glob("*.tar.gz"))
+        assert len(archives) == 1, f"Expected one sdist, found: {archives}"
+        required = {
+            "notebooks/04_ab_test_cluster_bootstrap.ipynb",
+            "notebooks/06_real_world_ab_hillstrom.ipynb",
+            "notebooks/07_product_ab_reference.ipynb",
+            "pytest.ini",
+            "tests/conftest.py",
+        }
+        with tarfile.open(archives[0]) as archive:
+            names = archive.getnames()
+        missing = {path for path in required if not any(name.endswith(path) for name in names)}
+        assert not missing, f"Source archive is missing: {sorted(missing)}"
+        PY
 
     - name: Publish to PyPI
       if: env.PYPI_VERSION_EXISTS != 'true'
