@@ -273,6 +273,21 @@ def test_result_exports_are_compact_and_independent(experiment_data) -> None:
     distribution = complete["bootstrap_distribution"]
     np.testing.assert_array_equal(distribution, result.bootstrap_distribution)
     assert not np.shares_memory(distribution, result.bootstrap_distribution)
+
+
+def test_result_to_frame_is_compact(experiment_data) -> None:
+    pytest.importorskip("pandas")
+    control, treatment = experiment_data
+    result = bootstrap_two_sample(
+        control,
+        treatment,
+        np.mean,
+        method="percentile",
+        n_resamples=50,
+        random_state=10,
+    )
+    compact = result.to_dict()
+
     assert result.to_frame().shape == (1, len(compact))
 
 
