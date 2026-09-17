@@ -60,6 +60,16 @@ The score distribution is based on varying out-of-bag subsets. Its standard
 deviation is not automatically a confidence interval for future deployment
 performance.
 
+`BootstrapCV` assumes independent rows and rejects non-None `groups` rather
+than silently splitting observations from the same entity across train and
+test. Use a group-aware cross-validator for repeated users/accounts and a
+time-aware splitter for temporal validation. Cluster bootstrap for an interval
+is a separate workflow, not a group-aware machine-learning splitter.
+
+The approximately 63.2% unique training fraction is an expectation for large
+samples, not a per-split guarantee. `cross_val_score(..., cv=BootstrapCV(...))`
+reports OOB scores; it does not automatically compute the .632 estimator.
+
 ## When Numba helps
 
 The core library does not require Numba. Installing

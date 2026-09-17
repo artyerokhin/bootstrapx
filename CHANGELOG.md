@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.1] — 2026-09-17
+
+### Fixed
+- `BootstrapCV` rejects unsupported `groups` instead of silently allowing
+  repeated entities to appear in both training and out-of-bag test sets.
+- Compiled Numba index kernels and Python fallbacks share an explicit callable
+  type contract compatible with typed and untyped Numba releases.
+- Documentation distinguishes OOB scores from the .632 estimator, corrects
+  the core dependency list and product-example seed, and makes the published
+  0.5.0 benchmark instructions retrospective.
+- Removed shadowed pytest configuration from `pyproject.toml`; `pytest.ini`
+  remains the authoritative, unchanged test configuration.
+
+### Tests
+- CI checks strict typing both without Numba and with the optional Numba extra.
+- Offline release notebooks execute in fresh kernels and verify documented
+  results; a separate manual workflow checks the checksum-verified Hillstrom
+  download and complete analysis without making PR checks depend on its host.
+- Regression checks cover rejection of groups and unchanged seeded splits
+  when groups are omitted or explicitly None.
+- Compiled index kernels are checked against Python references for identical
+  seeded index sequences.
+
 ## [0.5.0] — 2026-09-07
 
 ### Added

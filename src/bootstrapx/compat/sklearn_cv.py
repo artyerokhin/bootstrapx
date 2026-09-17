@@ -23,8 +23,9 @@ Usage
 Notes
 -----
 Unlike k-fold, bootstrap splits allow an observation to appear multiple times
-in the training set and guarantees ~63.2% unique training samples per split
-(the "0.632 bootstrap estimator").
+in the training set. The expected unique training fraction is approximately
+63.2% for large samples, not a guarantee for each split. This splitter does
+not itself calculate the .632 estimator.
 """
 
 from __future__ import annotations
@@ -67,6 +68,8 @@ class BootstrapCV(BaseCrossValidator):  # type: ignore[misc]
     -----
     - Usable with ``cross_val_score``, ``cross_validate``, ``GridSearchCV``.
     - OOB test set size ≈ 0.368 × n per split (Poisson approximation).
+    - Independent rows only: non-None ``groups`` are rejected. This splitter
+      does not provide group-aware or time-series-safe validation.
     - For the 0.632 bootstrap estimator, average
       ``0.368 * train_score + 0.632 * oob_score`` across splits.
     """
@@ -88,6 +91,11 @@ class BootstrapCV(BaseCrossValidator):  # type: ignore[misc]
     def split(
         self, X: Any, y: Any = None, groups: Any = None
     ) -> Generator[tuple[IntArray, IntArray], None, None]:
+        if groups is not None:
+            raise ValueError(
+                "BootstrapCV does not support groups. Use a group-aware "
+                "cross-validator for repeated observations per entity."
+            )
         X, y, groups = indexable(X, y, groups)
         n = len(X)
         if n < 2:

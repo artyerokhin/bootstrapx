@@ -35,8 +35,8 @@ python benchmarks/run_comparison_release.py \
 ```
 
 The quick profile uses only two datasets per selected coverage cell and is not
-statistical evidence. Before publishing 0.5.0, run the checkpointed release
-profile from a clean commit:
+statistical evidence. To reproduce the 0.5.0 release study, run the checkpointed
+release profile from the corresponding clean release checkout:
 
 ```bash
 python benchmarks/run_comparison_release.py \

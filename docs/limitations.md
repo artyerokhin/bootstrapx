@@ -40,6 +40,13 @@ Input data must be finite. NaN and infinite values are rejected instead of
 being silently dropped or imputed. Apply a documented missing-data policy
 before calling bootstrapx.
 
+## Machine-learning validation
+
+`BootstrapCV` resamples independent rows and rejects non-None `groups`.
+It is not a group-aware or time-series-safe cross-validator. Its OOB score
+distribution is not automatically a confidence interval or a .632 estimate.
+See [scikit-learn integration](integrations.md#scikit-learn).
+
 ## Dependent data
 
 Block and sieve methods assume that their time-series model is appropriate.

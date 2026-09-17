@@ -9,7 +9,7 @@ Hotfix:
 from __future__ import annotations
 
 from collections.abc import Callable, Generator
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 from numpy.typing import NDArray
@@ -60,8 +60,7 @@ def _stat_idx_python(n: int, mb: float, seed: int) -> IntArray:
 try:
     from numba import njit
 
-    @njit(cache=True)  # type: ignore[untyped-decorator]
-    def _mbb_idx(n: int, bl: int, seed: int) -> IntArray:
+    def _mbb_idx_kernel(n: int, bl: int, seed: int) -> IntArray:
         np.random.seed(seed)
         out = np.empty(n, dtype=np.int64)
         pos = 0
@@ -74,8 +73,7 @@ try:
                 pos += 1
         return out
 
-    @njit(cache=True)  # type: ignore[untyped-decorator]
-    def _cbb_idx(n: int, bl: int, seed: int) -> IntArray:
+    def _cbb_idx_kernel(n: int, bl: int, seed: int) -> IntArray:
         np.random.seed(seed)
         out = np.empty(n, dtype=np.int64)
         pos = 0
@@ -88,8 +86,7 @@ try:
                 pos += 1
         return out
 
-    @njit(cache=True)  # type: ignore[untyped-decorator]
-    def _stat_idx(n: int, mb: float, seed: int) -> IntArray:
+    def _stat_idx_kernel(n: int, mb: float, seed: int) -> IntArray:
         np.random.seed(seed)
         continuation_probability = 1.0 - 1.0 / mb
         out = np.empty(n, dtype=np.int64)
@@ -100,6 +97,12 @@ try:
             else:
                 out[i] = np.random.randint(0, n)
         return out
+
+    # Numba's dispatcher type varies between dependency versions. Keep the
+    # same callable contract for compiled kernels and their Python fallbacks.
+    _mbb_idx: IndexFunction = cast(IndexFunction, njit(cache=True)(_mbb_idx_kernel))
+    _cbb_idx: IndexFunction = cast(IndexFunction, njit(cache=True)(_cbb_idx_kernel))
+    _stat_idx: IndexFunction = cast(IndexFunction, njit(cache=True)(_stat_idx_kernel))
 except ImportError:
     _mbb_idx = _mbb_idx_python
     _cbb_idx = _cbb_idx_python

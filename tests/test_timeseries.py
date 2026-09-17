@@ -217,6 +217,21 @@ def test_time_series_methods_are_reproducible(timeseries_data, method, kwargs):
     np.testing.assert_array_equal(first.bootstrap_distribution, second.bootstrap_distribution)
 
 
+@pytest.mark.parametrize("seed", [0, 42, 2**32 - 1])
+@pytest.mark.parametrize(
+    "kernel,reference,block",
+    [
+        ("_mbb_idx", "_mbb_idx_python", 7),
+        ("_cbb_idx", "_cbb_idx_python", 7),
+        ("_stat_idx", "_stat_idx_python", 7.0),
+    ],
+)
+def test_index_kernels_match_python_reference(kernel, reference, block, seed):
+    actual = getattr(ts_generators, kernel)(53, block, seed)
+    expected = getattr(ts_generators, reference)(53, block, seed)
+    np.testing.assert_array_equal(actual, expected)
+
+
 def test_python_fallback_index_generators(monkeypatch):
     monkeypatch.setattr(ts_generators, "_mbb_idx", ts_generators._mbb_idx_python)
     monkeypatch.setattr(ts_generators, "_cbb_idx", ts_generators._cbb_idx_python)
