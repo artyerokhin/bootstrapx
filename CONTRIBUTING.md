@@ -43,6 +43,29 @@ pytest --doctest-modules src/bootstrapx
 mkdocs build --strict
 ```
 
+Also check typing with the optional Numba extra installed. CI covers both
+the core and Numba-enabled typing environments.
+
+Execute the offline release notebooks without changing their tracked outputs:
+
+```bash
+pip install nbclient nbformat ipykernel
+BOOTSTRAPX_RUN_NOTEBOOKS=1 pytest tests/test_notebook_execution.py -k offline
+```
+
+The external Hillstrom download is checked separately to avoid tying ordinary
+PR checks to the availability of its host:
+
+```bash
+pip install matplotlib
+BOOTSTRAPX_RUN_NETWORK_NOTEBOOKS=1 pytest tests/test_notebook_execution.py -k hillstrom
+```
+
+On Windows, set the environment variable in PowerShell with
+`$env:BOOTSTRAPX_RUN_NOTEBOOKS="1"` (or the corresponding network variable).
+The real-data check is also available through the manually dispatched
+**Verify real-data notebook** GitHub Actions workflow.
+
 New statistical behavior should include both focused regression tests and a
 simulation or invariant that demonstrates correctness. Avoid assertions that
 depend on unstable wording from third-party libraries.

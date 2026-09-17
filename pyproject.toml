@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bootstrapx-lib"
-version = "0.5.0"
+version = "0.5.1"
 description = "Practical bootstrap uncertainty estimation for experiments, time series, and grouped data."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -80,8 +80,3 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "W", "F", "I", "UP", "B"]
-
-[tool.pytest.ini_options]
-pythonpath = ["src"]
-testpaths  = ["tests"]
-addopts    = "--tb=short -q"

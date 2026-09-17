@@ -58,7 +58,7 @@ for methods, uncertainty, difficult cases, and reproducible inputs.
 ## Installation
 
 ```bash
-pip install bootstrapx-lib                  # core (numpy + scipy only)
+pip install bootstrapx-lib                  # core (numpy + scipy + joblib)
 pip install "bootstrapx-lib[pandas]"        # + pandas accessor
 pip install "bootstrapx-lib[sklearn]"       # + scikit-learn CV integration
 pip install "bootstrapx-lib[numba]"         # + faster MBB/CBB/stationary indexing
@@ -346,7 +346,7 @@ If you use bootstrapx in academic work:
   author  = {Erokhin, Artem},
   title   = {bootstrapx: Practical bootstrap uncertainty estimation},
   url     = {https://github.com/artyerokhin/bootstrapx},
-  version = {0.5.0},
+  version = {0.5.1},
   year    = {2026},
 }
 ```

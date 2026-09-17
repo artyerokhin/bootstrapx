@@ -31,7 +31,7 @@ In a real experiment this truth would be unknown.
 ## Generate and validate the experiment
 
 ```python
-rng = np.random.default_rng(1)
+rng = np.random.default_rng(EXPERIMENT_SEED)  # 0, as defined in the notebook
 assignment = rng.permutation(
     np.repeat(["control", "treatment"], N_USERS // 2)
 )

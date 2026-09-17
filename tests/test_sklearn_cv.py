@@ -37,6 +37,33 @@ class TestBootstrapCV:
         for a, b in zip(s1, s2, strict=True):
             np.testing.assert_array_equal(a, b)
 
+    def test_rejects_groups_instead_of_silently_leaking_entities(self):
+        X = np.arange(40).reshape(-1, 1)
+        groups = np.repeat(np.arange(10), 4)
+        cv = BootstrapCV(n_splits=2, random_state=42)
+        with pytest.raises(ValueError, match="does not support groups"):
+            list(cv.split(X, groups=groups))
+
+    def test_explicit_none_groups_preserves_seeded_splits(self):
+        X = np.arange(40).reshape(-1, 1)
+        implicit = list(BootstrapCV(n_splits=2, random_state=42).split(X))
+        explicit = list(BootstrapCV(n_splits=2, random_state=42).split(X, groups=None))
+        for (train_a, test_a), (train_b, test_b) in zip(implicit, explicit, strict=True):
+            np.testing.assert_array_equal(train_a, train_b)
+            np.testing.assert_array_equal(test_a, test_b)
+
+    def test_cross_val_score_rejects_unsupported_groups(self):
+        X, y = load_iris(return_X_y=True)
+        groups = np.repeat(np.arange(50), 3)
+        with pytest.raises(ValueError, match="does not support groups"):
+            cross_val_score(
+                LogisticRegression(max_iter=200),
+                X,
+                y,
+                cv=BootstrapCV(n_splits=2, random_state=42),
+                groups=groups,
+            )
+
     def test_cross_val_score(self):
         X, y = load_iris(return_X_y=True)
         cv = BootstrapCV(n_splits=100, random_state=0)

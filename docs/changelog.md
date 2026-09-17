@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.1 — 2026-09-17
+
+### Reliability fixes
+
+- `BootstrapCV` rejects unsupported groups rather than silently allowing
+  entity overlap between train and test; OOB and .632 terminology is clarified.
+- Numba kernel typing supports both compiled and fallback configurations,
+  and both configurations are checked by CI.
+- Offline notebooks now execute in CI and verify documented results.
+- A separate manual workflow executes the real-data Hillstrom analysis with
+  source checksum verification, independent of ordinary PR checks.
+- Core dependencies, the product-example seed, and benchmark instructions
+  are corrected. The statistical algorithms and 0.5.0 benchmark evidence
+  are unchanged.
+
 ## 0.5.0 — 2026-09-07
 
 ### Experiment comparisons
