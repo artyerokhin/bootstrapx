@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased — 0.6.0 development
+
+- Joint-column scalar metrics, `RatioOfSums`, and design-aware BCa.
+- Optional row-unit ID checks and compact, copy-safe reporting metadata.
+- Offline assigned-user/order example preserving non-buyers and explicitly
+  distinguishing assigned-user metrics from buyer-only descriptions.
+- Cluster identifiers retain types/large-integer precision; incompatible labels
+  and duplicate matrix-DataFrame column labels raise explicit errors.
+- Known-truth benchmarks now include dependent activity/price, changes in their
+  relationship between arms, and clustered dependence.
+- See [Composite metrics](composite-metrics.md). The published version remains
+  0.5.1; release statistical/performance evidence is still pending.
+
 ## 0.5.1 — 2026-09-17
 
 ### Reliability fixes

@@ -53,6 +53,7 @@ class TwoSampleBootstrapResult:
     n_control_clusters: int | None = None
     n_treatment_clusters: int | None = None
     extra: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     @property
     def theta_hat(self) -> float:
@@ -87,6 +88,7 @@ class TwoSampleBootstrapResult:
             "n_treatment_clusters": self.n_treatment_clusters,
             "n_resamples": self.n_resamples,
             "extra": deepcopy(self.extra),
+            "metadata": deepcopy(self.metadata),
         }
         if include_distribution:
             summary["bootstrap_distribution"] = self.bootstrap_distribution.copy()
@@ -166,7 +168,46 @@ def _resolve_effect(effect: str | Effect) -> tuple[Effect, str]:
 
 
 def _evaluate_statistic(statistic: Statistic, sample: FloatArray) -> float:
-    return _as_scalar(statistic(sample), source="statistic")
+    try:
+        value = statistic(sample)
+    except ZeroDivisionError as exc:
+        raise ValueError(
+            "statistic is undefined because it divided by zero for an observed, "
+            "resampled, or jackknife value."
+        ) from exc
+    return _as_scalar(value, source="statistic")
+
+
+def _validate_comparison_samples(
+    control: Any, treatment: Any, *, allow_2d: bool
+) -> tuple[FloatArray, FloatArray]:
+    control_array = validate_data(control, allow_2d=allow_2d)
+    treatment_array = validate_data(treatment, allow_2d=allow_2d)
+    if control_array.ndim != treatment_array.ndim:
+        raise ValueError("control and treatment must have the same number of dimensions.")
+    if control_array.ndim == 2:
+        if control_array.shape[1] == 0 or treatment_array.shape[1] == 0:
+            raise ValueError("Matrix samples must contain at least one feature column.")
+        if control_array.shape[1] != treatment_array.shape[1]:
+            raise ValueError("control and treatment must have the same number of feature columns.")
+        try:
+            import pandas as pd
+        except ImportError:
+            pass
+        else:
+            for name, sample in (("control", control), ("treatment", treatment)):
+                if isinstance(sample, pd.DataFrame) and not sample.columns.is_unique:
+                    raise ValueError(
+                        f"{name} DataFrame must have unique column labels. "
+                        "Rename duplicate columns before selecting metric features."
+                    )
+            if isinstance(control, pd.DataFrame) and isinstance(treatment, pd.DataFrame):
+                if not control.columns.equals(treatment.columns):
+                    raise ValueError(
+                        "control and treatment DataFrames must have identical column labels "
+                        "in the same order. Select matching numeric columns explicitly."
+                    )
+    return control_array, treatment_array
 
 
 def _evaluate_effect(effect: Effect, control: float, treatment: float) -> float:
@@ -180,17 +221,22 @@ def _evaluate_effect(effect: Effect, control: float, treatment: float) -> float:
 
 
 def _validate_cluster_ids(ids: Any, n: int, *, name: str) -> AnyArray:
-    values = np.asarray(ids)
+    # Preserve labels before validation: NumPy's inferred string/float dtype
+    # can merge 1 with "1", or round distinct large integer identifiers.
+    values = np.asarray(ids, dtype=object)
     if values.ndim != 1 or len(values) != n:
         raise ValueError(f"{name} must be one-dimensional and match its sample length.")
     for identifier in values:
-        if identifier is None:
-            raise ValueError(f"{name} must not contain missing values.")
+        if identifier is None or np.ndim(identifier) != 0:
+            raise ValueError(f"{name} must contain scalar, non-missing identifiers.")
         try:
             if bool(identifier != identifier):
                 raise ValueError(f"{name} must not contain missing values.")
-        except TypeError as exc:
+        except (TypeError, ValueError) as exc:
             raise ValueError(f"{name} must contain scalar, non-missing identifiers.") from exc
+        if isinstance(identifier, float | complex | np.floating | np.complexfloating):
+            if not np.isfinite(identifier):
+                raise ValueError(f"{name} must not contain infinite identifiers.")
     try:
         unique = np.unique(values)
     except (TypeError, ValueError) as exc:
@@ -198,6 +244,69 @@ def _validate_cluster_ids(ids: Any, n: int, *, name: str) -> AnyArray:
     if len(unique) < 2:
         raise ValueError(f"{name} must contain at least two distinct clusters.")
     return values
+
+
+def _validate_unit_ids(ids: Any, n: int, *, name: str) -> AnyArray:
+    # Object dtype prevents mixed identifiers such as 1 and "1" from being
+    # silently coerced into the same string before uniqueness checks.
+    values = np.asarray(ids, dtype=object)
+    if values.ndim != 1 or len(values) != n:
+        raise ValueError(f"{name} must be one-dimensional and match its sample length.")
+    unique: set[Any] = set()
+    for identifier in values:
+        if identifier is None or np.ndim(identifier) != 0:
+            raise ValueError(f"{name} must contain scalar, non-missing identifiers.")
+        try:
+            missing = bool(identifier != identifier)
+            hash(identifier)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"{name} must contain hashable, non-missing scalar identifiers."
+            ) from exc
+        if missing or (isinstance(identifier, float | np.floating) and not np.isfinite(identifier)):
+            raise ValueError(f"{name} must not contain missing or infinite identifiers.")
+        if identifier in unique:
+            raise ValueError(
+                f"{name} must be unique: each row must represent one analysis unit. "
+                "Aggregate repeated observations or use cluster IDs instead."
+            )
+        unique.add(identifier)
+    return values
+
+
+def _validate_design_unit_ids(
+    control_unit_ids: Any,
+    treatment_unit_ids: Any,
+    *,
+    n_control: int,
+    n_treatment: int,
+    paired: bool,
+    cluster_mode: bool,
+) -> bool:
+    supplied = control_unit_ids is not None or treatment_unit_ids is not None
+    if not supplied:
+        return False
+    if control_unit_ids is None or treatment_unit_ids is None:
+        raise ValueError("control_unit_ids and treatment_unit_ids must be provided together.")
+    if cluster_mode:
+        raise ValueError(
+            "unit IDs validate one row per unit and cannot be combined with cluster IDs. "
+            "For repeated-event input, use cluster IDs and check assignment integrity separately."
+        )
+    control = _validate_unit_ids(control_unit_ids, n_control, name="control_unit_ids")
+    treatment = _validate_unit_ids(treatment_unit_ids, n_treatment, name="treatment_unit_ids")
+    if paired:
+        if not np.array_equal(control, treatment):
+            raise ValueError(
+                "Paired unit IDs must match in the same row order. "
+                "Align corresponding units explicitly before analysis."
+            )
+    elif set(control).intersection(treatment):
+        raise ValueError(
+            "Independent samples must not share unit IDs. "
+            "Check assignment integrity or choose a justified paired design."
+        )
+    return True
 
 
 def _child_generators(
@@ -313,8 +422,10 @@ def _loo_effects(
 ) -> list[FloatArray]:
     if paired:
         effects = np.empty(len(control), dtype=np.float64)
-        control_buffer = np.empty(len(control) - 1, dtype=control.dtype)
-        treatment_buffer = np.empty(len(treatment) - 1, dtype=treatment.dtype)
+        control_buffer = np.empty((len(control) - 1, *control.shape[1:]), dtype=control.dtype)
+        treatment_buffer = np.empty(
+            (len(treatment) - 1, *treatment.shape[1:]), dtype=treatment.dtype
+        )
         for index in range(len(control)):
             control_buffer[:index] = control[:index]
             control_buffer[index:] = control[index + 1 :]
@@ -333,8 +444,10 @@ def _loo_effects(
     if control_cluster_ids is None or treatment_cluster_ids is None:
         control_effects = np.empty(len(control), dtype=np.float64)
         treatment_effects = np.empty(len(treatment), dtype=np.float64)
-        control_buffer = np.empty(len(control) - 1, dtype=control.dtype)
-        treatment_buffer = np.empty(len(treatment) - 1, dtype=treatment.dtype)
+        control_buffer = np.empty((len(control) - 1, *control.shape[1:]), dtype=control.dtype)
+        treatment_buffer = np.empty(
+            (len(treatment) - 1, *treatment.shape[1:]), dtype=treatment.dtype
+        )
         for index in range(len(control)):
             control_buffer[:index] = control[:index]
             control_buffer[index:] = control[index + 1 :]
@@ -380,8 +493,13 @@ def bootstrap_two_sample(
     effect: str | Effect = "difference",
     method: str = "bca",
     paired: bool = False,
+    allow_2d: bool = False,
     control_cluster_ids: Any | None = None,
     treatment_cluster_ids: Any | None = None,
+    control_unit_ids: Any | None = None,
+    treatment_unit_ids: Any | None = None,
+    metric_name: str | None = None,
+    effect_unit: str | None = None,
     n_resamples: int = 9999,
     batch_size: int | None = None,
     confidence_level: float = 0.95,
@@ -398,10 +516,15 @@ def bootstrap_two_sample(
     Parameters
     ----------
     control, treatment : array-like
-        Finite one-dimensional samples. Their order defines the direction of
-        every built-in effect.
+        Finite one-dimensional samples, or numeric matrices with
+        ``allow_2d=True``. Matrix rows are observations and columns are jointly
+        observed features, always resampled together. Their order defines the
+        direction of every built-in effect. DataFrames are converted to NumPy;
+        matrix DataFrames must have unique column labels; two DataFrames must
+        have identical labels and order.
     statistic : callable
         Scalar function applied separately to each arm, ``array -> float``.
+        For matrix input, receives a 2-D array and must still return one scalar.
     effect : {"difference", "ratio", "relative_lift"} or callable
         Transformation of the two arm statistics. A callable receives
         ``(control_statistic, treatment_statistic)`` and returns one scalar.
@@ -413,10 +536,27 @@ def bootstrap_two_sample(
     paired : bool
         Resample corresponding rows together. The samples must have equal
         length and cluster IDs cannot be supplied.
+        Pairing is positional: pandas indices are not used to align samples.
+    allow_2d : bool
+        Explicitly enable multicolumn input for composite scalar metrics.
+        Defaults to False, preserving the one-dimensional input contract.
+        Both arms must have the same dimensionality and feature count.
     control_cluster_ids, treatment_cluster_ids : array-like or None
         One cluster identifier per row. Both arrays are required for clustered
         analysis; complete clusters are resampled independently within each
-        experiment arm.
+        experiment arm. Labels must be scalar, non-missing, finite when numeric,
+        and mutually comparable within each arm. Mixed string/numeric labels
+        are rejected rather than coerced into one type.
+    control_unit_ids, treatment_unit_ids : array-like or None
+        Optional globally consistent identifiers for one-row-per-unit input.
+        Both are required together and must be unique within each arm.
+        Independent arms must be disjoint; paired arms must match in row order.
+        Cannot be combined with cluster IDs. No IDs are stored in the result.
+        Omitting IDs leaves correspondence/assignment validation to the caller.
+    metric_name, effect_unit : str or None
+        Optional non-empty reporting labels, for example ``"revenue/order"``
+        and ``"USD/order"`` for a difference. Labels do not transform values or
+        verify the metric definition. Ratios/lifts are dimensionless.
     n_resamples : int
         Number of bootstrap effects.
     batch_size : int or None
@@ -447,13 +587,22 @@ def bootstrap_two_sample(
         raise TypeError("method must be a string.")
     if not isinstance(paired, bool):
         raise TypeError("paired must be a boolean.")
+    if not isinstance(allow_2d, bool):
+        raise TypeError("allow_2d must be a boolean.")
+    for name, label in (("metric_name", metric_name), ("effect_unit", effect_unit)):
+        if label is not None:
+            if not isinstance(label, str):
+                raise TypeError(f"{name} must be a string or None.")
+            if not label.strip():
+                raise ValueError(f"{name} must be non-empty when provided.")
 
     method = method.lower().strip()
     if method not in _METHODS:
         raise ValueError(f"Unknown method {method!r}. Choose from {sorted(_METHODS)}.")
     effect_function, effect_name = _resolve_effect(effect)
-    control_array = validate_data(control)
-    treatment_array = validate_data(treatment)
+    control_array, treatment_array = _validate_comparison_samples(
+        control, treatment, allow_2d=allow_2d
+    )
 
     cluster_mode = control_cluster_ids is not None or treatment_cluster_ids is not None
     if cluster_mode and (control_cluster_ids is None or treatment_cluster_ids is None):
@@ -462,6 +611,14 @@ def bootstrap_two_sample(
         raise ValueError("paired=True cannot be combined with cluster IDs.")
     if paired and len(control_array) != len(treatment_array):
         raise ValueError("paired samples must contain the same number of observations.")
+    unit_ids_validated = _validate_design_unit_ids(
+        control_unit_ids,
+        treatment_unit_ids,
+        n_control=len(control_array),
+        n_treatment=len(treatment_array),
+        paired=paired,
+        cluster_mode=cluster_mode,
+    )
 
     control_ids: AnyArray | None = None
     treatment_ids: AnyArray | None = None
@@ -493,7 +650,7 @@ def bootstrap_two_sample(
     )
     validate_random_state(random_state)
     if batch_size is None:
-        batch_size = auto_batch_size(len(control_array) + len(treatment_array), n_resamples)
+        batch_size = auto_batch_size(control_array.size + treatment_array.size, n_resamples)
 
     control_estimate = _evaluate_statistic(statistic, control_array)
     treatment_estimate = _evaluate_statistic(statistic, treatment_array)
@@ -546,6 +703,26 @@ def bootstrap_two_sample(
             confidence_level,
         )
 
+    from bootstrapx import __version__
+
+    metadata = {
+        "metric_name": metric_name or getattr(statistic, "__name__", type(statistic).__name__),
+        "effect_unit": effect_unit,
+        "resampling_unit": "cluster" if cluster_mode else "pair" if paired else "row",
+        "n_control_units": n_units_control,
+        "n_treatment_units": n_units_treatment,
+        "n_features": control_array.shape[1] if control_array.ndim == 2 else 1,
+        "unit_ids_validated": unit_ids_validated,
+        "confidence_level": float(confidence_level),
+        "batch_size": int(batch_size),
+        "seed": int(random_state) if isinstance(random_state, int | np.integer) else None,
+        "random_state_kind": "generator"
+        if isinstance(random_state, np.random.Generator)
+        else "seed"
+        if random_state is not None
+        else "unseeded",
+        "package_version": __version__,
+    }
     return TwoSampleBootstrapResult(
         confidence_interval=interval,
         bootstrap_distribution=distribution,
@@ -562,4 +739,5 @@ def bootstrap_two_sample(
         n_treatment=len(treatment_array),
         n_control_clusters=n_units_control if cluster_mode else None,
         n_treatment_clusters=n_units_treatment if cluster_mode else None,
+        metadata=metadata,
     )

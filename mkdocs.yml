@@ -36,6 +36,7 @@ nav:
   - First Analysis: getting-started.md
   - Choose a Method: methods.md
   - Experiment Comparisons: ab-testing.md
+  - Composite Metrics (development): composite-metrics.md
   - Product A/B Reference: product-ab.md
   - Real-data A/B Case Study: real-world-ab.md
   - Time Series: time-series.md

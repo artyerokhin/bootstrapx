@@ -86,11 +86,13 @@ rejects an observed or resampled zero denominator rather than dropping that
 replicate. Prefer an absolute difference when a stable ratio estimand cannot be
 defined.
 
-These effects compare two scalar arm statistics. They do not implement a
+These effects compare two scalar arm statistics. In published 0.5.x they do not implement a
 within-arm ratio metric such as `sum(revenue) / sum(orders)` from multiple
 columns: the current API accepts only one-dimensional data per arm.
 Independently bootstrapping numerator and denominator columns would discard
-their within-unit dependence. Multi-column metric inputs remain out of scope.
+their within-unit dependence. The unreleased development branch adds explicit
+joint-column input: see [Composite metrics](composite-metrics.md), including
+the distinction between a within-arm metric and a between-arm ratio effect.
 
 ## Paired or before/after outcomes
 

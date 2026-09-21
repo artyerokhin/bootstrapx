@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased] — 0.6.0 development
+
+### Added
+- Opt-in joint multicolumn input for scalar two-sample metrics, including
+  independent, paired, and clustered resampling and row-aware BCa jackknife.
+- `RatioOfSums` scalar metric helper with explicit undefined-denominator checks.
+- Optional globally consistent row-unit IDs: uniqueness, independent-arm
+  disjointness, and positional paired correspondence checks. IDs are not stored.
+- Copy-safe reporting metadata with metric/unit labels, design/unit counts,
+  feature count, ID-validation status, and calculation settings/version.
+- Executable offline assigned-user/order example that preserves non-buyers,
+  rejects unsafe joins/events, and separates pointwise inference from
+  buyer-only descriptions.
+
+### Fixed
+- Cluster-label validation preserves identifier types and large integer
+  precision; incompatible mixed labels fail instead of silently merging clusters.
+- Matrix DataFrames reject duplicate column labels before metric evaluation,
+  including mixed DataFrame/NumPy input.
+
+### Tests
+- Regression checks cover ambiguous labels/columns and seeded large-ID results.
+- Composite benchmarks include dependent activity/price, covariance-only
+  treatment changes, and clustered dependence with analytically known effects.
+
+Release coverage and performance evidence for the new path remains pending.
+
 ## [0.5.1] — 2026-09-17
 
 ### Fixed

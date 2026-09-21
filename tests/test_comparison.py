@@ -455,6 +455,68 @@ def test_rejects_invalid_cluster_ids(ids) -> None:
         )
 
 
+@pytest.mark.parametrize(
+    "ids",
+    [
+        [1, "1", 2, "2", 3, "3"],
+        np.array([1, "1", 2, "2", 3, "3"], dtype=object),
+    ],
+)
+def test_cluster_ids_reject_incomparable_types_without_coercion(ids) -> None:
+    with pytest.raises(ValueError, match="mutually comparable identifiers"):
+        bootstrap_two_sample(
+            np.arange(6),
+            np.arange(6) + 1,
+            np.mean,
+            control_cluster_ids=ids,
+            treatment_cluster_ids=np.arange(6),
+            method="percentile",
+            n_resamples=20,
+        )
+
+
+def test_cluster_ids_preserve_large_integers_in_mixed_numeric_input() -> None:
+    # Inferred float64 would round 2**53 + 1 to 2**53 and merge clusters.
+    ids = [2**53, 2**53 + 1, 2**53 + 2, 0.5]
+    result = bootstrap_two_sample(
+        [1, 3, 5, 7],
+        [2, 5, 6, 9],
+        np.mean,
+        control_cluster_ids=ids,
+        treatment_cluster_ids=ids,
+        method="bca",
+        n_resamples=99,
+        random_state=42,
+    )
+    reference = bootstrap_two_sample(
+        [1, 3, 5, 7],
+        [2, 5, 6, 9],
+        np.mean,
+        control_cluster_ids=[1, 2, 3, 0],
+        treatment_cluster_ids=[1, 2, 3, 0],
+        method="bca",
+        n_resamples=99,
+        random_state=42,
+    )
+    assert result.n_control_clusters == result.n_treatment_clusters == 4
+    np.testing.assert_array_equal(result.bootstrap_distribution, reference.bootstrap_distribution)
+    assert result.confidence_interval == reference.confidence_interval
+
+
+@pytest.mark.parametrize("identifier", [np.inf, -np.inf, complex(0, np.inf), [1]])
+def test_cluster_ids_reject_infinite_or_non_scalar_labels(identifier) -> None:
+    with pytest.raises(ValueError, match="cluster"):
+        bootstrap_two_sample(
+            [1, 3, 5],
+            [2, 5, 6],
+            np.mean,
+            control_cluster_ids=[0, 1, identifier],
+            treatment_cluster_ids=[0, 1, 2],
+            method="percentile",
+            n_resamples=20,
+        )
+
+
 def test_bca_requires_three_resampling_units() -> None:
     with pytest.raises(ValueError, match="at least three observations"):
         bootstrap_two_sample(

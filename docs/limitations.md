@@ -10,6 +10,13 @@ The public APIs expect exactly one finite scalar statistic per arm and one
 finite scalar effect per resample. Vector-valued statistics, simultaneous
 intervals, and covariance estimates are not yet supported.
 
+The unreleased 0.6.0 development API allows multicolumn input for one composite
+scalar metric through `bootstrap_two_sample(..., allow_2d=True)`. This is not
+vector-valued output and is not available in the published 0.5.1 package.
+Optional row-unit ID checks detect duplicates/overlap or mismatched pairs, not
+invalid randomization, missing telemetry, or all forms of selection bias.
+See [Composite metrics](composite-metrics.md).
+
 `DataFrame.bootstrap.summary()` evaluates columns independently. Separate
 column intervals are not an interval or hypothesis test for the difference
 between columns. Extract the two samples and call `bootstrap_two_sample()` for

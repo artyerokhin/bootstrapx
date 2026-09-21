@@ -70,6 +70,13 @@ pip install "bootstrapx-lib[pandas,sklearn,numba]"  # all optional features
 
 ## Quick Start
 
+Development work toward 0.6.0 adds joint-column scalar metrics, optional
+analysis-unit ID checks, and reporting metadata. These are **not in published
+0.5.1**. See the [local development plan](plans/0.6.0.md) and
+[assigned-user/order walkthrough](docs/composite-metrics.md); install the
+development checkout to run its offline example. Existing audited benchmark
+figures below remain evidence for their recorded releases, not 0.6.0 claims.
+
 ### Basic usage
 
 ```python

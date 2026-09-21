@@ -12,6 +12,12 @@
 
 ::: bootstrapx.TwoSampleBootstrapResult
 
+### Composite metric helper (unreleased development API)
+
+Not available in the published 0.5.1 package. See [Composite metrics](composite-metrics.md).
+
+::: bootstrapx.RatioOfSums
+
 ::: bootstrapx.ConfidenceInterval
 
 `BootstrapResult.to_dict()` excludes the potentially large bootstrap

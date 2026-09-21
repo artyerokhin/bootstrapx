@@ -77,8 +77,8 @@ jobs:
 
     - name: Verify release candidate
       run: |
-        ruff format --check src tests
-        ruff check src tests
+        ruff format --check src tests examples benchmarks/bench_composite_metrics.py
+        ruff check src tests examples benchmarks/bench_composite_metrics.py
         mypy src
         pytest --cov=bootstrapx --cov-fail-under=85
         pytest --doctest-modules src/bootstrapx
@@ -106,6 +106,10 @@ jobs:
         archives = list(Path("dist").glob("*.tar.gz"))
         assert len(archives) == 1, f"Expected one sdist, found: {archives}"
         required = {
+            "examples/assigned_users_composite_metrics.py",
+            "benchmarks/bench_composite_metrics.py",
+            "tests/test_assigned_user_example.py",
+            "tests/test_composite_benchmark.py",
             "notebooks/04_ab_test_cluster_bootstrap.ipynb",
             "notebooks/06_real_world_ab_hillstrom.ipynb",
             "notebooks/07_product_ab_reference.ipynb",
