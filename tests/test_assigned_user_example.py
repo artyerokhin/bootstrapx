@@ -43,6 +43,7 @@ def test_example_preserves_all_assigned_users_and_reports_correct_estimands(exam
         assert result.metadata["n_features"] == 2
         assert (result.n_control, result.n_treatment) == (240, 280)
         assert np.isfinite(result.bootstrap_distribution).all()
+        assert result.method == ("basic" if name == "revenue/order" else "bca")
     for _, record in analysis["buyer_descriptions"].iterrows():
         arm = users.loc[(users["variant"] == record["variant"]) & (users["orders"] > 0)]
         assert record["mean_buyer_revenue_per_order"] == pytest.approx(

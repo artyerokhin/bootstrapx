@@ -532,7 +532,11 @@ def bootstrap_two_sample(
         ``treatment / control``; relative lift is
         ``(treatment - control) / control``.
     method : {"percentile", "basic", "bca"}
-        Confidence-interval construction.
+        Confidence-interval construction. BCa is not automatically more
+        accurate in finite samples. Ratio metrics with skewed data, correlated
+        numerator/denominator components, or few clusters can materially
+        undercover; compare methods against domain-relevant simulations and
+        treat results with few independent units cautiously.
     paired : bool
         Resample corresponding rows together. The samples must have equal
         length and cluster IDs cannot be supplied.

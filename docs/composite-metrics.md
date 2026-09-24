@@ -56,7 +56,7 @@ result = bootstrap_two_sample(
     metric_name="revenue/order",
     effect_unit="currency/order",
     effect="difference",
-    method="bca",
+    method="basic",
     random_state=42,
 )
 ```
@@ -76,6 +76,21 @@ instead subtracts them. A zero denominator in an observed, bootstrap, or
 jackknife sample raises an error. Such samples are never dropped or redrawn.
 Signed denominators are mathematically allowed; business-domain checks belong
 in the metric/data-preparation policy.
+
+### Interval method is part of the analysis
+
+`BCa` is not an automatic accuracy upgrade for a nonlinear ratio. In the 0.6
+release study it tracked SciPy closely but materially undercovered known truth
+with strong skew, dependent activity/price, and especially only 24/30 clusters.
+The example therefore uses `basic` for revenue/order while retaining `BCa` for
+the two simple assigned-user means. This is a tested example choice, not a
+universal ranking: `basic` also undercovered in small-cluster cases.
+
+For a decision-critical ratio, simulate a plausible data-generating process,
+include denominator changes and zero-denominator samples, and compare `basic`,
+`percentile`, and `bca`. More bootstrap resamples reduce endpoint simulation
+noise; they do not fix finite-sample coverage. With few clusters, report that
+limitation or use a method whose assumptions are justified for that design.
 
 ## Check identities, do not infer them
 

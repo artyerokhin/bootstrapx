@@ -314,7 +314,7 @@ Commands and resume instructions are in the benchmark documentation.
 
 | Method | `method=` | Use case |
 |---|---|---|
-| BCa | `"bca"` | General-purpose starting point for scalar statistics |
+| BCa | `"bca"` | Smooth scalar statistics; verify finite-sample behavior |
 | Percentile | `"percentile"` | Simple, fast |
 | Basic (Hall) | `"basic"` | Reflected bootstrap interval |
 | Studentized | `"studentized"` | Bootstrap-t; expensive nested resampling |

@@ -80,8 +80,9 @@ def test_wilson_bounds_are_probabilities(benchmark, hits):
     assert 0 <= low <= hits / 30 <= high <= 1
 
 
-def test_large_cluster_generator_uses_more_independent_units(benchmark):
-    data = benchmark["make_data"]("cluster_large", np.random.default_rng(1))
+@pytest.mark.parametrize("name", ["cluster_large", "cluster_activity_price_large"])
+def test_large_cluster_generator_uses_more_independent_units(benchmark, name):
+    data = benchmark["make_data"](name, np.random.default_rng(1))
     assert len(np.unique(data[2])) == 100
     assert len(np.unique(data[3])) == 120
     with pytest.raises(ValueError, match="not clustered"):
@@ -128,7 +129,7 @@ def test_quick_runner_accounts_for_failures_and_resumes(tmp_path):
     metadata = json.loads((tmp_path / "metadata.json").read_text())
     assert metadata["status"] == "complete"
     assert not metadata["release_evidence"]
-    assert metadata["completed_cells"] == metadata["total_cells"] == 70
+    assert metadata["completed_cells"] == metadata["total_cells"] == 77
     with (tmp_path / "results.csv").open() as input_file:
         rows = list(csv.DictReader(input_file))
     for row in rows:

@@ -9,7 +9,9 @@
 - Cluster identifiers retain types/large-integer precision; incompatible labels
   and duplicate matrix-DataFrame column labels raise explicit errors.
 - Known-truth benchmarks now include dependent activity/price, changes in their
-  relationship between arms, and clustered dependence.
+  relationship between arms, and clustered dependence at two unit-count regimes.
+- Release evidence corrected the practical guidance: BCa is not presented as
+  an automatic ratio choice, and small-cluster/skew limitations are explicit.
 - See [Composite metrics](composite-metrics.md). The published version remains
   0.5.1; release statistical/performance evidence is still pending.
 

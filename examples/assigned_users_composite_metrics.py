@@ -79,12 +79,15 @@ def analyze_example(n_resamples: int = 499) -> dict[str, Any]:
     control = users.loc[users["variant"] == "control"]
     treatment = users.loc[users["variant"] == "treatment"]
     metrics = {
-        "revenue/user": (lambda sample: np.mean(sample[:, 0]), "currency/user"),
-        "orders/user": (lambda sample: np.mean(sample[:, 1]), "orders/user"),
-        "revenue/order": (RatioOfSums(), "currency/order"),
+        "revenue/user": (lambda sample: np.mean(sample[:, 0]), "currency/user", "bca"),
+        "orders/user": (lambda sample: np.mean(sample[:, 1]), "orders/user", "bca"),
+        # The 0.6 release study found materially poor finite-sample BCa coverage
+        # for skewed/correlated ratios. Basic performed better in those tested
+        # user-level cases; this is evidence for the example, not a guarantee.
+        "revenue/order": (RatioOfSums(), "currency/order", "basic"),
     }
     results = {}
-    for name, (metric, unit) in metrics.items():
+    for name, (metric, unit, method) in metrics.items():
         results[name] = bootstrap_two_sample(
             control[["revenue", "orders"]],
             treatment[["revenue", "orders"]],
@@ -94,7 +97,7 @@ def analyze_example(n_resamples: int = 499) -> dict[str, Any]:
             treatment_unit_ids=treatment["user_id"],
             metric_name=name,
             effect_unit=unit,
-            method="bca",
+            method=method,
             n_resamples=n_resamples,
             random_state=42,
         )

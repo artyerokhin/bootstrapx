@@ -76,6 +76,14 @@ Increase `n_resamples` and compare repeated seeds when interval endpoints are
 decision-critical. BCa and studentized intervals can be unstable for very
 small samples, nonsmooth statistics, or highly skewed distributions.
 
+The 0.6 composite-metric release study also found material BCa undercoverage
+for skewed and activity-correlated ratios despite close agreement with SciPy;
+the lowest observed result was 87% for a nominal 95% interval with 24/30
+clusters. That agreement is an implementation cross-check, not a coverage
+guarantee. Baseline clustered ratios were near nominal at 100/120 clusters, but
+the corresponding large correlated-cluster case remains a separate release
+gate. Do not infer a universal minimum safe cluster count from one simulation.
+
 ## API maturity
 
 bootstrapx is still in the `0.x` series. Changes are documented in the

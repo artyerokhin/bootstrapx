@@ -17,16 +17,16 @@ python benchmarks/bench_composite_metrics.py --profile validation \
 
 `quick` uses 2 trials and 99 resamples per cell; `validation` uses 30 trials and
 499 resamples. Both are preliminary checks, **not release coverage evidence**.
-Ten scenarios cover independent/paired/clustered ratios, heavy skew,
+Eleven scenarios cover independent/paired/clustered ratios, heavy skew,
 denominator changes, sparse orders, a larger-cluster comparison, and dependent
-activity/price cases. References resample entire rows or
+activity/price cases at both small and larger cluster counts. References resample entire rows or
 clusters, never columns separately. Delta-method intervals are another
 approximation, not a ground-truth coverage guarantee.
 
 ### Dependent activity and price: known truth
 
-The new `activity_price`, `activity_price_covariance` and
-`cluster_activity_price` scenarios share a latent standard-normal variable
+The new `activity_price`, `activity_price_covariance`,
+`cluster_activity_price`, and `cluster_activity_price_large` scenarios share a latent standard-normal variable
 `Z`. Conditional order count is Poisson with mean
 `rate * exp(b * Z - b² / 2)`; price is `exp(m + c * Z + s * epsilon)`, where
 `epsilon` is an independent standard normal. Revenue is order count times price.
@@ -47,16 +47,58 @@ coverage. These models do not represent informative cluster sizes.
 ```bash
 python benchmarks/bench_composite_metrics.py --profile validation \
   --scenario activity_price --scenario activity_price_covariance \
-  --scenario cluster_activity_price \
+  --scenario cluster_activity_price --scenario cluster_activity_price_large \
   --output-dir benchmark_runs/v0.6.0-activity-price-validation
 ```
 
+### Completed candidate evidence and the resulting correction
+
+The first release-profile run completed all 70 cells then present: 300
+independently generated datasets per cell and 4,999 resamples, on macOS arm64
+with Python 3.11.5, NumPy 2.2.6, and SciPy 1.17.1. It is pinned to commit
+`e6d11c2` and source SHA-256
+`260c05d1f269097bd5e089e6b070745210d8b0bf9512a20b980aa2dcc56d94d8`.
+The current runner adds the previously missing larger correlated-cluster cell,
+so that completed run is evidence for the measured source, not the final 77-cell
+release gate.
+
+Empirical coverage for bootstrapx's nominal 95% intervals was:
+
+| Scenario | Percentile | Basic | BCa |
+|---|---:|---:|---:|
+| Independent ratio | 93.3% | 93.7% | 92.0% |
+| Paired ratio | 93.7% | 95.0% | 93.0% |
+| Cluster ratio (24/30 clusters) | 92.0% | 91.0% | 90.7% |
+| Heavy skew | 94.3% | 96.3% | 88.3% |
+| Denominator change | 95.7% | 95.3% | 95.3% |
+| Cluster ratio (100/120 clusters) | 94.3% | 95.7% | 94.3% |
+| Dependent activity/price | 91.7% | 93.7% | 90.0% |
+| Activity/price covariance change | 94.0% | 95.0% | 90.0% |
+| Clustered activity/price (24/30 clusters) | 93.7% | 92.3% | 87.0% |
+
+SciPy's scalar reference was within one percentage point in every matching
+non-sparse cell and produced nearly identical widths. This makes an
+implementation discrepancy unlikely, but does **not** make the intervals
+well-calibrated. For BCa in the heavy-skew and two dependent IID scenarios, the
+upper Wilson bound was below 95%; for clustered activity/price it was 90.3%.
+The practical example no longer presents BCa as the automatic ratio choice.
+
+All non-sparse cells produced 300 valid intervals and no execution failures.
+The deliberately sparse scenario produced no valid bootstrap interval because
+the observed or resampled order denominator was zero; bootstrapx and SciPy both
+failed explicitly instead of silently dropping draws. This is expected safety
+behavior, not 0% evidence for a defined interval procedure.
+
 ### Interpretation and release runs
 
-Preliminary small-cluster results signal undercoverage and need a larger study
-before release. Agreement with SciPy does not resolve that finite-sample
-statistical issue. Use repeatable `--scenario cluster --scenario cluster_large`
-to focus a run; that selection is part of the resume contract.
+Release-profile small-cluster results demonstrate undercoverage. Agreement with
+SciPy does not resolve that finite-sample statistical issue. The baseline large
+cluster scenario is near nominal; the new `cluster_activity_price_large`
+scenario tests whether that improvement survives correlated numerator and
+denominator components. Use repeatable `--scenario cluster --scenario
+cluster_large --scenario cluster_activity_price
+--scenario cluster_activity_price_large` to focus a run; that selection is part
+of the resume contract.
 
 `results.csv` reports failures, invalid intervals, coverage across **all**
 trials, conditional coverage among valid trials, and Wilson bounds for the

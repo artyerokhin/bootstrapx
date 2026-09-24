@@ -35,6 +35,7 @@ SCENARIOS = (
     "activity_price",
     "activity_price_covariance",
     "cluster_activity_price",
+    "cluster_activity_price_large",
 )
 METRIC = bx.RatioOfSums()
 
@@ -68,7 +69,7 @@ def make_data(name, rng, n_control=200, n_treatment=250, cluster_counts=None):
     samples, ids = [], []
     if name.startswith("cluster"):
         n_control, n_treatment = cluster_counts or (
-            (100, 120) if name == "cluster_large" else (24, 30)
+            (100, 120) if name in {"cluster_large", "cluster_activity_price_large"} else (24, 30)
         )
     if name == "sparse":
         n_control, n_treatment = 12, 15

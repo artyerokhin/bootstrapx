@@ -26,7 +26,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Tests
 - Regression checks cover ambiguous labels/columns and seeded large-ID results.
 - Composite benchmarks include dependent activity/price, covariance-only
-  treatment changes, and clustered dependence with analytically known effects.
+  treatment changes, and clustered dependence at small and larger cluster
+  counts with analytically known effects.
+- The practitioner example uses `basic`, rather than presenting BCa as an
+  automatic choice for revenue/order. Documentation records the observed
+  finite-sample undercoverage and requires method sensitivity for critical ratios.
 
 Release coverage and performance evidence for the new path remains pending.
 
