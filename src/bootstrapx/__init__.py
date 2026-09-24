@@ -16,6 +16,7 @@ from importlib.metadata import PackageNotFoundError, version
 from .api import BootstrapResult, bootstrap
 from .comparison import TwoSampleBootstrapResult, bootstrap_two_sample
 from .stats.confidence import ConfidenceInterval
+from .stats.metrics import RatioOfSums
 
 # Optional integrations — only register if their deps are present
 try:
@@ -35,7 +36,7 @@ except ImportError:
 try:
     __version__ = version("bootstrapx-lib")
 except PackageNotFoundError:
-    __version__ = "0.5.1"
+    __version__ = "0.6.0"
 
 __all__ = [
     "bootstrap",
@@ -43,6 +44,7 @@ __all__ = [
     "bootstrap_two_sample",
     "TwoSampleBootstrapResult",
     "ConfidenceInterval",
+    "RatioOfSums",
     "__version__",
 ]
 

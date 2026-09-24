@@ -21,7 +21,7 @@ relative lift require a stable nonzero control denominator.
 
 | Situation | Method | Main setting | Main caution |
 |---|---|---|---|
-| Independent observations, general scalar statistic | `bca` | — | can be unstable for tiny samples or nonsmooth statistics |
+| Independent observations, smooth scalar statistic | `bca` | — | can undercover skewed nonlinear ratios even outside tiny samples |
 | Independent observations, simple baseline | `percentile` | — | transformation and bias behavior can be weak |
 | Independent observations, reflected interval | `basic` | — | relies on a useful error-distribution reflection |
 | Bootstrap-t is scientifically justified | `studentized` | `n_inner=` | much more expensive; nested SE must be stable |
@@ -38,7 +38,11 @@ relative lift require a stable nonzero control denominator.
 
 `bca` is a reasonable starting point for many smooth scalar statistics, not a
 universal best method. Compare it with `percentile` and investigate large
-disagreements. `studentized` is useful only when the nested standard-error
+disagreements. For ratios of sums, also compare `basic`; the 0.6 known-truth
+study found BCa undercoverage with skew and dependent numerator/denominator
+components. No method was uniformly best, especially with few clusters. See
+[Composite metrics](composite-metrics.md#interval-method-is-part-of-the-analysis).
+`studentized` is useful only when the nested standard-error
 estimate is meaningful and its extra cost is acceptable.
 
 `bayesian` draws Dirichlet weights. `np.mean`, `np.nanmean`, and `np.average`

@@ -1,5 +1,148 @@
 # Benchmarks
 
+## Composite metrics: 0.6.0 release evidence
+
+The 0.6.0 runner is separate from the 0.4.4/0.5.0 evidence below. It imports
+checkout source and records its SHA-256 alongside version, commit, and
+environment. The release study was run before the final version-only bump;
+the source fingerprints and commits identify exactly what was measured.
+
+```bash
+python benchmarks/bench_composite_metrics.py --profile quick \
+  --output-dir benchmark_runs/v0.6.0-composite-quick
+python benchmarks/bench_composite_metrics.py --profile validation \
+  --output-dir benchmark_runs/v0.6.0-composite-validation
+```
+
+`quick` uses 2 trials and 99 resamples per cell; `validation` uses 30 trials and
+499 resamples. Both are preliminary checks, **not release coverage evidence**.
+Eleven scenarios cover independent/paired/clustered ratios, heavy skew,
+denominator changes, sparse orders, a larger-cluster comparison, and dependent
+activity/price cases at both small and larger cluster counts. References
+resample entire rows or clusters, never columns separately. Delta-method
+intervals are another approximation, not a ground-truth coverage guarantee.
+
+### Dependent activity and price: known truth
+
+The new `activity_price`, `activity_price_covariance`,
+`cluster_activity_price`, and `cluster_activity_price_large` scenarios share a
+latent standard-normal variable `Z`. Conditional order count is Poisson with mean
+`rate * exp(b * Z - b² / 2)`; price is `exp(m + c * Z + s * epsilon)`, where
+`epsilon` is an independent standard normal. Revenue is order count times price.
+Thus the population ratio is:
+
+```text
+E[revenue] / E[orders] = exp(m + b*c + (c² + s²)/2)
+```
+
+It is **not** simply mean price. In the covariance-change scenario, both arms
+have the same marginal price distribution and mean order rate, but the
+activity-price relationship changes the order-weighted metric. The cluster
+case shares latent activity/price within clusters; cluster size is independent
+of these variables, so the same known-truth formula applies. Tests check the
+formula against large generated populations; this does not establish interval
+coverage. These models do not represent informative cluster sizes.
+
+```bash
+python benchmarks/bench_composite_metrics.py --profile validation \
+  --scenario activity_price --scenario activity_price_covariance \
+  --scenario cluster_activity_price --scenario cluster_activity_price_large \
+  --output-dir benchmark_runs/v0.6.0-activity-price-validation
+```
+
+### Completed candidate evidence and the resulting correction
+
+The first release-profile run completed all 70 cells then present: 300
+independently generated datasets per cell and 4,999 resamples, on macOS arm64
+with Python 3.11.5, NumPy 2.2.6, and SciPy 1.17.1. It is pinned to commit
+`e6d11c2` and source SHA-256
+`260c05d1f269097bd5e089e6b070745210d8b0bf9512a20b980aa2dcc56d94d8`.
+The current runner adds the previously missing larger correlated-cluster cell,
+so that completed run is evidence for the measured source, not the final 77-cell
+release gate.
+
+Empirical coverage for bootstrapx's nominal 95% intervals was:
+
+| Scenario | Percentile | Basic | BCa |
+|---|---:|---:|---:|
+| Independent ratio | 93.3% | 93.7% | 92.0% |
+| Paired ratio | 93.7% | 95.0% | 93.0% |
+| Cluster ratio (24/30 clusters) | 92.0% | 91.0% | 90.7% |
+| Heavy skew | 94.3% | 96.3% | 88.3% |
+| Denominator change | 95.7% | 95.3% | 95.3% |
+| Cluster ratio (100/120 clusters) | 94.3% | 95.7% | 94.3% |
+| Dependent activity/price | 91.7% | 93.7% | 90.0% |
+| Activity/price covariance change | 94.0% | 95.0% | 90.0% |
+| Clustered activity/price (24/30 clusters) | 93.7% | 92.3% | 87.0% |
+
+SciPy's scalar reference was within one percentage point in every matching
+non-sparse cell and produced nearly identical widths. This makes an
+implementation discrepancy unlikely, but does **not** make the intervals
+well-calibrated. For BCa in the heavy-skew and two dependent IID scenarios, the
+upper Wilson bound was below 95%; for clustered activity/price it was 90.3%.
+The practical example no longer presents BCa as the automatic ratio choice.
+
+All non-sparse cells produced 300 valid intervals and no execution failures.
+The deliberately sparse scenario produced no valid bootstrap interval because
+the observed or resampled order denominator was zero; bootstrapx and SciPy both
+failed explicitly instead of silently dropping draws. This is expected safety
+behavior, not 0% evidence for a defined interval procedure.
+
+The supplemental release-profile run for the added 100/120-cluster correlated
+case completed 7/7 cells at commit `f6e2d9c` and source SHA-256
+`2be19c420defa3a1968b660876271643d74b6d97509cb0c07e31562f1e748645`.
+All 300 trials per method were valid with no failures:
+
+| Library | Percentile | Basic | BCa | Delta normal |
+|---|---:|---:|---:|---:|
+| bootstrapx | 94.7% | 95.0% | 93.0% | — |
+| SciPy | 94.3% | 94.7% | 92.7% | — |
+| analytic delta reference | — | — | — | 95.0% |
+
+The Wilson intervals include 95% for every method, so 300 trials do not prove
+the small remaining BCa shortfall is systematic. The important applied result
+is that the severe 24/30-cluster undercoverage did not persist at 100/120
+clusters. This supports a finite-sample warning, not a universal cluster-count
+threshold. Together the original run and the source-matched supplemental run
+cover all 77 cells in the current study; provenance remains separate rather
+than pretending they were one execution.
+
+### Interpretation and release runs
+
+Release-profile small-cluster results demonstrate undercoverage. Agreement with
+SciPy does not resolve that finite-sample statistical issue. Both large-cluster
+scenarios are near nominal, including correlated numerator and denominator
+components. Use repeatable `--scenario cluster --scenario
+cluster_large --scenario cluster_activity_price
+--scenario cluster_activity_price_large` to focus a run; that selection is part
+of the resume contract.
+
+`results.csv` reports failures, invalid intervals, coverage across **all**
+trials, conditional coverage among valid trials, and Wilson bounds for the
+all-trial proportion. Sparse scenarios intentionally expose undefined sample
+denominators; completing the runner does not imply every cell succeeded.
+`runtime.csv` separately measures warm-up, median repeated execution and
+`tracemalloc` allocations, including scalar/bounded-vectorized SciPy for
+independent metrics and scalar cluster-index references for clustered metrics.
+Allocation peaks are not process RSS.
+
+Long runs require a clean worktree, including untracked source/tests. Commit
+the candidate locally first; pushing is not required. Release profile uses
+300 trials/cell and 4,999 resamples; statistical profile uses 1,000 trials/cell.
+
+```bash
+python benchmarks/bench_composite_metrics.py --profile release \
+  --output-dir benchmark_runs/v0.6.0-composite-release
+# Resume only with the same source, commit, environment and profile:
+python benchmarks/bench_composite_metrics.py --profile release \
+  --output-dir benchmark_runs/v0.6.0-composite-release --resume
+```
+
+Coverage checkpoints per cell; an interrupted cell restarts. Progress prints
+per cell and every 10 trials in longer profiles. Timing is rerun on resume.
+Changed source/environment/configuration is rejected. Outputs remain under
+ignored `benchmark_runs/`, not in the installed library payload.
+
 Benchmarks answer three different questions and should not be mixed:
 
 1. **Runtime:** how long one configured call takes on one machine.

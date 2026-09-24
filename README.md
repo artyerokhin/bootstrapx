@@ -70,6 +70,13 @@ pip install "bootstrapx-lib[pandas,sklearn,numba]"  # all optional features
 
 ## Quick Start
 
+Version 0.6.0 adds joint-column scalar metrics, optional analysis-unit ID
+checks, and reporting metadata. See the
+[assigned-user/order walkthrough](docs/composite-metrics.md) for the complete
+workflow. Its known-truth evidence includes skewed, denominator-change, and
+correlated activity/price cases; method limitations are reported rather than
+hidden behind aggregate coverage.
+
 ### Basic usage
 
 ```python
@@ -307,7 +314,7 @@ Commands and resume instructions are in the benchmark documentation.
 
 | Method | `method=` | Use case |
 |---|---|---|
-| BCa | `"bca"` | General-purpose starting point for scalar statistics |
+| BCa | `"bca"` | Smooth scalar statistics; verify finite-sample behavior |
 | Percentile | `"percentile"` | Simple, fast |
 | Basic (Hall) | `"basic"` | Reflected bootstrap interval |
 | Studentized | `"studentized"` | Bootstrap-t; expensive nested resampling |
@@ -346,7 +353,7 @@ If you use bootstrapx in academic work:
   author  = {Erokhin, Artem},
   title   = {bootstrapx: Practical bootstrap uncertainty estimation},
   url     = {https://github.com/artyerokhin/bootstrapx},
-  version = {0.5.1},
+  version = {0.6.0},
   year    = {2026},
 }
 ```

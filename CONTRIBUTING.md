@@ -1,5 +1,20 @@
 # Contributing to bootstrapx
 
+## Composite metrics development checks
+
+The 0.6.0 work is unreleased. Install the checkout editable before using its API;
+an installed 0.5.1 wheel does not include it. Additional local checks:
+
+```bash
+pytest tests/test_analysis_units.py tests/test_assigned_user_example.py tests/test_composite_benchmark.py
+ruff check src tests examples benchmarks/bench_composite_metrics.py
+python examples/assigned_users_composite_metrics.py
+python benchmarks/bench_composite_metrics.py --profile quick --output-dir benchmark_runs/composite-quick
+```
+
+Example tests require pandas and skip when it is absent. Benchmark smoke/resume
+checks require only core SciPy/NumPy. See the benchmark guide before long runs.
+
 Thanks for helping make bootstrapx more useful for applied data science.
 
 ## Before opening a change

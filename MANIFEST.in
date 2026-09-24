@@ -3,3 +3,5 @@ include notebooks/06_real_world_ab_hillstrom.ipynb
 include notebooks/07_product_ab_reference.ipynb
 include pytest.ini
 include tests/conftest.py
+include examples/assigned_users_composite_metrics.py
+include benchmarks/bench_composite_metrics.py
