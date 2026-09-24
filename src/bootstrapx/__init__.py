@@ -36,7 +36,7 @@ except ImportError:
 try:
     __version__ = version("bootstrapx-lib")
 except PackageNotFoundError:
-    __version__ = "0.5.1"
+    __version__ = "0.6.0"
 
 __all__ = [
     "bootstrap",

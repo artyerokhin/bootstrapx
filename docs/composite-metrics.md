@@ -1,17 +1,15 @@
 # Composite metrics: assigned users and orders
 
-!!! warning "Unreleased development API"
-    This guide describes the local 0.6.0 development branch, not the published
-    0.5.1 package. Install the checkout to try it. Release coverage and
-    performance evidence for this path is still pending.
+!!! note "Added in 0.6.0"
+    Joint-column scalar metrics, `RatioOfSums`, analysis-unit ID checks, and
+    reporting metadata are new in 0.6.0. Read the interval-method limitations
+    below before applying the ratio workflow to decision-critical experiments.
 
 ## Start from assigned users, not just observed orders
 
 The executable [offline example](https://github.com/artyerokhin/bootstrapx/blob/main/examples/assigned_users_composite_metrics.py)
 generates synthetic assignments and orders, validates them, aggregates orders
-by user, and left-joins the aggregates to **all assigned users**. The file is
-currently local to the development branch; the main-branch link becomes valid
-only when that branch is merged.
+by user, and left-joins the aggregates to **all assigned users**.
 
 From the checkout:
 
@@ -118,8 +116,8 @@ labels, resampling unit and counts, feature count, ID-validation status,
 confidence level, effective batch size, seed kind/value, and package version.
 Raw IDs/data and callable objects are not stored. A supplied Generator is
 identified as such; its full state is not saved, and the seed is unknown.
-Local development still reports package version 0.5.1 until the release bump;
-that value alone does not identify uncommitted development code.
+Package version alone does not identify an uncommitted checkout; benchmark
+evidence also records the commit and a source fingerprint.
 
 Labels do not scale values or verify units. Difference units follow the metric;
 ratio/lift effects are dimensionless. Revenue/user is the example's primary

@@ -12,9 +12,9 @@
 
 ::: bootstrapx.TwoSampleBootstrapResult
 
-### Composite metric helper (unreleased development API)
+### Composite metric helper
 
-Not available in the published 0.5.1 package. See [Composite metrics](composite-metrics.md).
+Added in 0.6.0. See [Composite metrics](composite-metrics.md).
 
 ::: bootstrapx.RatioOfSums
 

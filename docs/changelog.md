@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — 0.6.0 development
+## 0.6.0 — 2026-09-24
 
 - Joint-column scalar metrics, `RatioOfSums`, and design-aware BCa.
 - Optional row-unit ID checks and compact, copy-safe reporting metadata.
@@ -14,8 +14,8 @@
   an automatic ratio choice, and small-cluster/skew limitations are explicit.
 - A supplemental 300-dataset run covers correlated ratios at 100/120 clusters;
   all methods' Monte Carlo intervals include the nominal 95% target.
-- See [Composite metrics](composite-metrics.md). The published version remains
-  0.5.1; release statistical/performance evidence is still pending.
+- See [Composite metrics](composite-metrics.md) and the source-matched
+  [statistical/performance evidence](benchmarks.md#composite-metrics-060-release-evidence).
 
 ## 0.5.1 — 2026-09-17
 

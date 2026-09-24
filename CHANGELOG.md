@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — 0.6.0 development
+## [0.6.0] — 2026-09-24
 
 ### Added
 - Opt-in joint multicolumn input for scalar two-sample metrics, including
@@ -34,7 +34,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Supplemental 300-dataset evidence shows near-nominal behavior for correlated
   ratios at 100/120 clusters while retaining the explicit small-cluster warning.
 
-Release coverage and performance evidence for the new path remains pending.
+Release coverage and performance evidence is recorded in the benchmark guide,
+including finite-sample failures and source-matched provenance.
 
 ## [0.5.1] — 2026-09-17
 

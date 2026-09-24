@@ -1,8 +1,8 @@
-# Composite metric API draft (unreleased)
+# Composite metric API contract (0.6.0)
 
-Implemented locally on `feature/v0.6.0-composite-metrics`. This is not an API
-available in the published 0.5.1 package. The version will change only when the
-candidate is ready; do not publish artifacts from this development checkout.
+Implemented on `feature/v0.6.0-composite-metrics` and included in the local
+0.6.0 release candidate. Do not publish artifacts until the candidate checks,
+PR, and tag workflow have completed.
 
 ## Minimal example
 
@@ -80,7 +80,7 @@ ratio. Choose a defensible metric/data design rather than silently adding epsilo
 ## Local checks
 
 The test runner uses source code through `pytest.ini`. When trying the new API
-directly, ensure imports use the local source, not an installed 0.5.1 wheel:
+directly, ensure imports use the local source, not another installed wheel:
 
 ```bash
 PYTHONPATH=src .venv-release/bin/python -c \
@@ -89,8 +89,8 @@ PYTHONPATH=src .venv-release/bin/python -c \
 ```
 
 Exact-reference tests verify implementation mechanics. A matched SciPy index
-bootstrap checks interval agreement for an ordinary ratio scenario. Neither
-constitutes the full known-truth coverage evidence required for release; that
-  study is still pending. The assigned-user/order example now exists in
-  `examples/assigned_users_composite_metrics.py`; it runs in ordinary CI tests
-  when pandas is present and preserves assigned non-buyers.
+bootstrap checks interval agreement for an ordinary ratio scenario. Separate
+known-truth release studies cover skew, denominator changes, activity/price
+dependence, and both small and larger cluster counts. The assigned-user/order
+example is in `examples/assigned_users_composite_metrics.py`; it runs in
+ordinary CI tests when pandas is present and preserves assigned non-buyers.

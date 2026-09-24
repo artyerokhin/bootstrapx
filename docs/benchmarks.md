@@ -1,12 +1,11 @@
 # Benchmarks
 
-## Composite metrics: unreleased development checks
+## Composite metrics: 0.6.0 release evidence
 
-The 0.6.0 development runner is separate from the published 0.4.4/0.5.0
-evidence below. No new release numbers are claimed yet. It imports checkout
-source and records its SHA-256 alongside version, commit and environment.
-Uncommitted development still reports version 0.5.1; the fingerprint records
-what was actually measured.
+The 0.6.0 runner is separate from the 0.4.4/0.5.0 evidence below. It imports
+checkout source and records its SHA-256 alongside version, commit, and
+environment. The release study was run before the final version-only bump;
+the source fingerprints and commits identify exactly what was measured.
 
 ```bash
 python benchmarks/bench_composite_metrics.py --profile quick \
@@ -19,15 +18,15 @@ python benchmarks/bench_composite_metrics.py --profile validation \
 499 resamples. Both are preliminary checks, **not release coverage evidence**.
 Eleven scenarios cover independent/paired/clustered ratios, heavy skew,
 denominator changes, sparse orders, a larger-cluster comparison, and dependent
-activity/price cases at both small and larger cluster counts. References resample entire rows or
-clusters, never columns separately. Delta-method intervals are another
-approximation, not a ground-truth coverage guarantee.
+activity/price cases at both small and larger cluster counts. References
+resample entire rows or clusters, never columns separately. Delta-method
+intervals are another approximation, not a ground-truth coverage guarantee.
 
 ### Dependent activity and price: known truth
 
 The new `activity_price`, `activity_price_covariance`,
-`cluster_activity_price`, and `cluster_activity_price_large` scenarios share a latent standard-normal variable
-`Z`. Conditional order count is Poisson with mean
+`cluster_activity_price`, and `cluster_activity_price_large` scenarios share a
+latent standard-normal variable `Z`. Conditional order count is Poisson with mean
 `rate * exp(b * Z - b² / 2)`; price is `exp(m + c * Z + s * epsilon)`, where
 `epsilon` is an independent standard normal. Revenue is order count times price.
 Thus the population ratio is:
