@@ -81,8 +81,9 @@ for skewed and activity-correlated ratios despite close agreement with SciPy;
 the lowest observed result was 87% for a nominal 95% interval with 24/30
 clusters. That agreement is an implementation cross-check, not a coverage
 guarantee. Baseline clustered ratios were near nominal at 100/120 clusters, but
-the corresponding large correlated-cluster case remains a separate release
-gate. Do not infer a universal minimum safe cluster count from one simulation.
+the corresponding correlated case reached 94.7%, 95.0%, and 93.0% for
+percentile, basic, and BCa. Their Monte Carlo intervals all included 95%.
+Do not infer a universal minimum safe cluster count from two simulations.
 
 ## API maturity
 

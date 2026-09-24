@@ -31,6 +31,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The practitioner example uses `basic`, rather than presenting BCa as an
   automatic choice for revenue/order. Documentation records the observed
   finite-sample undercoverage and requires method sensitivity for critical ratios.
+- Supplemental 300-dataset evidence shows near-nominal behavior for correlated
+  ratios at 100/120 clusters while retaining the explicit small-cluster warning.
 
 Release coverage and performance evidence for the new path remains pending.
 

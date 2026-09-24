@@ -89,13 +89,31 @@ the observed or resampled order denominator was zero; bootstrapx and SciPy both
 failed explicitly instead of silently dropping draws. This is expected safety
 behavior, not 0% evidence for a defined interval procedure.
 
+The supplemental release-profile run for the added 100/120-cluster correlated
+case completed 7/7 cells at commit `f6e2d9c` and source SHA-256
+`2be19c420defa3a1968b660876271643d74b6d97509cb0c07e31562f1e748645`.
+All 300 trials per method were valid with no failures:
+
+| Library | Percentile | Basic | BCa | Delta normal |
+|---|---:|---:|---:|---:|
+| bootstrapx | 94.7% | 95.0% | 93.0% | — |
+| SciPy | 94.3% | 94.7% | 92.7% | — |
+| analytic delta reference | — | — | — | 95.0% |
+
+The Wilson intervals include 95% for every method, so 300 trials do not prove
+the small remaining BCa shortfall is systematic. The important applied result
+is that the severe 24/30-cluster undercoverage did not persist at 100/120
+clusters. This supports a finite-sample warning, not a universal cluster-count
+threshold. Together the original run and the source-matched supplemental run
+cover all 77 cells in the current study; provenance remains separate rather
+than pretending they were one execution.
+
 ### Interpretation and release runs
 
 Release-profile small-cluster results demonstrate undercoverage. Agreement with
-SciPy does not resolve that finite-sample statistical issue. The baseline large
-cluster scenario is near nominal; the new `cluster_activity_price_large`
-scenario tests whether that improvement survives correlated numerator and
-denominator components. Use repeatable `--scenario cluster --scenario
+SciPy does not resolve that finite-sample statistical issue. Both large-cluster
+scenarios are near nominal, including correlated numerator and denominator
+components. Use repeatable `--scenario cluster --scenario
 cluster_large --scenario cluster_activity_price
 --scenario cluster_activity_price_large` to focus a run; that selection is part
 of the resume contract.

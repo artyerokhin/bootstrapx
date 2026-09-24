@@ -12,6 +12,8 @@
   relationship between arms, and clustered dependence at two unit-count regimes.
 - Release evidence corrected the practical guidance: BCa is not presented as
   an automatic ratio choice, and small-cluster/skew limitations are explicit.
+- A supplemental 300-dataset run covers correlated ratios at 100/120 clusters;
+  all methods' Monte Carlo intervals include the nominal 95% target.
 - See [Composite metrics](composite-metrics.md). The published version remains
   0.5.1; release statistical/performance evidence is still pending.
 
