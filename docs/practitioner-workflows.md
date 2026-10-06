@@ -6,8 +6,7 @@ without writing a resampling loop. Both use synthetic data, fixed seeds, and
 one generated dataset cannot establish 95% coverage or real-world adoption.
 
 The assigned-user example works on 0.6.0. The paired-cluster comparison and
-saved-interval reuse below are **unreleased**, so run them from this development
-checkout, not from a 0.6.0 PyPI installation:
+saved-interval reuse below require 0.7.0 or later. From a repository checkout:
 
 ```bash
 python -m pip install -e ".[pandas,sklearn]"
@@ -113,10 +112,10 @@ and seed do not encounter that case.
 ## What this exercise changed in the roadmap
 
 Both questions were already answerable in 0.6.0, using a custom stacked delta
-statistic for model comparison. The development API now removes specific
+statistic for model comparison. The 0.7.0 API now removes specific
 obstacles visible in those scripts:
 
-| Workflow step | Caller responsibility | Development API/recipe |
+| Workflow step | Caller responsibility | 0.7.0 API/recipe |
 |---|---|---|
 | Assigned-user metric | Validate and join assignment and event tables | Preparation recipe; no automatic missing-to-zero policy |
 | Related model outputs | Align unique observations and identify real clusters | Two matrices, shared cluster draws, optional positional ID validation |

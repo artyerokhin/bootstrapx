@@ -10,7 +10,7 @@ more sophisticated interval cannot repair the wrong independence assumption.
 | Different units in control and treatment | `bootstrap_two_sample(...)` | arms must be independent |
 | Matched or before/after rows | `paired=True` | row alignment must represent real pairs |
 | Repeated events per randomized unit | cluster IDs for both arms | define event- versus unit-weighted estimand |
-| Matched predictions on repeated entity rows (unreleased) | `paired=True`, `paired_cluster_ids=` | align unique observations; use fixed held-out models |
+| Matched predictions on repeated entity rows | `paired=True`, `paired_cluster_ids=` | align unique observations; use fixed held-out models |
 
 For independent, paired IID, and separately clustered comparisons,
 percentile, basic, and BCa intervals are available. Paired whole-cluster

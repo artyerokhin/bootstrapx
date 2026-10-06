@@ -1,8 +1,8 @@
 # Benchmarks
 
-## Paired-cluster development checks
+## Paired-cluster release checks
 
-This is evidence for the unreleased shared-cluster comparison, not a new
+This is evidence for the 0.7.0 shared-cluster comparison, not a new
 performance claim or a substitute for the earlier release studies.
 The source-only runner prints progress, environment, package-source and
 runner fingerprints; it writes no files and requires no private datasets.
@@ -22,7 +22,7 @@ independent row noise. Equal-size groups have five rows and true difference
 `0.3 + E[K*U]/E[K] = 0.3 + 1/sqrt(2*pi)`, not `0.3`.
 All metrics use common whole-cluster rows; basic reuses the same draws.
 
-A local development run on macOS arm64, Python 3.11.5, NumPy 2.2.6,
+A local 0.7.0 release-candidate run on macOS arm64, Python 3.11.5, NumPy 2.2.6,
 SciPy 1.17.1 used 1,000 independent datasets per scenario and 1,999 draws per
 dataset. Nominal 95% coverage was:
 
@@ -32,13 +32,11 @@ dataset. Nominal 95% coverage was:
 | 100 equal-size clusters | 95.1% | 95.1% | 1.3 percentage points |
 | 100 informative-size clusters | 94.6% | 95.7% | 1.3–1.4 percentage points |
 
-Measured development package-source SHA-256:
-`a37bdde20ad7f8e7c31087f646defb8a74dd24d3cea8efde22ca0d319db5cdcf`.
+Measured 0.7.0 package-source SHA-256:
+`5ecb17605405bd426ee0b1ab2b39e9454a6b6bccb77b7d3e5a9687b1617206b7`.
 Runner SHA-256:
 `68c2be5c40c37413e121b258c3339dc9ed4d834d58ec38e03de0ff4a6b7be941`.
-The checkout still reports version 0.6.0; these fingerprints distinguish
-unreleased code from the published package. They should not be substituted
-with a later release version without rerunning its measured source.
+These fingerprints identify the exact code and runner used for this study.
 
 These are separate confidence statements about estimated **coverage**, not
 the data-level effect intervals. The small-cluster shortfall remains after
@@ -49,7 +47,7 @@ This runner does not establish AUC calibration, behavior under arbitrary
 heavy tails, or training-procedure uncertainty.
 
 For 1,999 matched whole-cluster draws, three-repeat local median runtimes
-were about `0.074 s` for bootstrapx and `0.053 s` for a scalar SciPy statistic
+were about `0.046 s` for bootstrapx and `0.045 s` for a scalar SciPy statistic
 that reconstructs the same rows. Distinct random streams give nearby, not
 identical, endpoints. These small measurements do **not** show a speed
 advantage, and are not transferable performance promises.

@@ -28,7 +28,7 @@ are supported. The library does not provide p-values, sequential-testing
 guarantees, CUPED/regression adjustment, multiple-testing correction, or
 two-sample stratified resampling.
 
-The development API adds paired whole-cluster comparisons with a common
+Version 0.7.0 adds paired whole-cluster comparisons with a common
 cluster-ID array and optional unique observation keys. It supports only
 percentile/basic, not BCa. Matching keys do not establish matching outcomes,
 absence of leakage, or independence of entities. These intervals describe

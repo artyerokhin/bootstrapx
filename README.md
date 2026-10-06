@@ -33,8 +33,8 @@ direct experiment-effect comparisons.
 | A time-series interval | MBB, CBB, stationary, tapered, and sieve methods preserve different forms of dependence. |
 | Repeated observations by user, store, or account | Cluster bootstrap resamples whole groups instead of treating their rows as independent. |
 | Known sampling strata | Stratified resampling preserves the stratum composition. |
-| Same models evaluated on repeated entity rows (unreleased) | Paired whole-cluster comparisons keep corresponding predictions together and can validate observation keys. |
-| Clusters sampled inside fixed strata (unreleased) | `cluster_strata` resamples complete clusters within each stratum and reports design counts. |
+| Same models evaluated on repeated entity rows | Paired whole-cluster comparisons keep corresponding predictions together and can validate observation keys. |
+| Clusters sampled inside fixed strata | `cluster_strata` resamples complete clusters within each stratum and reports design counts. |
 | A reproducible analysis workflow | `random_state`, batched execution, result exports, pandas, and scikit-learn integrations are built in. |
 
 For a simple IID interval for a standard statistic, SciPy may be all you need.
@@ -47,8 +47,8 @@ two fixed models on patients with repeated observations. Both include SciPy
 references and state what their intervals do and do not estimate.
 The new [paired model-comparison workflow](docs/paired-model-comparison.md)
 adds shared cluster draws, positional key checks, and saved-interval reuse.
-It is currently available from the development checkout, not the 0.6.0 PyPI
-package; its Brier example runs offline and has a known population effect.
+It is available in 0.7.0; its Brier example runs offline and has a known
+population effect.
 For a design with both clusters and fixed strata, see the
 [cluster-within-strata guide](docs/design-aware-clusters.md). This is not a
 general complex-survey bootstrap or a guarantee of nominal coverage.
@@ -346,7 +346,7 @@ Commands and resume instructions are in the benchmark documentation.
 | Wild | `"wild"` | Heteroscedastic residuals (Wu 1986) |
 | Cluster | `"cluster"` | One-level grouped / panel data |
 | Stratified | `"strata"` | Stratified sampling designs |
-| Clusters within strata (unreleased) | `"cluster_strata"` | Complete clusters sampled inside fixed strata |
+| Clusters within strata | `"cluster_strata"` | Complete clusters sampled inside fixed strata |
 
 ---
 
@@ -370,7 +370,7 @@ If you use bootstrapx in academic work:
   author  = {Erokhin, Artem},
   title   = {bootstrapx: Practical bootstrap uncertainty estimation},
   url     = {https://github.com/artyerokhin/bootstrapx},
-  version = {0.6.0},
+  version = {0.7.0},
   year    = {2026},
 }
 ```

@@ -34,9 +34,7 @@ DataFrame.
 `TwoSampleBootstrapResult` follows the same compact-export policy and adds arm
 estimates, effect/design metadata, sample sizes, and optional cluster counts.
 
-### Development additions
-
-Not yet in the 0.6.0 PyPI package:
+### Added in 0.7.0
 
 - `paired=True, paired_cluster_ids=...` selects shared whole-cluster draws;
   specify `method="percentile"` or `"basic"`. The default BCa is unsupported

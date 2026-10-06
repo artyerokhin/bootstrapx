@@ -1,7 +1,7 @@
 # Compare fixed models on repeated observations
 
-**Development API, not yet released on PyPI.** Use an editable installation
-from this checkout to run the examples below.
+Added in 0.7.0. Install `bootstrapx-lib>=0.7.0` or use an editable
+installation from the repository to run the examples below.
 
 Two models often predict the same records, while one patient, user, or store
 contributes several records. Neither independent-arm resampling nor paired

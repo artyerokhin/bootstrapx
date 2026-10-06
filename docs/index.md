@@ -28,16 +28,16 @@ controlled, and reproducible.
 | Independent control and treatment units | `bootstrap_two_sample` | two samples |
 | Matched control/treatment outcomes | `bootstrap_two_sample` | `paired=True` |
 | Repeated events inside experiment arms | `bootstrap_two_sample` | cluster IDs for both arms |
-| Same records, repeated entities (unreleased) | `bootstrap_two_sample` | `paired=True`, `paired_cluster_ids=` |
+| Same records, repeated entities | `bootstrap_two_sample` | `paired=True`, `paired_cluster_ids=` |
 | Independent rows | `bca` or `percentile` | none |
 | Repeated rows per user, account, or store | `cluster` | `cluster_ids=` |
 | Stationary time series | `stationary` or `mbb` | `mean_block=` or `block_length=` |
 | Known sampling strata | `strata` | `strata_ids=` |
 | Complete clusters inside fixed strata | `cluster_strata` | `cluster_ids=`, `strata_ids=` |
 
-`cluster_strata`, paired whole-cluster comparison, automatic design reports,
-and saved-interval reuse are development additions, not in the 0.6.0 PyPI
-package yet. See [paired model comparison](paired-model-comparison.md).
+Version 0.7.0 adds `cluster_strata`, paired whole-cluster comparison, automatic
+design reports, and saved-interval reuse. See
+[paired model comparison](paired-model-comparison.md).
 
 ```python
 import numpy as np

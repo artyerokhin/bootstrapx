@@ -5,6 +5,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.7.0] — 2026-10-06
+
 ### Added
 - Paired whole-cluster two-sample comparisons through
   `paired=True, paired_cluster_ids=...`, with percentile/basic intervals.
