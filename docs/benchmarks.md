@@ -1,5 +1,66 @@
 # Benchmarks
 
+## Paired-cluster development checks
+
+This is evidence for the unreleased shared-cluster comparison, not a new
+performance claim or a substitute for the earlier release studies.
+The source-only runner prints progress, environment, package-source and
+runner fingerprints; it writes no files and requires no private datasets.
+`PYTHONPATH=src` makes it measure this checkout rather than an older installed
+package:
+
+```bash
+PYTHONPATH=src python benchmarks/bench_paired_clusters.py \
+  --trials 1000 --resamples 1999 --seed 20260928
+```
+
+The matched mean comparison shares large cluster-specific noise between
+both sides, while their difference has a cluster effect `U ~ N(0,1)` and
+independent row noise. Equal-size groups have five rows and true difference
+`0.3`. Informative group sizes are six when `U > 0`, otherwise two; the
+**row-weighted** population difference is
+`0.3 + E[K*U]/E[K] = 0.3 + 1/sqrt(2*pi)`, not `0.3`.
+All metrics use common whole-cluster rows; basic reuses the same draws.
+
+A local development run on macOS arm64, Python 3.11.5, NumPy 2.2.6,
+SciPy 1.17.1 used 1,000 independent datasets per scenario and 1,999 draws per
+dataset. Nominal 95% coverage was:
+
+| Generating design | Percentile | Basic | Approximate Monte Carlo 95% half-width |
+|---|---:|---:|---:|
+| 20 equal-size clusters | 93.3% | 93.5% | 1.5–1.6 percentage points |
+| 100 equal-size clusters | 95.1% | 95.1% | 1.3 percentage points |
+| 100 informative-size clusters | 94.6% | 95.7% | 1.3–1.4 percentage points |
+
+Measured development package-source SHA-256:
+`a37bdde20ad7f8e7c31087f646defb8a74dd24d3cea8efde22ca0d319db5cdcf`.
+Runner SHA-256:
+`68c2be5c40c37413e121b258c3339dc9ed4d834d58ec38e03de0ff4a6b7be941`.
+The checkout still reports version 0.6.0; these fingerprints distinguish
+unreleased code from the published package. They should not be substituted
+with a later release version without rerunning its measured source.
+
+These are separate confidence statements about estimated **coverage**, not
+the data-level effect intervals. The small-cluster shortfall remains after
+increasing draws from 399 to 1,999. Neither more draws nor switching between
+these two constructions is a general finite-sample correction. The two
+100-cluster settings do not establish a universal safe cluster count.
+This runner does not establish AUC calibration, behavior under arbitrary
+heavy tails, or training-procedure uncertainty.
+
+For 1,999 matched whole-cluster draws, three-repeat local median runtimes
+were about `0.074 s` for bootstrapx and `0.053 s` for a scalar SciPy statistic
+that reconstructs the same rows. Distinct random streams give nearby, not
+identical, endpoints. These small measurements do **not** show a speed
+advantage, and are not transferable performance promises.
+
+An exact seeded reference test separately checks every replicate with unequal,
+noncontiguous groups and multiple batch sizes. That checks the algorithm;
+the coverage simulations check only the stated generating models. The
+[Brier teaching example](paired-model-comparison.md) additionally exposes an
+analytical `-0.1` population effect, without treating one dataset as coverage
+evidence. No raw benchmark results are included in the installed package.
+
 ## Composite metrics: 0.6.0 release evidence
 
 The 0.6.0 runner is separate from the 0.4.4/0.5.0 evidence below. It imports

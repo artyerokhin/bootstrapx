@@ -1,9 +1,10 @@
 # bootstrapx
 
-`bootstrapx` estimates uncertainty for scalar statistics and explicit
-treatment-versus-control effects. Its strongest practical use cases are
-experiment comparisons, custom confidence intervals, dependent time series,
-and grouped data.
+`bootstrapx` estimates uncertainty for a scalar metric using a resampling
+scheme that reflects how the observations are related. Start with the metric
+and the independent unit: a row, a matched pair, a user, a patient, or a time
+block. Its practical use cases include experiment comparisons, custom metrics,
+dependent time series, and grouped data.
 
 ## Why use it?
 
@@ -27,10 +28,16 @@ controlled, and reproducible.
 | Independent control and treatment units | `bootstrap_two_sample` | two samples |
 | Matched control/treatment outcomes | `bootstrap_two_sample` | `paired=True` |
 | Repeated events inside experiment arms | `bootstrap_two_sample` | cluster IDs for both arms |
+| Same records, repeated entities (unreleased) | `bootstrap_two_sample` | `paired=True`, `paired_cluster_ids=` |
 | Independent rows | `bca` or `percentile` | none |
 | Repeated rows per user, account, or store | `cluster` | `cluster_ids=` |
 | Stationary time series | `stationary` or `mbb` | `mean_block=` or `block_length=` |
-| Known sampling strata | `strata` | `strata=` |
+| Known sampling strata | `strata` | `strata_ids=` |
+| Complete clusters inside fixed strata | `cluster_strata` | `cluster_ids=`, `strata_ids=` |
+
+`cluster_strata`, paired whole-cluster comparison, automatic design reports,
+and saved-interval reuse are development additions, not in the 0.6.0 PyPI
+package yet. See [paired model comparison](paired-model-comparison.md).
 
 ```python
 import numpy as np
@@ -64,9 +71,10 @@ estimate, named effect, experiment design, and optional cluster counts. See
 
 ## Important scope boundary
 
-bootstrapx 0.5 still expects one scalar statistic per arm and one scalar
+bootstrapx 0.6 still expects one scalar statistic per arm and one scalar
 effect. It does not provide p-values, vector-valued simultaneous intervals,
 automatic missing-value handling, CUPED, or sequential-testing guarantees.
+Multicolumn input can represent one scalar composite metric.
 Two separate one-sample intervals remain different from a direct interval for
 their effect.
 
@@ -82,7 +90,9 @@ decision-critical analysis.
    [time series](time-series.md) — complete workflow examples.
 4. [Product A/B reference](product-ab.md) — a controlled, reproducible
    user-randomized workflow with a known effect and a decision threshold.
-5. [Real-data A/B case study](real-world-ab.md) — a public email experiment
+5. [Practitioner workflows](practitioner-workflows.md) — assigned-user orders
+   and grouped evaluation of two models, with matched SciPy references.
+6. [Real-data A/B case study](real-world-ab.md) — a public email experiment
    with sparse conversion and spend outcomes.
-6. [Integrations and performance](integrations.md) — pandas, sklearn, and when
+7. [Integrations and performance](integrations.md) — pandas, sklearn, and when
    the optional Numba extra is useful.

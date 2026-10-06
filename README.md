@@ -2,7 +2,7 @@
 
 # bootstrapx
 
-**Practical bootstrap uncertainty estimation for Python.**
+**Bootstrap intervals for your metrics, with resampling that respects your data.**
 
 [![CI](https://github.com/artyerokhin/bootstrapx/actions/workflows/ci.yml/badge.svg)](https://github.com/artyerokhin/bootstrapx/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/bootstrapx-lib)](https://pypi.org/project/bootstrapx-lib/)
@@ -12,7 +12,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-mkdocs-blue)](https://artyerokhin.github.io/bootstrapx)
 
-*Two-sample experiments · 16 bootstrap methods · sklearn/pandas · bounded batches*
+*Custom metrics · independent and grouped data · experiment comparisons · time series*
 
 </div>
 
@@ -20,9 +20,11 @@
 
 ## Why bootstrapx?
 
-Use **bootstrapx** when ordinary IID resampling is not enough or when you want
-one API for IID intervals, block bootstrap, clustered/stratified resampling,
-Bayesian bootstrap, pandas summaries, and bootstrap cross-validation.
+Use **bootstrapx** to estimate the uncertainty of your metric while making the
+resampling unit explicit. That unit might be an observation, a matched pair,
+a user with many events, or a block of dependent time-series values. The
+library supports IID, clustered, stratified, and time-series resampling, plus
+direct experiment-effect comparisons.
 
 | If you need… | Start with bootstrapx because… |
 |---|---|
@@ -31,11 +33,25 @@ Bayesian bootstrap, pandas summaries, and bootstrap cross-validation.
 | A time-series interval | MBB, CBB, stationary, tapered, and sieve methods preserve different forms of dependence. |
 | Repeated observations by user, store, or account | Cluster bootstrap resamples whole groups instead of treating their rows as independent. |
 | Known sampling strata | Stratified resampling preserves the stratum composition. |
+| Same models evaluated on repeated entity rows (unreleased) | Paired whole-cluster comparisons keep corresponding predictions together and can validate observation keys. |
+| Clusters sampled inside fixed strata (unreleased) | `cluster_strata` resamples complete clusters within each stratum and reports design counts. |
 | A reproducible analysis workflow | `random_state`, batched execution, result exports, pandas, and scikit-learn integrations are built in. |
 
 For a simple IID interval for a standard statistic, SciPy may be all you need.
 bootstrapx is most useful when the resampling design or the surrounding analysis
 workflow needs to be explicit.
+
+See [two runnable practitioner workflows](docs/practitioner-workflows.md):
+revenue per assigned user from an order table, and paired AUC comparison of
+two fixed models on patients with repeated observations. Both include SciPy
+references and state what their intervals do and do not estimate.
+The new [paired model-comparison workflow](docs/paired-model-comparison.md)
+adds shared cluster draws, positional key checks, and saved-interval reuse.
+It is currently available from the development checkout, not the 0.6.0 PyPI
+package; its Brier example runs offline and has a known population effect.
+For a design with both clusters and fixed strata, see the
+[cluster-within-strata guide](docs/design-aware-clusters.md). This is not a
+general complex-survey bootstrap or a guarantee of nominal coverage.
 
 The library keeps resample matrices in bounded batches. The returned bootstrap
 distribution and some method-specific state still grow with `n_resamples` or
@@ -330,6 +346,7 @@ Commands and resume instructions are in the benchmark documentation.
 | Wild | `"wild"` | Heteroscedastic residuals (Wu 1986) |
 | Cluster | `"cluster"` | One-level grouped / panel data |
 | Stratified | `"strata"` | Stratified sampling designs |
+| Clusters within strata (unreleased) | `"cluster_strata"` | Complete clusters sampled inside fixed strata |
 
 ---
 

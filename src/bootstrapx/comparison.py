@@ -10,14 +10,17 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
+from bootstrapx.design import inspect_cluster_design
 from bootstrapx.stats.confidence import (
     ConfidenceInterval,
     basic_interval,
     bca_interval_from_jackknife,
     percentile_interval,
+    reused_interval,
 )
 from bootstrapx.utils import (
     auto_batch_size,
+    distribution_diagnostics,
     validate_bootstrap_distribution,
     validate_bootstrap_params,
     validate_data,
@@ -104,6 +107,16 @@ class TwoSampleBootstrapResult:
                 "Install with: pip install 'bootstrapx-lib[pandas]'"
             ) from exc
         return pd.DataFrame([self.to_dict()])
+
+    def interval(
+        self, *, confidence_level: float = 0.95, method: str = "percentile"
+    ) -> ConfidenceInterval:
+        """Return a percentile/basic interval without evaluating the metric again.
+
+        This does not change the original result, design, or resample count.
+        BCa cannot be reconstructed without its jackknife information.
+        """
+        return reused_interval(self.bootstrap_distribution, self.estimate, confidence_level, method)
 
 
 def _as_scalar(value: Any, *, source: str) -> float:
@@ -263,7 +276,10 @@ def _validate_unit_ids(ids: Any, n: int, *, name: str) -> AnyArray:
             raise ValueError(
                 f"{name} must contain hashable, non-missing scalar identifiers."
             ) from exc
-        if missing or (isinstance(identifier, float | np.floating) and not np.isfinite(identifier)):
+        if missing or (
+            isinstance(identifier, float | complex | np.floating | np.complexfloating)
+            and not np.isfinite(identifier)
+        ):
             raise ValueError(f"{name} must not contain missing or infinite identifiers.")
         if identifier in unique:
             raise ValueError(
@@ -320,6 +336,59 @@ def _child_generators(
     )
     seeds = root.integers(0, np.iinfo(np.uint64).max, size=count, dtype=np.uint64)
     return [np.random.default_rng(seed) for seed in seeds]
+
+
+def _validate_observation_alignment(
+    control_ids: Any,
+    treatment_ids: Any,
+    n_control: int,
+    n_treatment: int,
+    *,
+    paired: bool,
+) -> bool:
+    if control_ids is None and treatment_ids is None:
+        return False
+    if not paired:
+        raise ValueError("observation IDs are only supported for paired comparisons.")
+    if control_ids is None or treatment_ids is None:
+        raise ValueError(
+            "control_observation_ids and treatment_observation_ids are required together."
+        )
+    control = _validate_unit_ids(control_ids, n_control, name="control_observation_ids")
+    treatment = _validate_unit_ids(treatment_ids, n_treatment, name="treatment_observation_ids")
+    if not np.array_equal(control, treatment):
+        raise ValueError(
+            "Paired observation IDs must match in the same row order; align explicitly."
+        )
+    return True
+
+
+def _paired_cluster_distribution(
+    control: FloatArray,
+    treatment: FloatArray,
+    ids: AnyArray,
+    statistic: Statistic,
+    effect: Effect,
+    n_resamples: int,
+    batch_size: int,
+    random_state: int | np.random.Generator | None,
+) -> FloatArray:
+    _, codes = np.unique(ids, return_inverse=True)
+    order = np.argsort(codes, kind="stable")
+    groups = np.split(order, np.cumsum(np.bincount(codes))[:-1])
+    (rng,) = _child_generators(random_state, 1)
+    distribution = np.empty(n_resamples, dtype=np.float64)
+    for start in range(0, n_resamples, batch_size):
+        count = min(batch_size, n_resamples - start)
+        draws = rng.integers(0, len(groups), size=(count, len(groups)))
+        for offset, draw in enumerate(draws):
+            indices = np.concatenate([groups[int(group)] for group in draw])
+            distribution[start + offset] = _evaluate_effect(
+                effect,
+                _evaluate_statistic(statistic, control[indices]),
+                _evaluate_statistic(statistic, treatment[indices]),
+            )
+    return distribution
 
 
 def _iid_distribution(
@@ -496,6 +565,9 @@ def bootstrap_two_sample(
     allow_2d: bool = False,
     control_cluster_ids: Any | None = None,
     treatment_cluster_ids: Any | None = None,
+    paired_cluster_ids: Any | None = None,
+    control_observation_ids: Any | None = None,
+    treatment_observation_ids: Any | None = None,
     control_unit_ids: Any | None = None,
     treatment_unit_ids: Any | None = None,
     metric_name: str | None = None,
@@ -511,7 +583,9 @@ def bootstrap_two_sample(
     ``effect(statistic(control), statistic(treatment))``. Independent samples
     are resampled separately. With ``paired=True``, both samples use the same
     resampled indices. Supplying cluster IDs resamples complete clusters within
-    each arm and is mutually exclusive with paired analysis.
+    each arm and is mutually exclusive with paired analysis. For paired
+    clustered observations use ``paired=True, paired_cluster_ids=...``:
+    both sides then receive the same complete-cluster row indices.
 
     Parameters
     ----------
@@ -539,7 +613,8 @@ def bootstrap_two_sample(
         treat results with few independent units cautiously.
     paired : bool
         Resample corresponding rows together. The samples must have equal
-        length and cluster IDs cannot be supplied.
+        length. Arm-specific cluster IDs cannot be supplied; use
+        ``paired_cluster_ids`` for common clusters instead.
         Pairing is positional: pandas indices are not used to align samples.
     allow_2d : bool
         Explicitly enable multicolumn input for composite scalar metrics.
@@ -557,6 +632,16 @@ def bootstrap_two_sample(
         Independent arms must be disjoint; paired arms must match in row order.
         Cannot be combined with cluster IDs. No IDs are stored in the result.
         Omitting IDs leaves correspondence/assignment validation to the caller.
+    paired_cluster_ids : array-like or None
+        Shared cluster identifier per aligned row, requires ``paired=True``.
+        Resamples whole clusters jointly, not each side independently.
+        Currently supports only ``method="percentile"`` or ``"basic"``.
+        At least two clusters are required; this is not a safe-count threshold.
+    control_observation_ids, treatment_observation_ids : array-like or None
+        Optional unique row identifiers for paired comparisons, including
+        paired clusters. Both arrays must match in row order. No alignment,
+        sorting, joining or dropping is performed. Cannot be combined with
+        ``control_unit_ids``/``treatment_unit_ids``. IDs are never stored.
     metric_name, effect_unit : str or None
         Optional non-empty reporting labels, for example ``"revenue/order"``
         and ``"USD/order"`` for a difference. Labels do not transform values or
@@ -608,11 +693,17 @@ def bootstrap_two_sample(
         control, treatment, allow_2d=allow_2d
     )
 
-    cluster_mode = control_cluster_ids is not None or treatment_cluster_ids is not None
-    if cluster_mode and (control_cluster_ids is None or treatment_cluster_ids is None):
+    independent_cluster_mode = control_cluster_ids is not None or treatment_cluster_ids is not None
+    paired_cluster_mode = paired_cluster_ids is not None
+    cluster_mode = independent_cluster_mode or paired_cluster_mode
+    if independent_cluster_mode and (control_cluster_ids is None or treatment_cluster_ids is None):
         raise ValueError("control_cluster_ids and treatment_cluster_ids must be provided together.")
-    if paired and cluster_mode:
+    if paired and independent_cluster_mode:
         raise ValueError("paired=True cannot be combined with cluster IDs.")
+    if paired_cluster_mode and (not paired or independent_cluster_mode):
+        raise ValueError("paired_cluster_ids requires paired=True and no arm-specific cluster IDs.")
+    if paired_cluster_mode and method == "bca":
+        raise ValueError("Paired cluster comparisons currently support percentile/basic, not BCa.")
     if paired and len(control_array) != len(treatment_array):
         raise ValueError("paired samples must contain the same number of observations.")
     unit_ids_validated = _validate_design_unit_ids(
@@ -623,21 +714,39 @@ def bootstrap_two_sample(
         paired=paired,
         cluster_mode=cluster_mode,
     )
+    if (control_observation_ids is not None or treatment_observation_ids is not None) and (
+        control_unit_ids is not None or treatment_unit_ids is not None
+    ):
+        raise ValueError("Use observation IDs or unit IDs, not both.")
+    observation_ids_validated = _validate_observation_alignment(
+        control_observation_ids,
+        treatment_observation_ids,
+        len(control_array),
+        len(treatment_array),
+        paired=paired,
+    )
 
     control_ids: AnyArray | None = None
     treatment_ids: AnyArray | None = None
-    if cluster_mode:
+    paired_ids: AnyArray | None = None
+    if independent_cluster_mode:
         control_ids = _validate_cluster_ids(
             control_cluster_ids, len(control_array), name="control_cluster_ids"
         )
         treatment_ids = _validate_cluster_ids(
             treatment_cluster_ids, len(treatment_array), name="treatment_cluster_ids"
         )
+    elif paired_cluster_mode:
+        paired_ids = _validate_cluster_ids(
+            paired_cluster_ids, len(control_array), name="paired_cluster_ids"
+        )
 
     n_units_control = len(np.unique(control_ids)) if control_ids is not None else len(control_array)
     n_units_treatment = (
         len(np.unique(treatment_ids)) if treatment_ids is not None else len(treatment_array)
     )
+    if paired_ids is not None:
+        n_units_control = n_units_treatment = len(np.unique(paired_ids))
     if method == "bca" and min(n_units_control, n_units_treatment) < 3:
         unit_name = "clusters" if cluster_mode else "observations"
         raise ValueError(f"BCa requires at least three {unit_name} in each sample.")
@@ -660,7 +769,18 @@ def bootstrap_two_sample(
     treatment_estimate = _evaluate_statistic(statistic, treatment_array)
     estimate = _evaluate_effect(effect_function, control_estimate, treatment_estimate)
 
-    if cluster_mode:
+    if paired_ids is not None:
+        distribution = _paired_cluster_distribution(
+            control_array,
+            treatment_array,
+            paired_ids,
+            statistic,
+            effect_function,
+            n_resamples,
+            batch_size,
+            random_state,
+        )
+    elif independent_cluster_mode:
         assert control_ids is not None and treatment_ids is not None
         distribution = _cluster_distribution(
             control_array,
@@ -709,14 +829,29 @@ def bootstrap_two_sample(
 
     from bootstrapx import __version__
 
+    extra: dict[str, Any] = {"distribution_diagnostics": distribution_diagnostics(distribution)}
+    if paired_ids is not None:
+        extra["design"] = {"paired": inspect_cluster_design(paired_ids).to_dict()}
+    elif control_ids is not None and treatment_ids is not None:
+        extra["design"] = {
+            "control": inspect_cluster_design(control_ids).to_dict(),
+            "treatment": inspect_cluster_design(treatment_ids).to_dict(),
+        }
     metadata = {
         "metric_name": metric_name or getattr(statistic, "__name__", type(statistic).__name__),
         "effect_unit": effect_unit,
-        "resampling_unit": "cluster" if cluster_mode else "pair" if paired else "row",
+        "resampling_unit": "paired_cluster"
+        if paired_cluster_mode
+        else "cluster"
+        if cluster_mode
+        else "pair"
+        if paired
+        else "row",
         "n_control_units": n_units_control,
         "n_treatment_units": n_units_treatment,
         "n_features": control_array.shape[1] if control_array.ndim == 2 else 1,
         "unit_ids_validated": unit_ids_validated,
+        "observation_ids_validated": observation_ids_validated,
         "confidence_level": float(confidence_level),
         "batch_size": int(batch_size),
         "seed": int(random_state) if isinstance(random_state, int | np.integer) else None,
@@ -738,10 +873,15 @@ def bootstrap_two_sample(
         method=method,
         effect=effect_name,
         paired=paired,
-        resampling="cluster" if cluster_mode else "iid",
+        resampling="paired_cluster"
+        if paired_cluster_mode
+        else "cluster"
+        if cluster_mode
+        else "iid",
         n_control=len(control_array),
         n_treatment=len(treatment_array),
         n_control_clusters=n_units_control if cluster_mode else None,
         n_treatment_clusters=n_units_treatment if cluster_mode else None,
         metadata=metadata,
+        extra=extra,
     )

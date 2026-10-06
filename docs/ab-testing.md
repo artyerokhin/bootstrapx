@@ -18,6 +18,14 @@ The order is always control first and treatment second. Consequently,
 | Different units in control and treatment | default (`paired=False`) | rows independently within each arm |
 | Matched or before/after observations | `paired=True` | the same row indices in both arms |
 | Repeated events per user/account/store | cluster IDs for both arms | complete clusters independently within each arm |
+| Same records from repeated entities (unreleased) | `paired=True`, `paired_cluster_ids=` | the same complete-cluster rows in both samples |
+
+The development paired-cluster workflow is useful for comparing fixed model
+predictions on held-out repeated observations. It supports percentile/basic
+intervals and optional positional observation-key checks, not paired-cluster
+BCa. See [Paired model comparison](paired-model-comparison.md). Do not use
+independent-arm cluster arrays to represent two models evaluated on the same
+entities.
 
 The analysis unit should match the randomization unit whenever possible. If an
 experiment randomizes users and the business metric is revenue per user,

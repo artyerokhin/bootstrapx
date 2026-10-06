@@ -34,7 +34,10 @@ jobs:
             benchmarks/bench_two_sample.py \
             benchmarks/bench_two_sample_coverage.py \
             benchmarks/run_comparison_release.py \
-            benchmarks/plot_comparison_results.py
+            benchmarks/plot_comparison_results.py \
+            benchmarks/study_design_aware_bootstrap.py \
+            benchmarks/study_design_aware_grid.py \
+            benchmarks/bench_paired_clusters.py
 
       - name: Lint
         run: |
@@ -47,7 +50,10 @@ jobs:
             benchmarks/bench_two_sample.py \
             benchmarks/bench_two_sample_coverage.py \
             benchmarks/run_comparison_release.py \
-            benchmarks/plot_comparison_results.py
+            benchmarks/plot_comparison_results.py \
+            benchmarks/study_design_aware_bootstrap.py \
+            benchmarks/study_design_aware_grid.py \
+            benchmarks/bench_paired_clusters.py
 
   typing:
     name: Strict typing (Python ${{ matrix.python }})

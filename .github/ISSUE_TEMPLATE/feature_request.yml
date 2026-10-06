@@ -7,15 +7,23 @@ body:
     id: workflow
     attributes:
       label: Practitioner workflow
-      description: What decision or analysis should become easier?
-      placeholder: Compare treatment and control relative lift while resampling users.
+      description: What metric or comparison were you trying to estimate?
+      placeholder: Compare two models' AUC on repeated observations from the same patients.
+    validations:
+      required: true
+  - type: textarea
+    id: data_structure
+    attributes:
+      label: Data shape and independent unit
+      description: Describe the columns and what must stay together in a resample. An anonymized schema is enough; do not attach private records.
+      placeholder: One row per visit; patient_id repeats; y_true, score_a and score_b are aligned by visit.
     validations:
       required: true
   - type: textarea
     id: current
     attributes:
       label: Current workaround
-      description: Show how you solve this today and where it becomes error-prone.
+      description: Show how you solve this today, what is slow or error-prone, and which library you use.
     validations:
       required: true
   - type: textarea
@@ -28,11 +36,4 @@ body:
     id: assumptions
     attributes:
       label: Statistical assumptions or references
-      description: Include sampling units, dependence, pairing, or relevant references.
-  - type: checkboxes
-    id: scope
-    attributes:
-      label: Scope check
-      options:
-        - label: This solves a recurring applied workflow, not only one private dataset.
-          required: true
+      description: Include pairing, clustering, time dependence, or relevant references if known. It is fine to be unsure.

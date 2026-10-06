@@ -35,8 +35,11 @@ nav:
   - Home: index.md
   - First Analysis: getting-started.md
   - Choose a Method: methods.md
+  - Clusters within Fixed Strata: design-aware-clusters.md
   - Experiment Comparisons: ab-testing.md
   - Composite Metrics: composite-metrics.md
+  - Practitioner Workflows: practitioner-workflows.md
+  - Paired Model Comparison: paired-model-comparison.md
   - Product A/B Reference: product-ab.md
   - Real-data A/B Case Study: real-world-ab.md
   - Time Series: time-series.md

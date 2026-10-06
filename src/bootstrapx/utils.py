@@ -118,6 +118,7 @@ def validate_bootstrap_params(
         "wild": {"fitted", "distribution"},
         "cluster": {"cluster_ids"},
         "strata": {"strata_ids"},
+        "cluster_strata": {"cluster_ids", "strata_ids"},
     }
     unknown = set(kwargs) - allowed_kwargs.get(method, set())
     if unknown:
@@ -177,7 +178,7 @@ def validate_bootstrap_params(
         identifiers = kwargs.get(name)
         if identifiers is None:
             raise ValueError(f"{method} method requires `{name}` kwarg.")
-        ids = np.asarray(identifiers)
+        ids = np.asarray(identifiers, dtype=object)
         if ids.ndim != 1 or len(ids) != n_observations:
             raise ValueError(f"{name} must be one-dimensional and match data length.")
         for identifier in ids:
@@ -195,6 +196,10 @@ def validate_bootstrap_params(
             raise ValueError(f"{name} must contain mutually comparable identifiers.") from exc
         if len(unique_ids) < 2:
             raise ValueError(f"{name} must contain at least two distinct groups.")
+    if method == "cluster_strata":
+        for name in ("cluster_ids", "strata_ids"):
+            if kwargs.get(name) is None:
+                raise ValueError(f"cluster_strata method requires `{name}` kwarg.")
 
 
 def validate_random_state(random_state: Any) -> None:
@@ -220,6 +225,12 @@ def validate_bootstrap_distribution(distribution: Any, n_resamples: int) -> Floa
     if not np.all(np.isfinite(values)):
         raise ValueError("statistic returned NaN or inf for at least one bootstrap resample.")
     return values
+
+
+def distribution_diagnostics(distribution: FloatArray) -> dict[str, Any]:
+    """Describe empirical degeneracy without claiming interval validity."""
+    unique_count = int(np.unique(distribution).size)
+    return {"n_unique_values": unique_count, "is_degenerate": unique_count == 1}
 
 
 def auto_batch_size(n: int, n_resamples: int, itemsize: int = 8) -> int:

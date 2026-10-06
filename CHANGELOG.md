@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+- Paired whole-cluster two-sample comparisons through
+  `paired=True, paired_cluster_ids=...`, with percentile/basic intervals.
+- Optional unique observation-ID arrays check positional correspondence
+  without joining, sorting, dropping rows, or retaining raw identifiers.
+- Cluster-size/count reports in ordinary clustered results, and exact
+  distribution-degeneracy diagnostics in one- and two-sample results.
+- `result.interval()` reconstructs percentile/basic intervals from saved
+  draws without new metric calls or changes to the original result.
+- Offline held-out AUC/Brier model comparison and an oracle Brier example
+  with a known population effect; a matched paired-cluster coverage/runtime
+  runner with informative cluster sizes and progress output.
+- `cluster_strata` one-sample resampling of complete clusters inside fixed,
+  predesignated strata, with nesting and minimum-count validation.
+- `inspect_cluster_design()` reports independent-unit counts, cluster-size
+  spread, and optional exact conditional risk of a one-class binary resample.
+- A design-aware cluster guide and reproducible known-truth stress-test grid.
+
+### Fixed
+- Reject cluster/strata identifier lengths that differ from the actual data.
+- Preserve mixed large integer group IDs in one-sample clustered/stratified input
+  before NumPy can round them into duplicate float identifiers.
+
+### Limitations
+- Paired-cluster BCa is not implemented. Saved-interval reuse does not
+  reconstruct BCa or reinterpret Bayesian/studentized/subsampling/Bernoulli
+  intervals, and does not improve precision by adding replicates.
+- This is not a complex-survey bootstrap or a nominal-coverage guarantee.
+  Exploratory skewed-cluster and rare-class simulations found material
+  percentile/basic undercoverage; neither invalid draws nor weak designs are
+  silently repaired.
+
 ## [0.6.0] — 2026-09-24
 
 ### Added
