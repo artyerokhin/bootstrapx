@@ -44,7 +44,14 @@ class TestSeriesAccessor:
         assert frame.shape == (1, 8)
         assert frame.loc[0, "theta_hat"] == result.theta_hat
         assert frame.loc[0, "ci_method"] == "percentile"
-        assert frame.loc[0, "extra"] == {}
+        assert frame.loc[0, "extra"] == {
+            "distribution_diagnostics": {
+                "n_unique_values": len(np.unique(result.bootstrap_distribution)),
+                "is_degenerate": False,
+            }
+        }
+        frame.loc[0, "extra"]["distribution_diagnostics"]["is_degenerate"] = True
+        assert not result.extra["distribution_diagnostics"]["is_degenerate"]
         assert "bootstrap_distribution" not in frame.columns
 
 

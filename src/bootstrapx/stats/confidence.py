@@ -71,6 +71,36 @@ def basic_interval(
     )
 
 
+def reused_interval(
+    boot_stats: FloatArray,
+    theta_hat: float,
+    confidence_level: float,
+    method: str,
+) -> ConfidenceInterval:
+    """Validate and reconstruct an ordinary percentile/basic interval."""
+    if (
+        isinstance(confidence_level, bool)
+        or not isinstance(confidence_level, int | float | np.integer | np.floating)
+        or not np.isfinite(confidence_level)
+        or not 0 < confidence_level < 1
+    ):
+        raise ValueError("confidence_level must be a finite number strictly between zero and one.")
+    if not isinstance(method, str):
+        raise TypeError("method must be 'percentile' or 'basic'.")
+    method = method.lower().strip()
+    if method not in {"percentile", "basic"}:
+        raise ValueError(
+            "Reuse supports percentile/basic only; BCa requires jackknife information."
+        )
+    if boot_stats.ndim != 1 or boot_stats.size < 2 or not np.all(np.isfinite(boot_stats)):
+        raise ValueError("Stored bootstrap distribution must contain at least two finite values.")
+    if not np.isfinite(theta_hat):
+        raise ValueError("Stored estimate must be finite.")
+    if method == "basic":
+        return basic_interval(boot_stats, theta_hat, confidence_level)
+    return percentile_interval(boot_stats, confidence_level)
+
+
 def root_interval(
     root_stats: FloatArray,
     theta_hat: float,

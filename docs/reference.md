@@ -6,6 +6,12 @@
 
 ::: bootstrapx.BootstrapResult
 
+## Cluster-design diagnostics
+
+::: bootstrapx.inspect_cluster_design
+
+::: bootstrapx.ClusterDesignReport
+
 ## Experiment comparisons
 
 ::: bootstrapx.bootstrap_two_sample
@@ -27,6 +33,25 @@ DataFrame.
 
 `TwoSampleBootstrapResult` follows the same compact-export policy and adds arm
 estimates, effect/design metadata, sample sizes, and optional cluster counts.
+
+### Added in 0.7.0
+
+- `paired=True, paired_cluster_ids=...` selects shared whole-cluster draws;
+  specify `method="percentile"` or `"basic"`. The default BCa is unsupported
+  for this design and raises an error.
+- `control_observation_ids` and `treatment_observation_ids` optionally validate
+  unique, positionally matching row keys for paired comparisons. There is no
+  automatic join/alignment or retention of IDs.
+- `extra["design"]` reports counts/sizes for clustered results. Comparisons
+  use `"paired"`, or separate `"control"`/`"treatment"` reports.
+- `extra["distribution_diagnostics"]` contains `n_unique_values` and
+  `is_degenerate`. These are exact facts, not a coverage assessment.
+- `result.interval(confidence_level=0.95, method="percentile")` returns a new
+  percentile/basic interval from saved draws. It does not mutate the result
+  or call the metric. BCa reconstruction and specialized one-sample interval
+  reinterpretation are unsupported.
+
+See [Paired model comparison](paired-model-comparison.md) for a complete workflow.
 
 ## Integrations
 

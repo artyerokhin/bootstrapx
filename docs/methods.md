@@ -10,12 +10,17 @@ more sophisticated interval cannot repair the wrong independence assumption.
 | Different units in control and treatment | `bootstrap_two_sample(...)` | arms must be independent |
 | Matched or before/after rows | `paired=True` | row alignment must represent real pairs |
 | Repeated events per randomized unit | cluster IDs for both arms | define event- versus unit-weighted estimand |
+| Matched predictions on repeated entity rows | `paired=True`, `paired_cluster_ids=` | align unique observations; use fixed held-out models |
 
-For experiment comparisons, percentile, basic, and BCa intervals are
-available. BCa uses leave-one-observation-out acceleration for independent
+For independent, paired IID, and separately clustered comparisons,
+percentile, basic, and BCa intervals are available. Paired whole-cluster
+comparison currently supports **percentile/basic only**, not BCa.
+BCa uses leave-one-observation-out acceleration for independent
 samples, paired deletion for paired data, and leave-one-cluster-out
 acceleration for clustered data. Start with an absolute difference; ratio and
-relative lift require a stable nonzero control denominator.
+relative lift require a stable nonzero control denominator. See
+[Paired model comparison](paired-model-comparison.md) for the shared-cluster
+workflow and observation-key checks.
 
 ## Decision table
 
@@ -32,7 +37,8 @@ relative lift require a stable nonzero control denominator.
 | AR-like stationary series | `sieve` | `ar_order=` | inappropriate for dynamics an AR model cannot represent |
 | Heteroscedastic residual workflow | `wild` | `fitted=`, `distribution=` | caller must supply a meaningful fitted structure |
 | Repeated observations within groups | `cluster` | `cluster_ids=` | one grouping level only |
-| Known strata in the sampling design | `strata` | `strata=` | strata must represent the actual design |
+| Known strata in the sampling design | `strata` | `strata_ids=` | strata must represent the actual design |
+| Independent clusters inside fixed strata | `cluster_strata` | `cluster_ids=`, `strata_ids=` | few clusters per stratum can still undercover |
 
 ## IID intervals
 
@@ -59,6 +65,11 @@ Use `cluster` when dependence is explained by a grouping unit. Use block or
 stationary methods when ordering and local serial dependence matter. Use
 `strata` to preserve a known sampling composition, not merely because a useful
 category exists in the dataset.
+
+When both design features apply, `cluster_strata` draws complete clusters
+within their pre-existing strata. First inspect counts and cluster sizes with
+`inspect_cluster_design()`. No observed count guarantees nominal coverage;
+see [Clusters within fixed strata](design-aware-clusters.md).
 
 For detailed examples, continue to [Grouped and experiment data](ab-testing.md)
 or [Time series](time-series.md).

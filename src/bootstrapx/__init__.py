@@ -1,8 +1,8 @@
 """bootstrapx — Practical bootstrap uncertainty estimation for Python.
 
-Provides 16 bootstrap methods: iid (BCa, percentile, basic, studentized,
+Provides 17 bootstrap methods: iid (BCa, percentile, basic, studentized,
 Bayesian, Poisson, Bernoulli, subsampling), time-series (MBB, CBB, stationary,
-tapered, sieve, wild), and hierarchical (cluster, stratified).
+tapered, sieve, wild), and hierarchical (cluster, stratified, cluster-within-strata).
 
 Also exposes:
 - ``BootstrapCV`` — scikit-learn compatible cross-validator using bootstrap
@@ -15,6 +15,7 @@ from importlib.metadata import PackageNotFoundError, version
 
 from .api import BootstrapResult, bootstrap
 from .comparison import TwoSampleBootstrapResult, bootstrap_two_sample
+from .design import ClusterDesignReport, inspect_cluster_design
 from .stats.confidence import ConfidenceInterval
 from .stats.metrics import RatioOfSums
 
@@ -36,13 +37,15 @@ except ImportError:
 try:
     __version__ = version("bootstrapx-lib")
 except PackageNotFoundError:
-    __version__ = "0.6.0"
+    __version__ = "0.7.0"
 
 __all__ = [
     "bootstrap",
     "BootstrapResult",
     "bootstrap_two_sample",
     "TwoSampleBootstrapResult",
+    "inspect_cluster_design",
+    "ClusterDesignReport",
     "ConfidenceInterval",
     "RatioOfSums",
     "__version__",

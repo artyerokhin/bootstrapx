@@ -28,6 +28,13 @@ are supported. The library does not provide p-values, sequential-testing
 guarantees, CUPED/regression adjustment, multiple-testing correction, or
 two-sample stratified resampling.
 
+Version 0.7.0 adds paired whole-cluster comparisons with a common
+cluster-ID array and optional unique observation keys. It supports only
+percentile/basic, not BCa. Matching keys do not establish matching outcomes,
+absence of leakage, or independence of entities. These intervals describe
+fixed model predictions, not uncertainty of a refitted training procedure.
+See [Paired model comparison](paired-model-comparison.md).
+
 Ratio and relative-lift effects are undefined when a control estimate is zero
 and can be unstable when it is merely close to zero. bootstrapx rejects
 non-finite resampled effects instead of silently discarding them.
@@ -63,6 +70,12 @@ autoregressive approximation is reasonable.
 Cluster bootstrap resamples one grouping level. Multiway clustering,
 hierarchical random effects, survey calibration weights, and finite-population
 survey designs require additional methodology not currently implemented.
+`cluster_strata` handles one-level clusters inside fixed strata, but it is not
+a general complex-survey bootstrap. A stratum with only one observed cluster
+is rejected. Even with more clusters, percentile and basic intervals can
+undercover; `inspect_cluster_design()` reports design facts and binary-class
+collapse risk, not a coverage guarantee. See
+[Clusters within fixed strata](design-aware-clusters.md).
 
 For clustered experiments, applying `np.mean` to raw events estimates an
 event-weighted metric while clusters are the resampling unit. Aggregate to one

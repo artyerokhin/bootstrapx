@@ -5,3 +5,16 @@ include pytest.ini
 include tests/conftest.py
 include examples/assigned_users_composite_metrics.py
 include benchmarks/bench_composite_metrics.py
+include examples/paired_cluster_brier.py
+include examples/practitioner_grouped_model_comparison.py
+include examples/practitioner_user_orders.py
+include benchmarks/bench_paired_clusters.py
+include benchmarks/study_design_aware_bootstrap.py
+include benchmarks/study_design_aware_grid.py
+include docs/benchmarks.md
+include docs/design-aware-clusters.md
+include docs/paired-model-comparison.md
+include docs/practitioner-workflows.md
+include tests/test_cluster_strata.py
+include tests/test_paired_clusters.py
+include tests/test_practitioner_workflows.py

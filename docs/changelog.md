@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.0 — 2026-10-06
+
+- Paired whole-cluster comparisons of fixed model outputs with optional
+  positional observation-ID checks and percentile/basic intervals.
+- `cluster_strata` resamples complete clusters inside fixed strata;
+  `inspect_cluster_design()` reports counts, sizes, and conditional one-class
+  resample risk where labels are constant within clusters.
+- Cluster and bootstrap-distribution diagnostics; percentile/basic interval
+  reuse from saved draws without recomputing the statistic.
+- Offline practitioner examples for assigned-user revenue and grouped model
+  evaluation, with known-truth and stress-test evidence. Small-cluster
+  undercoverage and unsupported paired-cluster BCa remain explicit.
+
 ## 0.6.0 — 2026-09-24
 
 - Joint-column scalar metrics, `RatioOfSums`, and design-aware BCa.

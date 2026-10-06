@@ -34,7 +34,10 @@ jobs:
             benchmarks/bench_two_sample.py \
             benchmarks/bench_two_sample_coverage.py \
             benchmarks/run_comparison_release.py \
-            benchmarks/plot_comparison_results.py
+            benchmarks/plot_comparison_results.py \
+            benchmarks/study_design_aware_bootstrap.py \
+            benchmarks/study_design_aware_grid.py \
+            benchmarks/bench_paired_clusters.py
 
       - name: Lint
         run: |
@@ -47,7 +50,10 @@ jobs:
             benchmarks/bench_two_sample.py \
             benchmarks/bench_two_sample_coverage.py \
             benchmarks/run_comparison_release.py \
-            benchmarks/plot_comparison_results.py
+            benchmarks/plot_comparison_results.py \
+            benchmarks/study_design_aware_bootstrap.py \
+            benchmarks/study_design_aware_grid.py \
+            benchmarks/bench_paired_clusters.py
 
   typing:
     name: Strict typing (Python ${{ matrix.python }})
@@ -234,6 +240,19 @@ jobs:
               "pytest.ini",
               "tests/conftest.py",
               "tests/test_notebook_execution.py",
+              "examples/paired_cluster_brier.py",
+              "examples/practitioner_grouped_model_comparison.py",
+              "examples/practitioner_user_orders.py",
+              "benchmarks/bench_paired_clusters.py",
+              "benchmarks/study_design_aware_bootstrap.py",
+              "benchmarks/study_design_aware_grid.py",
+              "docs/benchmarks.md",
+              "docs/design-aware-clusters.md",
+              "docs/paired-model-comparison.md",
+              "docs/practitioner-workflows.md",
+              "tests/test_cluster_strata.py",
+              "tests/test_paired_clusters.py",
+              "tests/test_practitioner_workflows.py",
           }
           with tarfile.open(archives[0]) as archive:
               names = archive.getnames()

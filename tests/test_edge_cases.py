@@ -51,9 +51,16 @@ class TestEdgeCases:
             "ci_method": "percentile",
             "method": "percentile",
             "n_resamples": 25,
-            "extra": {},
+            "extra": {
+                "distribution_diagnostics": {
+                    "n_unique_values": len(np.unique(r.bootstrap_distribution)),
+                    "is_degenerate": False,
+                }
+            },
         }
         assert "bootstrap_distribution" not in summary
+        summary["extra"]["distribution_diagnostics"]["is_degenerate"] = True
+        assert not r.extra["distribution_diagnostics"]["is_degenerate"]
 
     def test_result_to_dict_can_include_distribution_copy(self):
         r = bootstrap(

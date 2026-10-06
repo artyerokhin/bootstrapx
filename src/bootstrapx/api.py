@@ -25,8 +25,13 @@ from typing import Any, cast
 import numpy as np
 from numpy.typing import NDArray
 
+from bootstrapx.design import ClusterDesignReport, inspect_cluster_design
 from bootstrapx.engine.backend import apply_statistic_batched, resolve_backend
-from bootstrapx.generators.hierarchical import cluster_resample, strata_resample
+from bootstrapx.generators.hierarchical import (
+    cluster_resample,
+    cluster_strata_resample,
+    strata_resample,
+)
 from bootstrapx.generators.iid import (
     bayesian_resample,
     bernoulli_resample,
@@ -46,11 +51,13 @@ from bootstrapx.stats.confidence import (
     basic_interval,
     bca_interval,
     percentile_interval,
+    reused_interval,
     root_interval,
     studentized_interval,
 )
 from bootstrapx.utils import (
     auto_batch_size,
+    distribution_diagnostics,
     validate_bootstrap_distribution,
     validate_bootstrap_params,
     validate_data,
@@ -118,6 +125,20 @@ class BootstrapResult:
                 "Install with: pip install 'bootstrapx-lib[pandas]'"
             ) from exc
         return pd.DataFrame([self.to_dict()])
+
+    def interval(
+        self, *, confidence_level: float = 0.95, method: str = "percentile"
+    ) -> ConfidenceInterval:
+        """Reconstruct a percentile/basic interval without new statistic calls.
+
+        Specialized Bayesian, subsampling, Bernoulli and studentized results
+        cannot be reinterpreted by this method. The result is not mutated.
+        """
+        if self.confidence_interval.method not in {"percentile", "basic", "bca"}:
+            raise ValueError("Interval reuse is unsupported for this specialized result.")
+        return reused_interval(
+            self.bootstrap_distribution, self.theta_hat, confidence_level, method
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -220,7 +241,7 @@ _IID_METHODS = {
     "bayesian",
 }
 _TS_METHODS = {"mbb", "cbb", "stationary", "tapered", "sieve", "wild"}
-_HIER_METHODS = {"cluster", "strata"}
+_HIER_METHODS = {"cluster", "strata", "cluster_strata"}
 _ALL_METHODS = _IID_METHODS | _TS_METHODS | _HIER_METHODS
 _CI_CAPABLE = {"percentile", "basic", "bca", "studentized"}
 
@@ -257,7 +278,7 @@ def bootstrap(
     method : str
         One of: bca, percentile, basic, studentized, poisson, bernoulli,
         bayesian, subsampling, mbb, cbb, stationary, tapered, sieve,
-        wild, cluster, strata.
+        wild, cluster, strata, cluster_strata.
     ci_method : str or None
         CI construction for generator-based methods that do not define a
         specialized interval: ``"percentile"`` or ``"basic"``. Defaults to
@@ -283,6 +304,11 @@ def bootstrap(
     n_inner : int
         Number of inner resamples per outer sample for the studentized method.
         Defaults to 100.
+    cluster_ids, strata_ids : array-like
+        Required together for ``method="cluster_strata"``. Each cluster must
+        belong to exactly one stratum; complete clusters are drawn within
+        their observed strata. The strata must represent a fixed design, not
+        categories selected after inspecting outcomes.
     """
     if not isinstance(method, str):
         raise TypeError("method must be a string.")
@@ -318,6 +344,18 @@ def bootstrap(
     )
     validate_random_state(random_state)
 
+    design_report: ClusterDesignReport | None = None
+    if method in {"cluster", "cluster_strata"}:
+        design_report = inspect_cluster_design(
+            kwargs["cluster_ids"], strata_ids=kwargs.get("strata_ids"), n_resamples=n_resamples
+        )
+        if design_report.n_rows != n:
+            raise ValueError("cluster_ids must match data length.")
+        if method == "cluster_strata" and len(design_report.clusters_per_stratum) < 2:
+            raise ValueError("cluster_strata requires at least two distinct strata.")
+        if method == "cluster_strata" and min(design_report.clusters_per_stratum) < 2:
+            raise ValueError("cluster_strata requires at least two clusters in every stratum.")
+
     rng: np.random.Generator = (
         random_state
         if isinstance(random_state, np.random.Generator)
@@ -333,6 +371,8 @@ def bootstrap(
         raise ValueError("statistic must return a finite scalar value for the observed data.")
 
     result_extra: dict[str, Any] = {}
+    if design_report is not None:
+        result_extra["design"] = design_report.to_dict()
     result_standard_error: float | None = None
     boot_stats: FloatArray
 
@@ -411,13 +451,28 @@ def bootstrap(
         elif method == "cluster":
             cids = kwargs["cluster_ids"]
             boot_stats_list = _collect_arrays(
-                cluster_resample(arr, np.asarray(cids), n_resamples, batch_size, rng), statistic
+                cluster_resample(arr, np.asarray(cids, dtype=object), n_resamples, batch_size, rng),
+                statistic,
             )
 
         elif method == "strata":
             sids = kwargs["strata_ids"]
             boot_stats_list = _collect_arrays(
-                strata_resample(arr, np.asarray(sids), n_resamples, batch_size, rng), statistic
+                strata_resample(arr, np.asarray(sids, dtype=object), n_resamples, batch_size, rng),
+                statistic,
+            )
+
+        elif method == "cluster_strata":
+            boot_stats_list = _collect_arrays(
+                cluster_strata_resample(
+                    arr,
+                    np.asarray(kwargs["cluster_ids"], dtype=object),
+                    np.asarray(kwargs["strata_ids"], dtype=object),
+                    n_resamples,
+                    batch_size,
+                    rng,
+                ),
+                statistic,
             )
 
         elif method == "subsampling":
@@ -524,6 +579,7 @@ def bootstrap(
             else:
                 ci = percentile_interval(boot_stats, confidence_level)
 
+    result_extra["distribution_diagnostics"] = distribution_diagnostics(boot_stats)
     return BootstrapResult(
         confidence_interval=ci,
         bootstrap_distribution=boot_stats,

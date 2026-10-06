@@ -77,8 +77,12 @@ jobs:
 
     - name: Verify release candidate
       run: |
-        ruff format --check src tests examples benchmarks/bench_composite_metrics.py
-        ruff check src tests examples benchmarks/bench_composite_metrics.py
+        ruff format --check src tests examples benchmarks/bench_composite_metrics.py \
+          benchmarks/bench_paired_clusters.py benchmarks/study_design_aware_bootstrap.py \
+          benchmarks/study_design_aware_grid.py
+        ruff check src tests examples benchmarks/bench_composite_metrics.py \
+          benchmarks/bench_paired_clusters.py benchmarks/study_design_aware_bootstrap.py \
+          benchmarks/study_design_aware_grid.py
         mypy src
         pytest --cov=bootstrapx --cov-fail-under=85
         pytest --doctest-modules src/bootstrapx
@@ -116,6 +120,19 @@ jobs:
             "pytest.ini",
             "tests/conftest.py",
             "tests/test_notebook_execution.py",
+            "examples/paired_cluster_brier.py",
+            "examples/practitioner_grouped_model_comparison.py",
+            "examples/practitioner_user_orders.py",
+            "benchmarks/bench_paired_clusters.py",
+            "benchmarks/study_design_aware_bootstrap.py",
+            "benchmarks/study_design_aware_grid.py",
+            "docs/benchmarks.md",
+            "docs/design-aware-clusters.md",
+            "docs/paired-model-comparison.md",
+            "docs/practitioner-workflows.md",
+            "tests/test_cluster_strata.py",
+            "tests/test_paired_clusters.py",
+            "tests/test_practitioner_workflows.py",
         }
         with tarfile.open(archives[0]) as archive:
             names = archive.getnames()

@@ -51,3 +51,38 @@ def strata_resample(
             batch.append(np.concatenate(parts))
         yield batch
         done += bs
+
+
+def cluster_strata_resample(
+    data: FloatArray,
+    cluster_ids: AnyArray,
+    strata_ids: AnyArray,
+    n_resamples: int,
+    batch_size: int,
+    rng: np.random.Generator,
+) -> Generator[list[FloatArray], None, None]:
+    """Draw complete clusters within each fixed stratum.
+
+    The public API validates nesting and at least two clusters per stratum
+    before entering this generator. Draws are independent of batch size.
+    """
+    _, cluster_codes = np.unique(np.asarray(cluster_ids, dtype=object), return_inverse=True)
+    _, stratum_codes = np.unique(np.asarray(strata_ids, dtype=object), return_inverse=True)
+    cluster_order = np.argsort(cluster_codes, kind="stable")
+    cluster_counts = np.bincount(cluster_codes)
+    groups = np.split(cluster_order, np.cumsum(cluster_counts)[:-1])
+    maps: list[list[NDArray[np.intp]]] = [[] for _ in range(int(stratum_codes.max()) + 1)]
+    for rows in groups:
+        maps[int(stratum_codes[rows[0]])].append(rows)
+
+    done = 0
+    while done < n_resamples:
+        bs = min(batch_size, n_resamples - done)
+        batch: list[FloatArray] = []
+        for _ in range(bs):
+            selected_parts = [
+                rows[index] for rows in maps for index in rng.integers(0, len(rows), size=len(rows))
+            ]
+            batch.append(data[np.concatenate(selected_parts)])
+        yield batch
+        done += bs
